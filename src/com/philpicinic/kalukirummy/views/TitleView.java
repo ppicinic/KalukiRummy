@@ -107,8 +107,8 @@ public class TitleView extends View {
 				Intent gameIntent = new Intent(context, GameActivity.class);
 				context.startActivity(gameIntent);
 			} else if (isOptionsPressed) {
-				Intent gameIntent = new Intent(context, GameActivity.class);
-				context.startActivity(gameIntent);
+//				Intent gameIntent = new Intent(context, GameActivity.class);
+//				context.startActivity(gameIntent);
 			}
 			isOptionsPressed = false;
 			playButtonPressed = false;

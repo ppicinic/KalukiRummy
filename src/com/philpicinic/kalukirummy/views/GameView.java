@@ -24,7 +24,7 @@ public class GameView extends View {
 		circleX = 100;
 		circleY = 100;
 		radius = 30;
-		System.out.println("Success");
+		//System.out.println("Success");
 	}
 
 	@Override
