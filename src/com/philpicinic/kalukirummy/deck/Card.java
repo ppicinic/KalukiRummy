@@ -8,8 +8,9 @@ public class Card {
 	private int rank;
 	// Suit uses a enum suit
 	private Suit suit;
-	
+
 	private int jRank;
+	private Suit jSuit;
 
 	public Card(int rank, Suit suit) {
 		this.rank = rank;
@@ -19,33 +20,38 @@ public class Card {
 	public int getRank() {
 		return rank;
 	}
-	
-	public int getJRank(){
+
+	public int getJRank() {
 		return jRank;
 	}
-	
-	public Suit getSuit(){
+
+	public Suit getSuit() {
 		return suit;
 	}
-	
-	public void setJRank(int jRank){
-		if(rank == 1){
+
+	public Suit getJSuit() {
+		return jSuit;
+	}
+
+	public void setJRank(int jRank) {
+		if (rank == 1) {
 			this.jRank = jRank;
 		}
 		// TODO throw exception if not a Joker?
 	}
-	
-	public boolean isAce(){
-		if(rank == 14){
+
+	public boolean isAce() {
+		if (rank == 14) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	public boolean isFace(){
-		if(rank == 11 || rank == 12 || rank == 13){
+
+	public boolean isFace() {
+		if (rank == 11 || rank == 12 || rank == 13) {
 			return true;
-		} else{
+		} else {
 			return false;
 		}
 	}
@@ -57,34 +63,41 @@ public class Card {
 			return false;
 		}
 	}
-	
-	public int handValue(){
-		if(rank == 1){
+
+	public int handValue() {
+		if (isJoker()) {
 			return 25;
 		}
-		
-		if(rank == 11 || rank == 12 || rank == 13){
+
+		if (isFace()) {
 			return 10;
 		}
-		if(rank == 14){
+		if (isAce()) {
 			return 11;
 		}
-		
+
 		return rank;
 	}
-	
-	public int meldValue(){
-		if(rank == 1){
+
+	public int meldValue() {
+		if (isJoker()) {
 			return jRank;
 		}
-		
-		if(rank == 11 || rank == 12 || rank == 13){
+
+		if (isFace()) {
 			return 10;
 		}
-		if(rank == 14){
+		if (isAce()) {
 			// TODO consider Ace acts as a 1? implement aRank?
 			return 11;
 		}
 		return rank;
+	}
+
+	public Suit meldSuit() {
+		if (isJoker()) {
+			return jSuit;
+		}
+		return suit;
 	}
 }
