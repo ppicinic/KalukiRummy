@@ -14,7 +14,7 @@ import com.philpicinic.kalukirummy.card.Suit;
 import com.philpicinic.kalukirummy.card.VCard;
 import com.philpicinic.kalukirummy.deck.DeckView;
 import com.philpicinic.kalukirummy.deck.DiscardView;
-import com.philpicinic.kalukirummy.hand.RightMove;
+import com.philpicinic.kalukirummy.hand.CardMove;
 
 public class GameView extends ViewGroup {
 
@@ -24,7 +24,8 @@ public class GameView extends ViewGroup {
 	private int screenW;
 	private int screenH;
 	private ArrayList<VCard> vCards;
-	private RightMove rightM;
+	private CardMove rightM;
+	private CardMove leftArrow;
 	private DeckView deckV;
 	private DiscardView discard;
 	
@@ -32,9 +33,8 @@ public class GameView extends ViewGroup {
 		super(context);
 		this.context = context;
 
-		deck = BitmapFactory.decodeResource(getResources(), R.drawable.card_back);
-		//deck.setWidth(50);
-		discardPile = BitmapFactory.decodeResource(getResources(), R.drawable.card102);
+		
+		
 		vCards = new ArrayList<VCard>();
 		for(int i = 0; i < 13; i++){
 			VCard vCard = new VCard(context, i, Suit.SPADES, (i + 2));
@@ -42,8 +42,12 @@ public class GameView extends ViewGroup {
 			
 			vCards.add(vCard);
 		}
-		rightM = new RightMove(context);
+		
+		rightM = new CardMove(context, true);
 		this.addView(rightM);
+		leftArrow = new CardMove(context, false);
+		this.addView(leftArrow);
+		
 		deckV = new DeckView(context);
 		this.addView(deckV);
 		discard = new DiscardView(context);
@@ -68,8 +72,8 @@ public class GameView extends ViewGroup {
 	@Override
 	protected void onDraw(Canvas canvas) {
 //		canvas.drawCircle(circleX, circleY, radius, redPaint);
-		canvas.drawBitmap(deck, (screenW / 100), (screenH / 200), null);
-		canvas.drawBitmap(discardPile, ((screenW / 50) + discardPile.getWidth() ), (screenH / 200), null);
+//		canvas.drawBitmap(deck, (screenW / 100), (screenH / 200), null);
+//		canvas.drawBitmap(discardPile, ((screenW / 50) + discardPile.getWidth() ), (screenH / 200), null);
 	}
 
 //	public boolean onTouchEvent(MotionEvent event) {

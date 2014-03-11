@@ -8,7 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.view.View;
 
-public class RightMove extends View {
+public class CardMove extends View {
 
 	private Context context;
 	private Bitmap arrow;
@@ -16,13 +16,21 @@ public class RightMove extends View {
 	private int screenH;
 	private int x;
 	private int y;
-	
-	public RightMove(Context context) {
+	private boolean right;
+
+	public CardMove(Context context, boolean right) {
 		super(context);
-		arrow = BitmapFactory.decodeResource(getResources(), R.drawable.arrow_right);
+		this.right = right;
+		if (this.right) {
+			arrow = BitmapFactory.decodeResource(getResources(),
+					R.drawable.arrow_right);
+		} else {
+			arrow = BitmapFactory.decodeResource(getResources(),
+					R.drawable.arrow_left);
+		}
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	@Override
 	public void onSizeChanged(int w, int h, int oldw, int oldh) {
 		super.onSizeChanged(w, h, oldw, oldh);
@@ -31,10 +39,14 @@ public class RightMove extends View {
 		int scaleW = (int) (screenW / 12);
 		int scaleH = (int) (scaleW);
 		arrow = Bitmap.createScaledBitmap(arrow, scaleW, scaleH, false);
-		x = screenW - (arrow.getWidth() * 5 / 4);
 		y = screenH - (arrow.getHeight() * 4);
+		if (this.right) {
+			x = screenW - (arrow.getWidth() * 5 / 4);
+		} else {
+			x = arrow.getWidth() / 4;
+		}
 	}
-	
+
 	@Override
 	protected void onDraw(Canvas canvas) {
 		canvas.drawBitmap(arrow, x, y, null);
