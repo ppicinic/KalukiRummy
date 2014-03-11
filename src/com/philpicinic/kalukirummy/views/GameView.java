@@ -1,39 +1,53 @@
 package com.philpicinic.kalukirummy.views;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.view.MotionEvent;
-import android.view.View;
+import android.view.ViewGroup;
 
 import com.philpicinic.kalukirummy.R;
+import com.philpicinic.kalukirummy.card.Suit;
+import com.philpicinic.kalukirummy.card.VCard;
+import com.philpicinic.kalukirummy.deck.DeckView;
+import com.philpicinic.kalukirummy.deck.DiscardView;
+import com.philpicinic.kalukirummy.hand.RightMove;
 
-public class GameView extends View {
+public class GameView extends ViewGroup {
 
 	private Context context;
-	private Paint redPaint;
-	private int circleX;
-	private int circleY;
-	private float radius;
 	private Bitmap deck;
 	private Bitmap discardPile;
 	private int screenW;
 	private int screenH;
-
+	private ArrayList<VCard> vCards;
+	private RightMove rightM;
+	private DeckView deckV;
+	private DiscardView discard;
+	
 	public GameView(Context context) {
 		super(context);
 		this.context = context;
-//		redPaint = new Paint();
-//		redPaint.setAntiAlias(true);
-//		redPaint.setColor(Color.RED);
-//		circleX = 100;
-//		circleY = 100;
-//		radius = 30;
+
 		deck = BitmapFactory.decodeResource(getResources(), R.drawable.card_back);
 		//deck.setWidth(50);
 		discardPile = BitmapFactory.decodeResource(getResources(), R.drawable.card102);
+		vCards = new ArrayList<VCard>();
+		for(int i = 0; i < 13; i++){
+			VCard vCard = new VCard(context, i, Suit.SPADES, (i + 2));
+			this.addView(vCard);
+			
+			vCards.add(vCard);
+		}
+		rightM = new RightMove(context);
+		this.addView(rightM);
+		deckV = new DeckView(context);
+		this.addView(deckV);
+		discard = new DiscardView(context);
+		this.addView(discard);
 		
 		//System.out.println("Success");
 	}
@@ -48,6 +62,7 @@ public class GameView extends View {
 		int scaleH = (int) (scaleW*1.28);
 		deck = Bitmap.createScaledBitmap(temp, scaleW, scaleH, false);
 		discardPile = Bitmap.createScaledBitmap(discardPile, scaleW, scaleH, false);
+		
 	}
 
 	@Override
@@ -57,7 +72,7 @@ public class GameView extends View {
 		canvas.drawBitmap(discardPile, ((screenW / 50) + discardPile.getWidth() ), (screenH / 200), null);
 	}
 
-	public boolean onTouchEvent(MotionEvent event) {
+//	public boolean onTouchEvent(MotionEvent event) {
 //		int eventaction = event.getAction();
 //		int X = (int) event.getX();
 //		int Y = (int) event.getY();
@@ -75,7 +90,27 @@ public class GameView extends View {
 //			break;
 //		}
 //		invalidate();
-		return true;
+//		return true;
+//	}
+	
+	public boolean onInterceptTouchEvent(MotionEvent event){
+		//this.removeView(vCards.get(0));
+		return false;
 	}
+//	public boolean onTouchEvent(MotionEvent event){
+//		vCard.invalidate();
+//		System.out.println("ViewGroup");
+//		return false;
+//	}
+
+	@Override
+	protected void onLayout(boolean arg0, int arg1, int arg2, int arg3, int arg4) {
+		// TODO Auto-generated method stub
+		for(int i = 0; i < this.getChildCount(); i++){
+			this.getChildAt(i).layout(arg1, arg2, arg3, arg4);
+		}
+	}
+	
+	
 
 }

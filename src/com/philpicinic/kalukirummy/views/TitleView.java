@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.philpicinic.kalukirummy.R;
 import com.philpicinic.kalukirummy.activity.GameActivity;
+import com.philpicinic.kalukirummy.card.VCard;
 
 public class TitleView extends View {
 
@@ -24,6 +25,7 @@ public class TitleView extends View {
 	private Bitmap optionsButtonPressed;
 	private boolean isOptionsPressed;
 	private Context context;
+	
 
 	public TitleView(Context context) {
 		super(context);
@@ -38,6 +40,7 @@ public class TitleView extends View {
 				R.drawable.options_button);
 		optionsButtonPressed = BitmapFactory.decodeResource(getResources(),
 				R.drawable.options_button_pressed);
+		
 	}
 
 	@Override
@@ -62,6 +65,7 @@ public class TitleView extends View {
 					(screenW - optionsButton.getWidth()) / 2,
 					(int) (screenH * 0.8), null);
 		}
+//		vCard.invalidate();
 	}
 
 	@Override
