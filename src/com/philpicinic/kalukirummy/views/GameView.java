@@ -3,118 +3,132 @@ package com.philpicinic.kalukirummy.views;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 
-import com.philpicinic.kalukirummy.R;
 import com.philpicinic.kalukirummy.card.Suit;
 import com.philpicinic.kalukirummy.card.VCard;
 import com.philpicinic.kalukirummy.deck.DeckView;
 import com.philpicinic.kalukirummy.deck.DiscardView;
 import com.philpicinic.kalukirummy.hand.CardMove;
+import com.philpicininc.kalukirummy.bot.BotView;
+import com.philpicininc.kalukirummy.score.ScoreCardView;
 
+/**
+ * 
+ * @author Phil Picinic
+ * 
+ *         Highest Level view of the game activity Contains and manages all
+ *         children
+ */
 public class GameView extends ViewGroup {
 
+	@SuppressWarnings("unused")
 	private Context context;
-	private Bitmap deck;
-	private Bitmap discardPile;
+
+	@SuppressWarnings("unused")
 	private int screenW;
+	@SuppressWarnings("unused")
 	private int screenH;
+
 	private ArrayList<VCard> vCards;
-	private CardMove rightM;
+
+	private CardMove rightArrow;
 	private CardMove leftArrow;
+
 	private DeckView deckV;
 	private DiscardView discard;
-	
+
+	private BotView bot;
+	private ScoreCardView scoreCard;
+
+	/**
+	 * Create the GameView Group Creates all child elements of the layout
+	 * 
+	 * @param context
+	 *            the context of the activity
+	 */
 	public GameView(Context context) {
 		super(context);
 		this.context = context;
 
-		
-		
-		vCards = new ArrayList<VCard>();
-		for(int i = 0; i < 13; i++){
-			VCard vCard = new VCard(context, i, Suit.SPADES, (i + 2));
-			this.addView(vCard);
-			
-			vCards.add(vCard);
-		}
-		
-		rightM = new CardMove(context, true);
-		this.addView(rightM);
+		// Creates Background
+		BackgroundView bg = new BackgroundView(context);
+		this.addView(bg);
+
+		// Creates right arrow
+		rightArrow = new CardMove(context, true);
+		this.addView(rightArrow);
+
+		// Creates left arrow
 		leftArrow = new CardMove(context, false);
 		this.addView(leftArrow);
-		
+
+		// Creates the Deck and Discard Pile
 		deckV = new DeckView(context);
 		this.addView(deckV);
 		discard = new DiscardView(context);
 		this.addView(discard);
-		
-		//System.out.println("Success");
+
+		// Create the bot opponent
+		bot = new BotView(context);
+		this.addView(bot);
+
+		// Creates the scorecard button
+		scoreCard = new ScoreCardView(context);
+		this.addView(scoreCard);
+
+		// Creates 13 cards in the players hand
+		vCards = new ArrayList<VCard>();
+		for (int i = 0; i < 13; i++) {
+			VCard vCard = new VCard(context, i, Suit.SPADES, (i + 2));
+			this.addView(vCard);
+
+			vCards.add(vCard);
+		}
 	}
-	
+
+	public boolean onInterceptTouchEvent(MotionEvent event) {
+		int e = event.getAction();
+		if (e == MotionEvent.ACTION_DOWN) {
+			for (VCard card : vCards) {
+				if(card.detectCollision(event)){
+					this.bringChildToFront(card);
+					
+					break;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * updates sizes if the display is changed
+	 * 
+	 * @param w
+	 *            width of the screen
+	 * @param h
+	 *            height of the screen
+	 * @param oldw
+	 *            old width of the screen
+	 * @param oldh
+	 *            old height of the screen
+	 */
 	@Override
 	public void onSizeChanged(int w, int h, int oldw, int oldh) {
 		super.onSizeChanged(w, h, oldw, oldh);
 		screenW = w;
 		screenH = h;
-		Bitmap temp = deck;
-		int scaleW = (int) (screenW/8);
-		int scaleH = (int) (scaleW*1.28);
-		deck = Bitmap.createScaledBitmap(temp, scaleW, scaleH, false);
-		discardPile = Bitmap.createScaledBitmap(discardPile, scaleW, scaleH, false);
-		
 	}
 
-	@Override
-	protected void onDraw(Canvas canvas) {
-//		canvas.drawCircle(circleX, circleY, radius, redPaint);
-//		canvas.drawBitmap(deck, (screenW / 100), (screenH / 200), null);
-//		canvas.drawBitmap(discardPile, ((screenW / 50) + discardPile.getWidth() ), (screenH / 200), null);
-	}
-
-//	public boolean onTouchEvent(MotionEvent event) {
-//		int eventaction = event.getAction();
-//		int X = (int) event.getX();
-//		int Y = (int) event.getY();
-//		
-//		switch (eventaction) {
-//		case MotionEvent.ACTION_DOWN:
-//			break;
-//		case MotionEvent.ACTION_MOVE:
-//			circleX = X;
-//			circleY = Y;
-//			break;
-//		case MotionEvent.ACTION_UP:
-//			circleX = X;
-//			circleY = Y;
-//			break;
-//		}
-//		invalidate();
-//		return true;
-//	}
-	
-	public boolean onInterceptTouchEvent(MotionEvent event){
-		//this.removeView(vCards.get(0));
-		return false;
-	}
-//	public boolean onTouchEvent(MotionEvent event){
-//		vCard.invalidate();
-//		System.out.println("ViewGroup");
-//		return false;
-//	}
-
+	/**
+	 * Updates the layout of all child elements
+	 */
 	@Override
 	protected void onLayout(boolean arg0, int arg1, int arg2, int arg3, int arg4) {
-		// TODO Auto-generated method stub
-		for(int i = 0; i < this.getChildCount(); i++){
+		for (int i = 0; i < this.getChildCount(); i++) {
 			this.getChildAt(i).layout(arg1, arg2, arg3, arg4);
 		}
 	}
-	
-	
 
 }

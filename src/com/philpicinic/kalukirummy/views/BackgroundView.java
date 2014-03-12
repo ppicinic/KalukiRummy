@@ -1,4 +1,4 @@
-package com.philpicinic.kalukirummy.deck;
+package com.philpicinic.kalukirummy.views;
 
 import com.philpicinic.kalukirummy.R;
 
@@ -12,28 +12,28 @@ import android.view.View;
  * 
  * @author Phil Picinic
  *
- * View Class of the Discard Pile
- * Shows the top card of the discard Pile
+ * Background View of the game view
  */
-public class DiscardView extends View{
-	
+public class BackgroundView extends View {
+
 	@SuppressWarnings("unused")
 	private Context context;
-	private Bitmap discardCard;
-	@SuppressWarnings("unused")
-	private int screenH;
+	private Bitmap bg;
+	
 	private int screenW;
-	private int x;
-	private int y;
-
-	public DiscardView(Context context) {
+	private int screenH;
+	
+	/**
+	 * Constructor creates the background bitmap
+	 * @param context the context of the activity
+	 */
+	public BackgroundView(Context context) {
 		super(context);
+		
 		this.context = context;
-
-		discardCard = BitmapFactory.decodeResource(getResources(),
-				R.drawable.card102);
+		bg = BitmapFactory.decodeResource(getResources(), R.drawable.bg);
 	}
-
+	
 	/**
 	 * updates sizes if the display is changed
 	 * @param w width of the screen
@@ -46,11 +46,12 @@ public class DiscardView extends View{
 		super.onSizeChanged(w, h, oldw, oldh);
 		screenW = w;
 		screenH = h;
-		int scaleW = (int) (screenW / 7);
-		int scaleH = (int) (scaleW * 1.28);
-		discardCard = Bitmap.createScaledBitmap(discardCard, scaleW, scaleH, false);
-		x = (discardCard.getWidth()) + ( (discardCard.getWidth() / 6) * (2));
-		y = (discardCard.getHeight()  / 6);
+		
+		// Scale Background
+		int scaleW = (int) (screenW);
+		int scaleH = (int) (screenH);
+		bg = Bitmap.createScaledBitmap(bg, scaleW, scaleH, false);
+
 	}
 
 	/**
@@ -58,6 +59,7 @@ public class DiscardView extends View{
 	 */
 	@Override
 	protected void onDraw(Canvas canvas) {
-		canvas.drawBitmap(discardCard, x, y, null);
+		canvas.drawBitmap(bg, 0, 0, null);
 	}
+
 }

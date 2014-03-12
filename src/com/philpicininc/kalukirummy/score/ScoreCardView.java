@@ -1,4 +1,4 @@
-package com.philpicinic.kalukirummy.deck;
+package com.philpicininc.kalukirummy.score;
 
 import com.philpicinic.kalukirummy.R;
 
@@ -12,30 +12,35 @@ import android.view.View;
  * 
  * @author Phil Picinic
  *
- * View Class of the Discard Pile
- * Shows the top card of the discard Pile
+ * View class of the Score Card
  */
-public class DiscardView extends View{
-	
+public class ScoreCardView extends View{
+
 	@SuppressWarnings("unused")
 	private Context context;
-	private Bitmap discardCard;
+	private Bitmap scorecard;
+	
+	private int screenW;
 	@SuppressWarnings("unused")
 	private int screenH;
-	private int screenW;
+	
 	private int x;
 	private int y;
-
-	public DiscardView(Context context) {
+	
+	/**
+	 * Constructor creates the image of the score card
+	 * @param context
+	 */
+	public ScoreCardView(Context context) {
 		super(context);
+		
 		this.context = context;
-
-		discardCard = BitmapFactory.decodeResource(getResources(),
-				R.drawable.card102);
+		scorecard = BitmapFactory.decodeResource(getResources(), R.drawable.scorecard);
 	}
-
+	
 	/**
 	 * updates sizes if the display is changed
+	 * resizes and places score card
 	 * @param w width of the screen
 	 * @param h height of the screen
 	 * @param oldw old width of the screen
@@ -46,18 +51,21 @@ public class DiscardView extends View{
 		super.onSizeChanged(w, h, oldw, oldh);
 		screenW = w;
 		screenH = h;
+		
+		// Scale and Place score card image
 		int scaleW = (int) (screenW / 7);
 		int scaleH = (int) (scaleW * 1.28);
-		discardCard = Bitmap.createScaledBitmap(discardCard, scaleW, scaleH, false);
-		x = (discardCard.getWidth()) + ( (discardCard.getWidth() / 6) * (2));
-		y = (discardCard.getHeight()  / 6);
+		scorecard = Bitmap.createScaledBitmap(scorecard, scaleW, scaleH, false);
+		x = screenW - (scorecard.getWidth() * 7 / 6);
+		y = (scorecard.getHeight()  / 6);
 	}
 
 	/**
-	 * Draw the card on the screen
+	 * Draw image onto the screen
 	 */
 	@Override
 	protected void onDraw(Canvas canvas) {
-		canvas.drawBitmap(discardCard, x, y, null);
+		canvas.drawBitmap(scorecard, x, y, null);
 	}
+
 }

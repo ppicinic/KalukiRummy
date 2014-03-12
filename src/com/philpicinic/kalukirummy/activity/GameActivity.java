@@ -7,8 +7,18 @@ import android.view.WindowManager;
 
 import com.philpicinic.kalukirummy.views.GameView;
 
+/**
+ *
+ * @author Phil Picinic
+ * Game Activity is the Activity for the game screen.
+ *
+ */
 public class GameActivity extends Activity {
-    /** Called when the activity is first created. */
+	
+    /** 
+     * Called when the activity is first created. 
+     * Creates and sets the GameView
+     * */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,7 +28,6 @@ public class GameActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
         					 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(gView);
-        //System.out.println("Success");
     }
 }
 

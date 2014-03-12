@@ -10,8 +10,12 @@ import android.view.View;
 
 import com.philpicinic.kalukirummy.R;
 import com.philpicinic.kalukirummy.activity.GameActivity;
-import com.philpicinic.kalukirummy.card.VCard;
 
+/**
+ *
+ * @author Phil Picinic
+ * View class for the title screen
+ */
 public class TitleView extends View {
 
 	private Bitmap titleGraphic;
@@ -27,6 +31,10 @@ public class TitleView extends View {
 	private Context context;
 	
 
+	/**
+	 * Constructor creates all the images of the title screen
+	 * @param context the context of the activity
+	 */
 	public TitleView(Context context) {
 		super(context);
 		this.context = context;
@@ -43,6 +51,9 @@ public class TitleView extends View {
 		
 	}
 
+	/**
+	 * Draws all the images onto the screen
+	 */
 	@Override
 	protected void onDraw(Canvas canvas) {
 		canvas.drawBitmap(titleGraphic,
@@ -65,18 +76,26 @@ public class TitleView extends View {
 					(screenW - optionsButton.getWidth()) / 2,
 					(int) (screenH * 0.8), null);
 		}
-//		vCard.invalidate();
 	}
-
+	
+	/**
+	 * updates sizes if the display is changed
+	 * @param w width of the screen
+	 * @param h height of the screen
+	 * @param oldw old width of the screen
+	 * @param oldh old height of the screen
+	 */
 	@Override
 	public void onSizeChanged(int w, int h, int oldw, int oldh) {
 		super.onSizeChanged(w, h, oldw, oldh);
 		screenW = w;
 		screenH = h;
-		// System.out.println("SCREEN W: " + screenW);
-		// System.out.println("SCREEN H: " + screenH);
 	}
 
+	/**
+	 * Handles User input and collision detects the buttons
+	 * @param event the event of the user's input
+	 */
 	public boolean onTouchEvent(MotionEvent event) {
 		int eventaction = event.getAction();
 		int X = (int) event.getX();
@@ -107,12 +126,10 @@ public class TitleView extends View {
 
 		case MotionEvent.ACTION_UP:
 			if (playButtonPressed) {
-				//System.out.println("Success");
 				Intent gameIntent = new Intent(context, GameActivity.class);
 				context.startActivity(gameIntent);
 			} else if (isOptionsPressed) {
-//				Intent gameIntent = new Intent(context, GameActivity.class);
-//				context.startActivity(gameIntent);
+				// TODO Go To Options Screen
 			}
 			isOptionsPressed = false;
 			playButtonPressed = false;

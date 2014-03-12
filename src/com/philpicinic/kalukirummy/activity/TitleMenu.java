@@ -9,8 +9,18 @@ import android.view.WindowManager;
 import com.philpicinic.kalukirummy.R;
 import com.philpicinic.kalukirummy.views.TitleView;
 
+/**
+ * 
+ * @author Phil Picinic
+ *
+ * TitleMenu is the activity for the title screen
+ */
 public class TitleMenu extends Activity {
 
+	/**
+	 * Run when the activity is started. 
+	 * Creates and sets the TitleView
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
