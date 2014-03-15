@@ -11,12 +11,21 @@ import com.philpicinic.kalukirummy.card.VCard;
 
 public class HandView extends ViewGroup {
 
+	private static final int CIH = 6;
+	
+	private Context context;
 	private ArrayList<VCard> cards;
 	private VCard movingCard;
+	private CardMove leftArrow;
+	private CardMove rightArrow;
+	private boolean cardMove;
+	private boolean right;
+	private int left;
 
 	public HandView(Context context) {
 		super(context);
-
+		this.context = context;
+		
 		cards = new ArrayList<VCard>();
 		// Creates 13 cards in the players hand
 		cards = new ArrayList<VCard>();
@@ -33,6 +42,18 @@ public class HandView extends ViewGroup {
 
 			cards.add(vCard);
 		}
+		
+		// Creates right arrow
+		rightArrow = new CardMove(context, true);
+		this.addView(rightArrow);
+
+		// Creates left arrow
+		leftArrow = new CardMove(context, false);
+		this.addView(leftArrow);
+		
+		cardMove = false;
+		right = false;
+		left = 0;
 	}
 
 	@Override
@@ -44,6 +65,7 @@ public class HandView extends ViewGroup {
 	}
 
 	public boolean isClicked(MotionEvent event) {
+
 		int e = event.getAction();
 		if (e == MotionEvent.ACTION_DOWN) {
 			for (VCard card : cards) {
@@ -52,6 +74,16 @@ public class HandView extends ViewGroup {
 					movingCard = card;
 					return true;
 				}
+			}
+			if(rightArrow.isPressed(event)){
+				cardMove = true;
+				right = true;
+				return true;
+			}
+			if(leftArrow.isPressed(event)){
+				cardMove = true;
+				right = false;
+				return true;
 			}
 		}
 		if(e == MotionEvent.ACTION_UP){
@@ -71,6 +103,24 @@ public class HandView extends ViewGroup {
 					movingCard.placeInHand();
 					movingCard = null;
 				}
+			}
+			if(cardMove){
+				for(VCard card : cards){
+					if(right){
+						card.setHandPos(card.getHandPos() - 1);
+					}else{
+						card.setHandPos(card.getHandPos() + 1);
+					}
+					//card.;
+				}
+				cardMove = false;
+				right = false;
+				if(right){
+					left += 1;
+				}else{
+					left -= 1;
+				}
+				this.invalidate();
 			}
 		}
 		return false;

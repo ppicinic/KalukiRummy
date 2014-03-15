@@ -53,13 +53,7 @@ public class GameView extends ViewGroup {
 		BackgroundView bg = new BackgroundView(context);
 		this.addView(bg);
 
-		// Creates right arrow
-		rightArrow = new CardMove(context, true);
-		this.addView(rightArrow);
-
-		// Creates left arrow
-		leftArrow = new CardMove(context, false);
-		this.addView(leftArrow);
+		
 
 		// Creates the Deck and Discard Pile
 		deckV = new DeckView(context);

@@ -1,12 +1,13 @@
 package com.philpicinic.kalukirummy.hand;
 
-import com.philpicinic.kalukirummy.R;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.view.MotionEvent;
 import android.view.View;
+
+import com.philpicinic.kalukirummy.R;
 
 /**
  * 
@@ -83,6 +84,21 @@ public class CardMove extends View {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		canvas.drawBitmap(arrow, x, y, null);
+	}
+	
+	public boolean isPressed(MotionEvent event){
+		System.out.println("derp");
+		int e = event.getAction();
+		int X = (int) event.getX();
+		int Y = (int) event.getY();
+		if(e == MotionEvent.ACTION_DOWN){
+			if (X > x && X < (x + arrow.getWidth()) && Y > y
+					&& Y < (y + arrow.getHeight())) {
+				System.out.println("yu");
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
