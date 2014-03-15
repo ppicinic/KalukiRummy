@@ -1,16 +1,13 @@
 package com.philpicinic.kalukirummy.views;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 
-import com.philpicinic.kalukirummy.card.Suit;
-import com.philpicinic.kalukirummy.card.VCard;
 import com.philpicinic.kalukirummy.deck.DeckView;
 import com.philpicinic.kalukirummy.deck.DiscardView;
 import com.philpicinic.kalukirummy.hand.CardMove;
+import com.philpicinic.kalukirummy.hand.HandView;
 import com.philpicininc.kalukirummy.bot.BotView;
 import com.philpicininc.kalukirummy.score.ScoreCardView;
 
@@ -31,7 +28,7 @@ public class GameView extends ViewGroup {
 	@SuppressWarnings("unused")
 	private int screenH;
 
-	private ArrayList<VCard> vCards;
+	private HandView hand;
 
 	private CardMove rightArrow;
 	private CardMove leftArrow;
@@ -78,33 +75,14 @@ public class GameView extends ViewGroup {
 		scoreCard = new ScoreCardView(context);
 		this.addView(scoreCard);
 
-		// Creates 13 cards in the players hand
-		vCards = new ArrayList<VCard>();
-		VCard vCard = new VCard(context, 0, Suit.DIAMONDS, 1);
-		this.addView(vCard);
-		vCards.add(vCard);
-		vCard = new VCard(context, 1, Suit.CLUBS, 1);
-		this.addView(vCard);
-		vCards.add(vCard);
+		hand = new HandView(context);
+		this.addView(hand);
 		
-		for (int i = 0; i < 11; i++) {
-			vCard = new VCard(context, (i + 2), Suit.SPADES, (i + 2));
-			this.addView(vCard);
-
-			vCards.add(vCard);
-		}
 	}
 
 	public boolean onInterceptTouchEvent(MotionEvent event) {
-		int e = event.getAction();
-		if (e == MotionEvent.ACTION_DOWN) {
-			for (VCard card : vCards) {
-				if(card.detectCollision(event)){
-					this.bringChildToFront(card);
-					
-					break;
-				}
-			}
+		if(hand.isClicked(event)){
+			this.bringChildToFront(hand);
 		}
 		return false;
 	}
