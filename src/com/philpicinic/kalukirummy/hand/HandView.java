@@ -55,7 +55,23 @@ public class HandView extends ViewGroup {
 			}
 		}
 		if(e == MotionEvent.ACTION_UP){
-			movingCard.placeInHand();
+			if(movingCard != null){
+				for(VCard card : cards){
+					if(!movingCard.equalsInHand(card)){
+						if(movingCard.collideWithCard(card)){
+							int tempPos = card.getHandPos();
+							card.setHandPos(movingCard.getHandPos());
+							movingCard.setHandPos(tempPos);
+							movingCard = null;
+							break;
+						}
+					}
+				}
+				if(movingCard != null){
+					movingCard.placeInHand();
+					movingCard = null;
+				}
+			}
 		}
 		return false;
 	}
