@@ -12,6 +12,7 @@ import com.philpicinic.kalukirummy.card.VCard;
 public class HandView extends ViewGroup {
 
 	private ArrayList<VCard> cards;
+	private VCard movingCard;
 
 	public HandView(Context context) {
 		super(context);
@@ -48,9 +49,13 @@ public class HandView extends ViewGroup {
 			for (VCard card : cards) {
 				if(card.detectCollision(event)){
 					this.bringChildToFront(card);
+					movingCard = card;
 					return true;
 				}
 			}
+		}
+		if(e == MotionEvent.ACTION_UP){
+			movingCard.placeInHand();
 		}
 		return false;
 	}

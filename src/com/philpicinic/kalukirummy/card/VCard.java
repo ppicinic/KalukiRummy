@@ -134,8 +134,6 @@ public class VCard extends View {
 		case MotionEvent.ACTION_UP:
 			// The player has let go of the card, put it back to the hand (there is no where to place it yet
 			if (touched) {
-				x = (card.getWidth() * pos) + ( (card.getWidth() / 6) * (pos)) + (card.getWidth() / 10);
-				y = screenH - (card.getHeight() * 7 / 6);
 				touched = false;
 				invalidate();
 			}
@@ -167,8 +165,13 @@ public class VCard extends View {
 	 */
 	public void setHandPos(int p){
 		pos = p;
+		placeInHand();
+	}
+
+	public void placeInHand() {
 		x = (card.getWidth() * pos) + ( (card.getWidth() / 6) * (pos)) + (card.getWidth() / 10);
 		y = screenH - (card.getHeight() * 7 / 6);
 		invalidate();
+		
 	}
 }
