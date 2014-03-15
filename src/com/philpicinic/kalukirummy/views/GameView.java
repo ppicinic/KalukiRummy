@@ -80,8 +80,15 @@ public class GameView extends ViewGroup {
 
 		// Creates 13 cards in the players hand
 		vCards = new ArrayList<VCard>();
-		for (int i = 0; i < 13; i++) {
-			VCard vCard = new VCard(context, i, Suit.SPADES, (i + 2));
+		VCard vCard = new VCard(context, 0, Suit.DIAMONDS, 1);
+		this.addView(vCard);
+		vCards.add(vCard);
+		vCard = new VCard(context, 1, Suit.CLUBS, 1);
+		this.addView(vCard);
+		vCards.add(vCard);
+		
+		for (int i = 0; i < 11; i++) {
+			vCard = new VCard(context, (i + 2), Suit.SPADES, (i + 2));
 			this.addView(vCard);
 
 			vCards.add(vCard);

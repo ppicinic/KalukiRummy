@@ -119,7 +119,7 @@ public class VCard extends View {
 			if (X > x && X < (x + card.getWidth()) && Y > y && Y < (y + card.getHeight()) ) {
 				touched = true;
 				x = X - (card.getWidth() / 2);
-				y = Y - (card.getHeight());
+				y = Y - (card.getHeight() * 3 / 4);
 				invalidate();
 			}
 			break;
@@ -127,7 +127,7 @@ public class VCard extends View {
 			// Move the card to where the player's finger is
 			if (touched) {
 				x = X - (card.getWidth() / 2);
-				y = Y - (card.getHeight());
+				y = Y - (card.getHeight() * 3 / 4);
 				invalidate();
 			}
 			break;
