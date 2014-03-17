@@ -155,7 +155,7 @@ public class VCard extends View {
 			}
 			break;
 		}
-
+		//invalidate();
 		return touched;
 	}
 	

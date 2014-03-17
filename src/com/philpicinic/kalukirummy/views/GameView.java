@@ -75,9 +75,10 @@ public class GameView extends ViewGroup {
 	}
 
 	public boolean onInterceptTouchEvent(MotionEvent event) {
-		if(hand.isClicked(event)){
-			this.bringChildToFront(hand);
-		}
+//		if (hand.isClicked(event)) {
+//			this.bringChildToFront(hand);
+//			// return true;
+//		}
 		return false;
 	}
 

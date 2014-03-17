@@ -12,6 +12,11 @@ import com.philpicinic.kalukirummy.card.VCard;
 public class HandView extends ViewGroup {
 
 	private static final int CIH = 6;
+
+	private int l;
+	private int w;
+	private int ol;
+	private int ow;
 	
 	private Context context;
 	private ArrayList<VCard> cards;
@@ -20,12 +25,13 @@ public class HandView extends ViewGroup {
 	private CardMove rightArrow;
 	private boolean cardMove;
 	private boolean right;
+	
 	private int left;
 
 	public HandView(Context context) {
 		super(context);
 		this.context = context;
-		
+
 		cards = new ArrayList<VCard>();
 		// Creates 13 cards in the players hand
 		cards = new ArrayList<VCard>();
@@ -42,15 +48,15 @@ public class HandView extends ViewGroup {
 
 			cards.add(vCard);
 		}
-		
+
 		// Creates right arrow
 		rightArrow = new CardMove(context, true);
 		this.addView(rightArrow);
 
 		// Creates left arrow
 		leftArrow = new CardMove(context, false);
-		this.addView(leftArrow);
-		
+		//this.addView(leftArrow);
+
 		cardMove = false;
 		right = false;
 		left = 0;
@@ -58,39 +64,51 @@ public class HandView extends ViewGroup {
 
 	@Override
 	protected void onLayout(boolean arg0, int arg1, int arg2, int arg3, int arg4) {
+		l = arg1;
+		w = arg2;
+		ol = arg3;
+		ow = arg4;
 		for (int i = 0; i < this.getChildCount(); i++) {
 			this.getChildAt(i).layout(arg1, arg2, arg3, arg4);
 		}
 
 	}
 
-	public boolean isClicked(MotionEvent event) {
-
+	public boolean onTouchEvent(MotionEvent event) {
+		//System.out.println(event);
 		int e = event.getAction();
+		//System.out.println(e);
 		if (e == MotionEvent.ACTION_DOWN) {
 			for (VCard card : cards) {
-				if(card.detectCollision(event)){
+				if (card.detectCollision(event)) {
 					this.bringChildToFront(card);
 					movingCard = card;
 					return true;
 				}
 			}
-			if(rightArrow.isPressed(event)){
+			if (rightArrow.isPressed(event)) {
+				System.out.println("happenny0");
 				cardMove = true;
 				right = true;
 				return true;
 			}
-			if(leftArrow.isPressed(event)){
+			if (leftArrow.isPressed(event)) {
 				cardMove = true;
 				right = false;
 				return true;
 			}
 		}
-		if(e == MotionEvent.ACTION_UP){
-			if(movingCard != null){
-				for(VCard card : cards){
-					if(!movingCard.equalsInHand(card)){
-						if(movingCard.collideWithCard(card)){
+		if (e == MotionEvent.ACTION_MOVE) {
+			if (movingCard != null) {
+				// movingCard.onTouchEvent(event);
+			}
+		}
+		if (e == MotionEvent.ACTION_UP) {
+			// System.out.println("up");
+			if (movingCard != null) {
+				for (VCard card : cards) {
+					if (!movingCard.equalsInHand(card)) {
+						if (movingCard.collideWithCard(card)) {
 							int tempPos = card.getHandPos();
 							card.setHandPos(movingCard.getHandPos());
 							movingCard.setHandPos(tempPos);
@@ -99,28 +117,88 @@ public class HandView extends ViewGroup {
 						}
 					}
 				}
-				if(movingCard != null){
+				if (movingCard != null) {
 					movingCard.placeInHand();
 					movingCard = null;
 				}
 			}
-			if(cardMove){
-				for(VCard card : cards){
-					if(right){
+			// System.out.println("before");
+			if (cardMove) {
+				// System.out.println("test");
+				for (VCard card : cards) {
+					if (right) {
 						card.setHandPos(card.getHandPos() - 1);
-					}else{
+					} else {
 						card.setHandPos(card.getHandPos() + 1);
 					}
-					//card.;
+					// card.;
 				}
 				cardMove = false;
-				right = false;
-				if(right){
+				System.out.println(right);
+				if (right) {
 					left += 1;
-				}else{
+					if ((!leftArrow.isVisible()) && left >= 1) {
+						this.addView(leftArrow);
+						leftArrow.layout(l, w, ol, ow);
+						leftArrow.flipVisibility();
+						
+						//this.inva
+					}
+					if(rightArrow.isVisible() && left >= 7){
+						this.removeView(rightArrow);
+						rightArrow.flipVisibility();
+					}
+				} else {
 					left -= 1;
+					if((!rightArrow.isVisible()) && left <= 6){
+						this.addView(rightArrow);
+						rightArrow.layout(l, w, ol, ow);
+						rightArrow.flipVisibility();
+					}
+					if(leftArrow.isVisible() && left <= 0){
+						this.removeView(leftArrow);
+						leftArrow.flipVisibility();
+					}
+
 				}
-				this.invalidate();
+				right = false;
+				// this.invalidate();
+			}
+		}
+		System.out.println(cardMove);
+		return false;
+	}
+
+	public boolean onInterceptTouchEvent(MotionEvent event) {
+		System.out.println("inter");
+		int e = event.getAction();
+		if (e == MotionEvent.ACTION_DOWN) {
+			for (VCard card : cards) {
+				if (card.detectCollision(event)) {
+					this.bringChildToFront(card);
+					movingCard = card;
+					// return true;
+				}
+			}
+		}
+		if (e == MotionEvent.ACTION_UP) {
+			System.out.println("up");
+			if (movingCard != null) {
+				for (VCard card : cards) {
+					if (!movingCard.equalsInHand(card)) {
+						if (movingCard.collideWithCard(card)) {
+							int tempPos = card.getHandPos();
+							card.setHandPos(movingCard.getHandPos());
+							movingCard.setHandPos(tempPos);
+							movingCard = null;
+							break;
+						}
+					}
+				}
+				if (movingCard != null) {
+					movingCard.placeInHand();
+					movingCard = null;
+				}
 			}
 		}
 		return false;
