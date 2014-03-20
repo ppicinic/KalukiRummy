@@ -6,8 +6,9 @@ import android.content.Context;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 
-import com.philpicinic.kalukirummy.card.Suit;
+import com.philpicinic.kalukirummy.card.Card;
 import com.philpicinic.kalukirummy.card.VCard;
+import com.philpicinic.kalukirummy.deck.Deck;
 
 public class HandView extends ViewGroup {
 
@@ -17,7 +18,8 @@ public class HandView extends ViewGroup {
 	private int w;
 	private int ol;
 	private int ow;
-	
+
+	private Deck deck;
 	private Context context;
 	private ArrayList<VCard> cards;
 	private VCard movingCard;
@@ -32,22 +34,31 @@ public class HandView extends ViewGroup {
 		super(context);
 		this.context = context;
 
+		deck = new Deck();
 		cards = new ArrayList<VCard>();
-		// Creates 13 cards in the players hand
-		cards = new ArrayList<VCard>();
-		VCard vCard = new VCard(context, 0, Suit.DIAMONDS, 1);
-		this.addView(vCard);
-		cards.add(vCard);
-		vCard = new VCard(context, 1, Suit.CLUBS, 1);
-		this.addView(vCard);
-		cards.add(vCard);
-
-		for (int i = 0; i < 11; i++) {
-			vCard = new VCard(context, (i + 2), Suit.SPADES, (i + 2));
-			this.addView(vCard);
-
+		for(int i = 0; i < 13; i++){
+			Card card = deck.deal();
+			//System.out.println(card.getRank());
+			VCard vCard = new VCard(this.context, i, card.getSuit(), card.getRank());
 			cards.add(vCard);
+			this.addView(vCard);
 		}
+//		cards = new ArrayList<VCard>();
+//		// Creates 13 cards in the players hand
+//		cards = new ArrayList<VCard>();
+//		VCard vCard = new VCard(context, 0, Suit.DIAMONDS, 1);
+//		this.addView(vCard);
+//		cards.add(vCard);
+//		vCard = new VCard(context, 1, Suit.CLUBS, 1);
+//		this.addView(vCard);
+//		cards.add(vCard);
+//
+//		for (int i = 0; i < 11; i++) {
+//			vCard = new VCard(context, (i + 2), Suit.SPADES, (i + 2));
+//			this.addView(vCard);
+//
+//			cards.add(vCard);
+//		}
 
 		// Creates right arrow
 		rightArrow = new CardMove(context, true);
