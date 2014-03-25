@@ -144,6 +144,7 @@ public class VCard extends View implements Comparable<VCard>{
 	}
 	
 	public void setMeldPlacePos(int pos){
+		touched = false;
 		this.pos = pos;
 		inHand = false;
 		inPlaceArea = true;
@@ -158,9 +159,12 @@ public class VCard extends View implements Comparable<VCard>{
 	 *            the action the user does
 	 */
 	public boolean onTouchEvent(MotionEvent event) {
+		System.out.println("yo hey 1");
 		if(!inHand){
+			System.out.println("yo hey");
 			return false;
 		}
+		System.out.println("yo hey 3");
 		// Get event action and location
 		int eventaction = event.getAction();
 		int X = (int) event.getX();
@@ -228,6 +232,9 @@ public class VCard extends View implements Comparable<VCard>{
 	 */
 	public void setHandPos(int p) {
 		pos = p;
+		inHand = true;
+		inPlaceArea = false;
+		//touched = false;
 		placeInHand();
 	}
 

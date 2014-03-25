@@ -25,8 +25,12 @@ public class Deck {
 						break;
 					case 2:
 						suit = Suit.HEARTS;
+						break;
 					case 3:
 						suit = Suit.SPADES;
+						break;
+					default:
+						break;
 					}
 					deck.add(new Card(y, suit));
 				}
@@ -36,12 +40,12 @@ public class Deck {
 		}
 		Collections.shuffle(deck);
 	}
-	
-	public boolean isEmpty(){
+
+	public boolean isEmpty() {
 		return deck.isEmpty();
 	}
-	
-	public Card deal(){
+
+	public Card deal() {
 		return deck.remove();
 	}
 }

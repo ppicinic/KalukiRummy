@@ -1,6 +1,7 @@
 package com.philpicinic.kalukirummy.meld;
 
 import android.content.Context;
+import android.view.MotionEvent;
 import android.view.ViewGroup;
 
 import com.philpicinic.kalukirummy.card.VCard;
@@ -44,6 +45,15 @@ public class MeldViewGroup extends ViewGroup {
 	public void placeCard(VCard movingCard) {
 		meldPlaceViewGroup.placeCard(movingCard);
 		
+	}
+
+	public boolean checkPlayCollisions(MotionEvent event) {
+		// TODO Auto-generated method stub
+		return meldPlaceViewGroup.checkPlayCollisions(event);
+	}
+	
+	public VCard removeCardFromPlay(){
+		return meldPlaceViewGroup.removeCard();
 	}
 	
 }

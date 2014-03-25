@@ -124,7 +124,26 @@ public class HandView extends ViewGroup {
 			rightArrow.flipVisibility();
 		}
 	}
-
+	
+	public void deal(VCard returnToHand) {
+		// TODO Auto-generated method stub
+		left = 0;
+		cards.add(0, returnToHand);
+		this.addView(returnToHand);
+		returnToHand.layout(l, w, ol, ow);
+		for(int i = 0; i < cards.size(); i++){
+			cards.get(i).setHandPos(left + i);
+		}
+		if(leftArrow.isVisible()){
+			this.removeView(leftArrow);
+			leftArrow.flipVisibility();
+		}
+		if(!rightArrow.isVisible() && cards.size() > (left + 6)){
+			this.addView(rightArrow);
+			rightArrow.layout(l, w, ol, ow);
+			rightArrow.flipVisibility();
+		}
+	}
 	@Override
 	protected void onLayout(boolean arg0, int arg1, int arg2, int arg3, int arg4) {
 		l = arg1;
@@ -318,5 +337,8 @@ public class HandView extends ViewGroup {
 			cards.get(i).setHandPos(i - left);
 		}
 	}
+	
+
+	
 
 }

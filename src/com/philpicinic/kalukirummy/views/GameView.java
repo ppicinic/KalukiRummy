@@ -55,6 +55,7 @@ public class GameView extends ViewGroup {
 	private TurnState turnState;
 	
 	private boolean start;
+	private boolean returnToHand;
 	
 	private VCard movingCard;
 	/**
@@ -118,6 +119,13 @@ public class GameView extends ViewGroup {
 			}
 			else if(turnState == TurnState.DRAW){
 				return deckV.checkCollision(event);
+			}else if(turnState == TurnState.PLAY){
+				if( meldViewGroup.checkPlayCollisions(event)){
+					//hand.deal(returnToHand);
+					//returnToHand = null;
+					//returnToHand = true;
+					//return true;
+				}
 			}
 			
 		}
@@ -128,7 +136,10 @@ public class GameView extends ViewGroup {
 					if( (movingCard = hand.getMovingCard()) != null){
 						meldViewGroup.initiateMovingCard();
 					}
+				}if(returnToHand){
+					//return true;
 				}
+				
 			}
 		}
 		if(e == MotionEvent.ACTION_UP){
@@ -149,6 +160,8 @@ public class GameView extends ViewGroup {
 					if(!meldViewGroup.playingCards()){
 						meldViewGroup.deinitiateMovingCard();
 					}
+				}else if(returnToHand){
+					//return true;
 				}
 			}
 		}
@@ -169,6 +182,13 @@ public class GameView extends ViewGroup {
 			}else if(turnState == TurnState.DRAW){
 				start = deckV.checkCollision(event);
 				return start;
+			}else if(turnState == TurnState.PLAY){
+				if( meldViewGroup.checkPlayCollisions(event)){
+					//hand.deal(returnToHand);
+					//returnToHand = null;
+					returnToHand = true;
+					return true;
+				}
 			}
 		}
 		if(e == MotionEvent.ACTION_MOVE){
@@ -195,7 +215,13 @@ public class GameView extends ViewGroup {
 				}
 			}
 			else if(turnState == TurnState.PLAY){
-				
+				if(returnToHand){
+					System.out.println("I should be here");
+					hand.deal(meldViewGroup.removeCardFromPlay());
+					//hand.deal(returnToHand);
+					returnToHand = false;
+					return true;
+				}
 			}
 		}
 		return false;
