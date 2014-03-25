@@ -1,12 +1,13 @@
 package com.philpicinic.kalukirummy.deck;
 
-import com.philpicinic.kalukirummy.R;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.view.MotionEvent;
 import android.view.View;
+
+import com.philpicinic.kalukirummy.R;
 
 /**
  * 
@@ -68,6 +69,17 @@ public class DeckView extends View {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		canvas.drawBitmap(backCard, x, y, null);
+	}
+	
+	public boolean checkCollision(MotionEvent event){
+		int X = (int) event.getX();
+		int Y = (int) event.getY();
+		
+		if(X >= x && X <= (x + backCard.getWidth()) && Y >= y && Y <= (y + backCard.getHeight())){
+			return true;
+		}
+		
+		return false;
 	}
 
 }

@@ -1,8 +1,11 @@
 package com.philpicinic.kalukirummy.hand;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 
@@ -28,6 +31,10 @@ public class HandView extends ViewGroup {
 	private boolean cardMove;
 	private boolean right;
 	
+	private boolean start;
+	private boolean started;
+	//private LinkedList<VCard> deal;
+	
 	private int left;
 
 	public HandView(Context context) {
@@ -36,13 +43,11 @@ public class HandView extends ViewGroup {
 
 		deck = new Deck();
 		cards = new ArrayList<VCard>();
-		for(int i = 0; i < 13; i++){
-			Card card = deck.deal();
-			//System.out.println(card.getRank());
-			VCard vCard = new VCard(this.context, i, card.getSuit(), card.getRank());
-			cards.add(vCard);
-			this.addView(vCard);
-		}
+		//deal = new LinkedList<VCard>();
+		
+		this.start = false;
+		this.started = false;
+		
 //		cards = new ArrayList<VCard>();
 //		// Creates 13 cards in the players hand
 //		cards = new ArrayList<VCard>();
@@ -62,7 +67,7 @@ public class HandView extends ViewGroup {
 
 		// Creates right arrow
 		rightArrow = new CardMove(context, true);
-		this.addView(rightArrow);
+		//this.addView(rightArrow);
 
 		// Creates left arrow
 		leftArrow = new CardMove(context, false);
@@ -71,6 +76,59 @@ public class HandView extends ViewGroup {
 		cardMove = false;
 		right = false;
 		left = 0;
+	}
+	
+	public void onDraw(Canvas canvas){
+		super.onDraw(canvas);
+//		if(!deal.isEmpty()){
+//			System.out.println("shit happening");
+//			VCard temp = deal.remove();
+//			this.addView(temp);
+//			this.layout(l, w, ol, ow);
+//			cards.add(0, temp);
+//			for(int i = 0; i < cards.size(); i++){
+//				cards.get(i).setHandPos(i);
+//			}
+//		}
+	}
+	public void deal(Card card){
+		//for(int i = 0; i < 13; i++){
+			//Card card = deck.deal();
+			//for(VCard temp : cards){
+				//temp.setHandPos(temp.getHandPos() + 1);
+			//}
+			//System.out.println(card.getRank());
+			//VCard temp = new VCard(this.context, 0, card);
+			//cards.add(0, vCard);
+			//deal.add(temp);
+			//this.addView(vCard);
+			//vCard.layout(l, w, ol, ow);
+			
+			//this.invalidate();
+			//try{
+			//	Thread.sleep(1000);
+			//}catch(InterruptedException ie){
+				
+			//}
+//			SystemClock.sleep(1000);
+		//}
+		left = 0;
+		VCard temp = new VCard(this.context, 0, card);
+		cards.add(0, temp);
+		this.addView(temp);
+		temp.layout(l, w, ol, ow);
+		for(int i = 0; i < cards.size(); i++){
+			cards.get(i).setHandPos(left + i);
+		}
+		if(leftArrow.isVisible()){
+			this.removeView(leftArrow);
+			leftArrow.flipVisibility();
+		}
+		if(!rightArrow.isVisible() && cards.size() > (left + 6)){
+			this.addView(rightArrow);
+			rightArrow.layout(l, w, ol, ow);
+			rightArrow.flipVisibility();
+		}
 	}
 
 	@Override
@@ -85,11 +143,19 @@ public class HandView extends ViewGroup {
 
 	}
 
+	public VCard getMovingCard(){
+		return movingCard;
+	}
+	
 	public boolean onTouchEvent(MotionEvent event) {
 		//System.out.println(event);
 		int e = event.getAction();
 		//System.out.println(e);
 		if (e == MotionEvent.ACTION_DOWN) {
+//			if(!started){
+//				start = true;
+//				return true;
+//			}
 			for (VCard card : cards) {
 				if (card.detectCollision(event)) {
 					this.bringChildToFront(card);
@@ -98,7 +164,7 @@ public class HandView extends ViewGroup {
 				}
 			}
 			if (rightArrow.isPressed(event)) {
-				System.out.println("happenny0");
+				//System.out.println("happenny0");
 				cardMove = true;
 				right = true;
 				return true;
@@ -114,7 +180,17 @@ public class HandView extends ViewGroup {
 				// movingCard.onTouchEvent(event);
 			}
 		}
+		
 		if (e == MotionEvent.ACTION_UP) {
+//			if(!started){
+//				if(start){
+//					started = true;
+//					new Handler().postDelayed((new InitThread(this, deck)), 1000);
+//					//this.initHand();
+//					System.out.println("started game");
+//					return true;
+//				}
+//			}
 			// System.out.println("up");
 			if (movingCard != null) {
 				for (VCard card : cards) {
@@ -155,13 +231,13 @@ public class HandView extends ViewGroup {
 						
 						//this.inva
 					}
-					if(rightArrow.isVisible() && left >= 7){
+					if(rightArrow.isVisible() && (left + 6) >= cards.size()){
 						this.removeView(rightArrow);
 						rightArrow.flipVisibility();
 					}
 				} else {
 					left -= 1;
-					if((!rightArrow.isVisible()) && left <= 6){
+					if((!rightArrow.isVisible()) && (left + 6) < cards.size()){
 						this.addView(rightArrow);
 						rightArrow.layout(l, w, ol, ow);
 						rightArrow.flipVisibility();
@@ -176,12 +252,13 @@ public class HandView extends ViewGroup {
 				// this.invalidate();
 			}
 		}
+		this.invalidate();
 		System.out.println(cardMove);
 		return false;
 	}
 
 	public boolean onInterceptTouchEvent(MotionEvent event) {
-		System.out.println("inter");
+		//System.out.println("inter");
 		int e = event.getAction();
 		if (e == MotionEvent.ACTION_DOWN) {
 			for (VCard card : cards) {
@@ -198,9 +275,11 @@ public class HandView extends ViewGroup {
 				for (VCard card : cards) {
 					if (!movingCard.equalsInHand(card)) {
 						if (movingCard.collideWithCard(card)) {
-							int tempPos = card.getHandPos();
-							card.setHandPos(movingCard.getHandPos());
-							movingCard.setHandPos(tempPos);
+							int tempPos = movingCard.getHandPos();
+							cards.set(tempPos + left, card);
+							cards.set(card.getHandPos() + left, movingCard);
+							movingCard.setHandPos(card.getHandPos());
+							card.setHandPos(tempPos);
 							movingCard = null;
 							break;
 						}
@@ -213,6 +292,37 @@ public class HandView extends ViewGroup {
 			}
 		}
 		return false;
+	}
+	
+	public void removeMovingCard(){
+		int tempPos = movingCard.getHandPos();
+		tempPos += left;
+		cards.remove(tempPos);
+		
+		if((left + 6) > cards.size()){
+			left = cards.size() - 6;
+		}
+		
+		for(int i = 0; i < cards.size(); i++){
+			cards.get(i).setHandPos(i - left);
+		}
+		
+		if(rightArrow.isVisible()){
+			if(cards.size() <= left + 6){
+				rightArrow.flipVisibility();
+				this.removeView(rightArrow);
+			}
+		}
+		
+		this.removeView(movingCard);
+		movingCard = null;
+	}
+	
+	public void sortHand(){
+		Collections.sort(cards);
+		for(int i = 0; i < cards.size(); i++){
+			cards.get(i).setHandPos(i - left);
+		}
 	}
 
 }

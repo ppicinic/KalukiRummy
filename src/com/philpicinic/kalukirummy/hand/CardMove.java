@@ -53,7 +53,7 @@ public class CardMove extends View {
 		if (this.right) {
 			arrow = BitmapFactory.decodeResource(getResources(),
 					R.drawable.arrow_right);
-			visible = true;
+			visible = false;
 		} else {
 			arrow = BitmapFactory.decodeResource(getResources(),
 					R.drawable.arrow_left);

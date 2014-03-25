@@ -10,15 +10,16 @@ import android.view.View;
 /**
  * 
  * @author Phil Picinic
- *
+ * 
  *         This is the View module of the Card This class is responsible for
  *         drawing the card and updating its position from user movement or move
  *         calls from Hand View (eventually)
  */
-public class VCard extends View {
+public class VCard extends View implements Comparable<VCard>{
 
 	private Context context;
 	private Bitmap card;
+	private Card cardModel;
 
 	private int screenW;
 	private int screenH;
@@ -30,8 +31,8 @@ public class VCard extends View {
 
 	private int pos;
 
-	@SuppressWarnings("unused")
 	private boolean inHand;
+	private boolean inPlaceArea; 
 
 	/**
 	 * Constructor calls the view constructor THIS SHOULD NOTE BE USED
@@ -57,11 +58,14 @@ public class VCard extends View {
 	 *            the rank of the card TODO handle spawning cards in spots other
 	 *            than the player's hand
 	 */
-	public VCard(Context context, int pos, Suit suit, int rank) {
+	public VCard(Context context, int pos, Card cardModel) {
 		super(context);
 		this.context = context;
 
 		this.pos = pos;
+		this.cardModel = cardModel;
+		Suit suit = this.cardModel.getSuit();
+		int rank = this.cardModel.getRank();
 
 		// Create the card name
 		String cardName = "card";
@@ -77,6 +81,7 @@ public class VCard extends View {
 		int resourceId = getResources().getIdentifier(cardName, "drawable",
 				this.context.getPackageName());
 		card = BitmapFactory.decodeResource(getResources(), resourceId);
+		inHand = true;
 	}
 
 	/**
@@ -114,14 +119,47 @@ public class VCard extends View {
 		canvas.drawBitmap(card, x, y, null);
 	}
 
+	public void setTossPos(){
+		inHand = false;
+		x = (card.getWidth() * 1) + ( (card.getWidth() / 6) * (2));
+		y = (card.getHeight()  / 6);
+		invalidate();
+	}
+	
+	public int getMyX(){
+		return x;
+	}
+	
+	public int getMyY(){
+		return y;
+	}
+	
+	public int getMyWidth(){
+		return card.getWidth();
+	}
+	
+	public int getMyHeight(){
+		return card.getHeight();
+	}
+	
+	public void setMeldPlacePos(int pos){
+		this.pos = pos;
+		inHand = false;
+		inPlaceArea = true;
+		x = (card.getWidth() * pos) + (int) (card.getWidth() * .77) + ((card.getWidth() / 8) * pos );
+		y = screenH - (int) (card.getHeight() * 2.2285);
+		invalidate();
+	}
 	/**
-	 * Checks if the player is moving the card and updates the cards location
+	 * Checks if the player is moving the card and updates the cards location1
 	 * 
 	 * @param event
 	 *            the action the user does
 	 */
 	public boolean onTouchEvent(MotionEvent event) {
-
+		if(!inHand){
+			return false;
+		}
 		// Get event action and location
 		int eventaction = event.getAction();
 		int X = (int) event.getX();
@@ -155,13 +193,14 @@ public class VCard extends View {
 			}
 			break;
 		}
-		//invalidate();
+		// invalidate();
 		return touched;
 	}
-	
-	public int getHandPos(){
+
+	public int getHandPos() {
 		return this.pos;
 	}
+
 	/**
 	 * Detects if the event has a collision with the card
 	 * 
@@ -199,20 +238,32 @@ public class VCard extends View {
 
 	}
 
-	public boolean collideWithCard(VCard arg0){
-		if( (this.x >= arg0.x && this.x <=  (arg0.x + (card.getWidth() / 4)) ) || 
-			( ( (this.x + card.getWidth()) >= (arg0.x + (card.getWidth() * 3 / 4) )  ) && 
-					(this.x + card.getWidth()) <= (arg0.x + card.getWidth()) ) ){
-			if( (this.y >= arg0.y && this.y <=  (arg0.y + (card.getHeight() / 4)) ) || 
-					( ( (this.y + card.getHeight()) >= (arg0.y + (card.getHeight() * 3 / 4) )  ) && 
-							(this.y + card.getHeight()) <= (arg0.y + card.getHeight()) ) ){
+	public boolean collideWithCard(VCard arg0) {
+		if ((this.x >= arg0.x && this.x < (arg0.x + (card.getWidth() / 2)))
+				|| (((this.x + card.getWidth()) > (arg0.x + (card.getWidth() / 2))) && (this.x + card
+						.getWidth()) <= (arg0.x + card.getWidth()))) {
+			if ((this.y >= arg0.y && this.y < (arg0.y + (card.getHeight() / 2)))
+					|| (((this.y + card.getHeight()) > (arg0.y + (card
+							.getHeight() / 2))) && (this.y + card.getHeight()) <= (arg0.y + card
+							.getHeight()))) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
-	public boolean equalsInHand(VCard arg0){
+
+	public boolean equalsInHand(VCard arg0) {
 		return this.pos == arg0.pos;
 	}
+	
+	public Card getCard(){
+		return cardModel;
+	}
+
+	@Override
+	public int compareTo(VCard arg0) {
+		return getCard().compareTo(arg0.getCard());
+	}
+	
+	
 }

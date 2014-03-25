@@ -16,7 +16,7 @@ public class CardController {
 	}
 	
 	public VCard createView(Context context, int pos){
-		this.view = new VCard(context, pos, card.getSuit(), card.getRank());
+		//this.view = new VCard(context, pos, card.getSuit(), card.getRank());
 		return this.view;
 		
 	}
