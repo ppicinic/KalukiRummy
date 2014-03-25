@@ -11,6 +11,7 @@ import com.philpicinic.kalukirummy.card.VCard;
 
 public class MeldPlaceArea extends View {
 
+	@SuppressWarnings("unused")
 	private Context context;
 	private Bitmap meldPlace;
 	private int x;

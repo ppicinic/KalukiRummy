@@ -11,7 +11,6 @@ import com.philpicinic.kalukirummy.card.VCard;
 import com.philpicinic.kalukirummy.deck.Deck;
 import com.philpicinic.kalukirummy.deck.DeckView;
 import com.philpicinic.kalukirummy.deck.DiscardView;
-import com.philpicinic.kalukirummy.hand.CardMove;
 import com.philpicinic.kalukirummy.hand.HandView;
 import com.philpicinic.kalukirummy.meld.MeldViewGroup;
 import com.philpicinic.kalukirummy.threads.GameStart;
@@ -37,8 +36,8 @@ public class GameView extends ViewGroup {
 
 	private HandView hand;
 
-	private CardMove rightArrow;
-	private CardMove leftArrow;
+//	private CardMove rightArrow;
+//	private CardMove leftArrow;
 	
 	private StartHandButton startHand;
 

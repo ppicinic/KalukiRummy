@@ -5,24 +5,19 @@ import java.util.Collections;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 
 import com.philpicinic.kalukirummy.card.Card;
 import com.philpicinic.kalukirummy.card.VCard;
-import com.philpicinic.kalukirummy.deck.Deck;
 
 public class HandView extends ViewGroup {
-
-	private static final int CIH = 6;
 
 	private int l;
 	private int w;
 	private int ol;
 	private int ow;
 
-	private Deck deck;
 	private Context context;
 	private ArrayList<VCard> cards;
 	private VCard movingCard;
@@ -31,8 +26,8 @@ public class HandView extends ViewGroup {
 	private boolean cardMove;
 	private boolean right;
 	
-	private boolean start;
-	private boolean started;
+	//private boolean start;
+	//private boolean started;
 	//private LinkedList<VCard> deal;
 	
 	private int left;
@@ -41,13 +36,12 @@ public class HandView extends ViewGroup {
 		super(context);
 		this.context = context;
 
-		deck = new Deck();
 		cards = new ArrayList<VCard>();
 		//deal = new LinkedList<VCard>();
 		
-		this.start = false;
-		this.started = false;
-		
+//		this.start = false;
+//		this.started = false;
+//		
 //		cards = new ArrayList<VCard>();
 //		// Creates 13 cards in the players hand
 //		cards = new ArrayList<VCard>();

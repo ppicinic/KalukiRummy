@@ -32,6 +32,7 @@ public class VCard extends View implements Comparable<VCard>{
 	private int pos;
 
 	private boolean inHand;
+	@SuppressWarnings("unused")
 	private boolean inPlaceArea; 
 
 	/**
