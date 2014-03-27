@@ -1,4 +1,4 @@
-package com.philpicininc.kalukirummy.bot;
+package com.philpicinic.kalukirummy.bot;
 
 import com.philpicinic.kalukirummy.R;
 

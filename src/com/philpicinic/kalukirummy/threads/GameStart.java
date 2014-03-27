@@ -30,7 +30,8 @@ public class GameStart implements Runnable {
 		cardsToDeal--;
 		if (cardsToDeal <= 0) {
 			discard.toss(deck.deal());
-			hand.sortHand();
+			hand.handCreated();
+			//hand.sortHand();
 			view.setAnimating(false);
 		} else {
 			Handler handler = new Handler();

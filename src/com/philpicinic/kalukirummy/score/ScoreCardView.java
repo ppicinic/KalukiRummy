@@ -1,4 +1,4 @@
-package com.philpicininc.kalukirummy.score;
+package com.philpicinic.kalukirummy.score;
 
 import com.philpicinic.kalukirummy.R;
 

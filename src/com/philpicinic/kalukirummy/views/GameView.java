@@ -6,6 +6,7 @@ import android.view.MotionEvent;
 import android.view.ViewGroup;
 
 import com.philpicinic.kalukirummy.Constants;
+import com.philpicinic.kalukirummy.bot.BotView;
 import com.philpicinic.kalukirummy.buttons.StartHandButton;
 import com.philpicinic.kalukirummy.card.VCard;
 import com.philpicinic.kalukirummy.deck.Deck;
@@ -13,9 +14,8 @@ import com.philpicinic.kalukirummy.deck.DeckView;
 import com.philpicinic.kalukirummy.deck.DiscardView;
 import com.philpicinic.kalukirummy.hand.HandView;
 import com.philpicinic.kalukirummy.meld.MeldViewGroup;
+import com.philpicinic.kalukirummy.score.ScoreCardView;
 import com.philpicinic.kalukirummy.threads.GameStart;
-import com.philpicininc.kalukirummy.bot.BotView;
-import com.philpicininc.kalukirummy.score.ScoreCardView;
 
 /**
  * 
@@ -146,19 +146,21 @@ public class GameView extends ViewGroup {
 			if(turnState == TurnState.PLAY){
 				//VCard temp = hand.getMovingCard();
 				if(movingCard != null){
+					
+					System.out.println("happens2");
 					if(discard.checkCollision(movingCard) && !meldViewGroup.playingCards()){
 						hand.removeMovingCard();
 						discard.toss(movingCard);
 						turnState = TurnState.DRAW;
 					}
 					else if(meldViewGroup.checkCollisionByCard(movingCard)){
-						System.out.println("yo");
 						hand.removeMovingCard();
 						meldViewGroup.placeCard(movingCard);
 					}
 					movingCard = null;
 					if(!meldViewGroup.playingCards()){
 						meldViewGroup.deinitiateMovingCard();
+						hand.handCreated();
 					}
 				}else if(returnToHand){
 					//return true;
@@ -196,6 +198,9 @@ public class GameView extends ViewGroup {
 		}
 		if(e == MotionEvent.ACTION_UP){
 			System.out.println("get up");
+			if(animating || turnState == TurnState.BOT){
+				return true;
+			}
 			if(turnState == TurnState.START){
 				if(start){
 					//TODO deal hand
@@ -203,6 +208,7 @@ public class GameView extends ViewGroup {
 					start = false;
 					animating = true;
 					turnState = TurnState.DRAW;
+					//hand.handCreated();
 					Handler handler = new Handler();
 					GameStart gameStart = new GameStart(this, hand, deck, discard);
 					handler.postDelayed(gameStart, Constants.DEAL_DELAY);
@@ -218,6 +224,9 @@ public class GameView extends ViewGroup {
 				if(returnToHand){
 					System.out.println("I should be here");
 					hand.deal(meldViewGroup.removeCardFromPlay());
+					if(!meldViewGroup.playingCards()){
+						hand.handCreated();
+					}
 					//hand.deal(returnToHand);
 					returnToHand = false;
 					return true;
