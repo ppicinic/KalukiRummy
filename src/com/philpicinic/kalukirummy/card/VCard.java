@@ -69,7 +69,7 @@ public class VCard extends View implements Comparable<VCard>{
 		int rank = this.cardModel.getRank();
 
 		// Create the card name
-		String cardName = "card";
+		String cardName = "card1";
 		cardName += (suit.ordinal() + 1);
 		String rTemp = "" + rank;
 
@@ -105,7 +105,7 @@ public class VCard extends View implements Comparable<VCard>{
 		screenH = h;
 		Bitmap temp = card;
 		int scaleW = (int) (screenW / 7);
-		int scaleH = (int) (scaleW * 1.28);
+		int scaleH = (int) (scaleW * 1.4);
 		card = Bitmap.createScaledBitmap(temp, scaleW, scaleH, false);
 		x = (card.getWidth() * pos) + ((card.getWidth() / 6) * (pos))
 				+ (card.getWidth() / 10);

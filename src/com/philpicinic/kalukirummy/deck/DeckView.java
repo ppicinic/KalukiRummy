@@ -39,7 +39,7 @@ public class DeckView extends View {
 		this.context = context;
 
 		backCard = BitmapFactory.decodeResource(getResources(),
-				R.drawable.card_back);
+				R.drawable.card_back1);
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class DeckView extends View {
 		screenH = h;
 		// Scale the card bitmap
 		int scaleW = (int) (screenW / 7);
-		int scaleH = (int) (scaleW * 1.28);
+		int scaleH = (int) (scaleW * 1.4);
 		backCard = Bitmap.createScaledBitmap(backCard, scaleW, scaleH, false);
 		// Place the card bitmap in the top left corner
 		x = (backCard.getWidth() * 0) + ( (backCard.getWidth() / 6) * (1));
