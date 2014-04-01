@@ -116,11 +116,12 @@ public class Card implements Comparable<Card> {
 	 * @return true if ace, otherwise false
 	 */
 	public boolean isAce() {
-		if (rank == 14) {
-			return true;
-		} else {
-			return false;
-		}
+//		if (rank == 14) {
+//			return true;
+//		} else {
+//			return false;
+//		}
+		return (rank == 14);
 	}
 
 	/**
@@ -129,11 +130,12 @@ public class Card implements Comparable<Card> {
 	 * @return true if a face card, otherwise false
 	 */
 	public boolean isFace() {
-		if (rank == 11 || rank == 12 || rank == 13) {
-			return true;
-		} else {
-			return false;
-		}
+//		if (rank == 11 || rank == 12 || rank == 13) {
+//			return true;
+//		} else {
+//			return false;
+//		}
+		return (rank == 11 || rank == 12 || rank == 13);
 	}
 
 	/**
@@ -142,11 +144,12 @@ public class Card implements Comparable<Card> {
 	 * @return true if a joker, otherwise false
 	 */
 	public boolean isJoker() {
-		if (rank == 1) {
-			return true;
-		} else {
-			return false;
-		}
+		// if rank == 1) {
+		// return true;
+		// } else {
+		// return false;
+		// }
+		return (rank == 1);
 	}
 
 	/**
@@ -199,6 +202,13 @@ public class Card implements Comparable<Card> {
 			return jSuit;
 		}
 		return suit;
+	}
+
+	public int getMeldRank() {
+		if (isJoker()) {
+			return jRank;
+		}
+		return rank;
 	}
 
 	@Override
@@ -281,5 +291,12 @@ public class Card implements Comparable<Card> {
 				}
 			}
 		}
+	}
+
+	public Suit getMeldSuit() {
+		if (isJoker()) {
+			return jSuit;
+		}
+		return suit;
 	}
 }

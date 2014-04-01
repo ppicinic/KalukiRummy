@@ -1,6 +1,7 @@
 package com.philpicinic.kalukirummy.meld;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import android.content.Context;
 import android.view.MotionEvent;
@@ -54,6 +55,7 @@ public class MeldPlaceViewGroup extends ViewGroup {
 	public void placeCard(VCard movingCard) {
 		cards.add(movingCard);
 		this.addView(movingCard);
+		Collections.sort(cards);
 		for (int i = 0; i < cards.size(); i++) {
 			cards.get(i).setMeldPlacePos(i);
 		}
@@ -80,6 +82,7 @@ public class MeldPlaceViewGroup extends ViewGroup {
 			VCard temp = cards.get(removed);
 			this.removeView(temp);
 			cards.remove(removed);
+			Collections.sort(cards);
 			for (int j = 0; j < cards.size(); j++) {
 				cards.get(j).setMeldPlacePos(j);
 			}

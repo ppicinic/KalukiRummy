@@ -115,7 +115,7 @@ public class GameView extends ViewGroup {
 		int e = event.getAction();
 		if(e == MotionEvent.ACTION_DOWN){
 			if(turnState == TurnState.START){
-				return startHand.checkCollision(event);
+				return true; //startHand.checkCollision(event);
 			}
 			else if(turnState == TurnState.DRAW){
 				return deckV.checkCollision(event);
@@ -143,6 +143,9 @@ public class GameView extends ViewGroup {
 			}
 		}
 		if(e == MotionEvent.ACTION_UP){
+			if(turnState == TurnState.DRAW){
+				hand.handCreated();
+			}
 			if(turnState == TurnState.PLAY){
 				//VCard temp = hand.getMovingCard();
 				if(movingCard != null){
@@ -183,7 +186,7 @@ public class GameView extends ViewGroup {
 				return start;
 			}else if(turnState == TurnState.DRAW){
 				start = deckV.checkCollision(event);
-				return start;
+				return true;
 			}else if(turnState == TurnState.PLAY){
 				if( meldViewGroup.checkPlayCollisions(event)){
 					//hand.deal(returnToHand);
@@ -215,6 +218,7 @@ public class GameView extends ViewGroup {
 					return true;
 				}
 			}else if(turnState == TurnState.DRAW){
+				hand.handCreated();
 				if(start){
 					hand.deal(deck.deal());
 					turnState = TurnState.PLAY;
