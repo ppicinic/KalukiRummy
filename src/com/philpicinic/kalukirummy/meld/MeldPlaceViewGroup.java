@@ -99,7 +99,7 @@ public class MeldPlaceViewGroup extends ViewGroup {
 
 	public boolean checkPlay(MotionEvent event){
 		if(cards.size() >= 3){
-			meldPlayButton.checkCollision(event);
+			return meldPlayButton.checkCollision(event);
 		}
 		return false;
 	}

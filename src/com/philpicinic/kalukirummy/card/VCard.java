@@ -15,7 +15,7 @@ import android.view.View;
  *         drawing the card and updating its position from user movement or move
  *         calls from Hand View (eventually)
  */
-public class VCard extends View implements Comparable<VCard>{
+public class VCard extends View implements Comparable<VCard> {
 
 	private Context context;
 	private Bitmap card;
@@ -33,7 +33,8 @@ public class VCard extends View implements Comparable<VCard>{
 
 	private boolean inHand;
 	@SuppressWarnings("unused")
-	private boolean inPlaceArea; 
+	private boolean inPlaceArea;
+	private boolean played;
 
 	/**
 	 * Constructor calls the view constructor THIS SHOULD NOTE BE USED
@@ -120,38 +121,40 @@ public class VCard extends View implements Comparable<VCard>{
 		canvas.drawBitmap(card, x, y, null);
 	}
 
-	public void setTossPos(){
+	public void setTossPos() {
 		inHand = false;
-		x = (card.getWidth() * 1) + ( (card.getWidth() / 6) * (2));
-		y = (card.getHeight()  / 6);
+		x = (card.getWidth() * 1) + ((card.getWidth() / 6) * (2));
+		y = (card.getHeight() / 6);
 		invalidate();
 	}
-	
-	public int getMyX(){
+
+	public int getMyX() {
 		return x;
 	}
-	
-	public int getMyY(){
+
+	public int getMyY() {
 		return y;
 	}
-	
-	public int getMyWidth(){
+
+	public int getMyWidth() {
 		return card.getWidth();
 	}
-	
-	public int getMyHeight(){
+
+	public int getMyHeight() {
 		return card.getHeight();
 	}
-	
-	public void setMeldPlacePos(int pos){
+
+	public void setMeldPlacePos(int pos) {
 		touched = false;
 		this.pos = pos;
 		inHand = false;
 		inPlaceArea = true;
-		x = (card.getWidth() * pos) + (int) (card.getWidth() * .77) + ((card.getWidth() / 8) * pos );
+		x = (card.getWidth() * pos) + (int) (card.getWidth() * .77)
+				+ ((card.getWidth() / 8) * pos);
 		y = screenH - (int) (card.getHeight() * 2.2285);
 		invalidate();
 	}
+
 	/**
 	 * Checks if the player is moving the card and updates the cards location1
 	 * 
@@ -159,12 +162,12 @@ public class VCard extends View implements Comparable<VCard>{
 	 *            the action the user does
 	 */
 	public boolean onTouchEvent(MotionEvent event) {
-		System.out.println("yo hey 1");
-		if(!inHand){
-			System.out.println("yo hey");
+		// System.out.println("yo hey 1");
+		if (!inHand) {
+			// System.out.println("yo hey");
 			return false;
 		}
-		System.out.println("yo hey 3");
+		// System.out.println("yo hey 3");
 		// Get event action and location
 		int eventaction = event.getAction();
 		int X = (int) event.getX();
@@ -234,7 +237,7 @@ public class VCard extends View implements Comparable<VCard>{
 		pos = p;
 		inHand = true;
 		inPlaceArea = false;
-		//touched = false;
+		// touched = false;
 		placeInHand();
 	}
 
@@ -263,8 +266,8 @@ public class VCard extends View implements Comparable<VCard>{
 	public boolean equalsInHand(VCard arg0) {
 		return this.pos == arg0.pos;
 	}
-	
-	public Card getCard(){
+
+	public Card getCard() {
 		return cardModel;
 	}
 
@@ -272,6 +275,19 @@ public class VCard extends View implements Comparable<VCard>{
 	public int compareTo(VCard arg0) {
 		return getCard().compareTo(arg0.getCard());
 	}
-	
-	
+
+	public void setMeldPos(boolean playerSide, int level, int pos) {
+		this.pos = pos;
+		inHand = false;
+		inPlaceArea = false;
+		played = true;
+		if (playerSide) {
+			x = (card.getWidth() / 6) + (card.getWidth() * pos / 4);
+			y = screenH - ((int) (card.getHeight() * (3 + level)) + (card.getHeight() * (1 + level) / 4));
+		} else {
+			// TODO Bot positioning
+		}
+		invalidate();
+	}
+
 }

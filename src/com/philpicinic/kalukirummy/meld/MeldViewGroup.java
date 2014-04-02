@@ -12,6 +12,7 @@ public class MeldViewGroup extends ViewGroup {
 	
 	private Context context;
 	private MeldPlaceViewGroup meldPlaceViewGroup;
+	private MeldPlayerViewGroup meldPlayerViewGroup;
 	
 	public MeldViewGroup(Context context) {
 		super(context);
@@ -20,6 +21,8 @@ public class MeldViewGroup extends ViewGroup {
 		
 		meldPlaceViewGroup = new MeldPlaceViewGroup(this.context);
 		this.addView(meldPlaceViewGroup);
+		meldPlayerViewGroup = new MeldPlayerViewGroup(this.context);
+		this.addView(meldPlayerViewGroup);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -42,6 +45,11 @@ public class MeldViewGroup extends ViewGroup {
 	protected void onLayout(boolean arg0, int arg1, int arg2, int arg3, int arg4) {
 		// TODO Auto-generated method stub
 		meldPlaceViewGroup.layout(arg1, arg2, arg3, arg4);
+		meldPlayerViewGroup.layout(arg1, arg2, arg3, arg4);
+	}
+	
+	public void addMeld(Meld meld){
+		meldPlayerViewGroup.addMeld(meld);
 	}
 
 	public void placeCard(VCard movingCard) {
@@ -68,5 +76,12 @@ public class MeldViewGroup extends ViewGroup {
 	
 	public boolean checkPlayMeld(MotionEvent event){
 		return meldPlaceViewGroup.checkPlay(event);
+	}
+	
+	public boolean playerCanToss(){
+		return meldPlayerViewGroup.playerCanToss();
+	}
+	public int playerMeldValue(){
+		return meldPlayerViewGroup.meldValue();
 	}
 }

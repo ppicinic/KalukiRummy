@@ -29,4 +29,12 @@ public abstract class AbstractMeld implements Meld {
 	public int size(){
 		return cardsize;
 	}
+	
+	public void setUndoable(boolean undoable){
+		this.undoable = undoable;
+	}
+	
+	public boolean getUndoable(){
+		return undoable;
+	}
 }

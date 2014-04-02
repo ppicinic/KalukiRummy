@@ -8,7 +8,6 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.philpicinic.kalukirummy.R;
-import com.philpicinic.kalukirummy.card.VCard;
 
 public class MeldPlayButton extends View {
 
@@ -48,10 +47,12 @@ public class MeldPlayButton extends View {
 	}
 	
 	public boolean checkCollision(MotionEvent event){
+		System.out.println("get here");
 		int X = (int) event.getX();
 		int Y = (int) event.getY();
 		
 		if(X > x && X < (x + button.getWidth()) && Y > y && Y < (y + button.getHeight())){
+			System.out.println("get here 2");
 			return true;
 		}
 		return false;

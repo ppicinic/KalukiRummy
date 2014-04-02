@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.philpicinic.kalukirummy.Constants;
 import com.philpicinic.kalukirummy.bot.BotView;
@@ -39,9 +40,9 @@ public class GameView extends ViewGroup {
 
 	private HandView hand;
 
-//	private CardMove rightArrow;
-//	private CardMove leftArrow;
-	
+	// private CardMove rightArrow;
+	// private CardMove leftArrow;
+
 	private StartHandButton startHand;
 
 	private DeckView deckV;
@@ -52,16 +53,17 @@ public class GameView extends ViewGroup {
 
 	private MeldViewGroup meldViewGroup;
 	private Deck deck;
-	
+
 	private boolean animating;
-	
+
 	private TurnState turnState;
-	
+
 	private boolean start;
 	private boolean returnToHand;
 	private boolean playCards;
-	
+
 	private VCard movingCard;
+
 	/**
 	 * Create the GameView Group Creates all child elements of the layout
 	 * 
@@ -73,7 +75,7 @@ public class GameView extends ViewGroup {
 		this.context = context;
 
 		deck = new Deck();
-		
+
 		animating = false;
 		turnState = TurnState.START;
 		start = false;
@@ -81,7 +83,6 @@ public class GameView extends ViewGroup {
 		BackgroundView bg = new BackgroundView(context);
 		this.addView(bg);
 
-		
 		startHand = new StartHandButton(context);
 		this.addView(startHand);
 		// Creates the Deck and Discard Pile
@@ -93,10 +94,10 @@ public class GameView extends ViewGroup {
 		// Create the bot opponent
 		bot = new BotView(context);
 		this.addView(bot);
-		
+
 		meldViewGroup = new MeldViewGroup(context);
 		this.addView(meldViewGroup);
-		//this.addView(meldArea);
+		// this.addView(meldArea);
 
 		// Creates the scorecard button
 		scoreCard = new ScoreCardView(context);
@@ -104,152 +105,163 @@ public class GameView extends ViewGroup {
 
 		hand = new HandView(context);
 		this.addView(hand);
-		
+
 	}
 
-	public void setAnimating(boolean animating){
+	public void setAnimating(boolean animating) {
 		this.animating = animating;
 	}
-	
+
 	public boolean onInterceptTouchEvent(MotionEvent event) {
-		System.out.println("game inter");
-		if(animating || turnState == TurnState.BOT){
+		if (animating || turnState == TurnState.BOT) {
 			return true;
 		}
 		int e = event.getAction();
-		if(e == MotionEvent.ACTION_DOWN){
-			if(turnState == TurnState.START){
-				return true; //startHand.checkCollision(event);
-			}
-			else if(turnState == TurnState.DRAW){
+		if (e == MotionEvent.ACTION_DOWN) {
+			if (turnState == TurnState.START) {
+				return true; // startHand.checkCollision(event);
+			} else if (turnState == TurnState.DRAW) {
 				return deckV.checkCollision(event);
-			}else if(turnState == TurnState.PLAY){
-				if( meldViewGroup.checkPlayCollisions(event)){
-					//hand.deal(returnToHand);
-					//returnToHand = null;
-					//returnToHand = true;
-					//return true;
+			} else if (turnState == TurnState.PLAY) {
+				if (meldViewGroup.checkPlayCollisions(event)) {
+					// hand.deal(returnToHand);
+					// returnToHand = null;
+					// returnToHand = true;
+					// return true;
+				}
+				if (meldViewGroup.checkPlayMeld(event)) {
+					return true;
 				}
 			}
-			
+
 		}
-		
-		if(e == MotionEvent.ACTION_MOVE){
-			if(turnState == TurnState.PLAY){
-				if(movingCard == null){
-					if( (movingCard = hand.getMovingCard()) != null){
+
+		if (e == MotionEvent.ACTION_MOVE) {
+			if (turnState == TurnState.PLAY) {
+				if (movingCard == null) {
+					if ((movingCard = hand.getMovingCard()) != null) {
 						meldViewGroup.initiateMovingCard();
 					}
-				}if(returnToHand){
-					//return true;
 				}
-				
+				if (returnToHand) {
+					// return true;
+				}
+
 			}
 		}
-		if(e == MotionEvent.ACTION_UP){
-			if(turnState == TurnState.DRAW){
+		if (e == MotionEvent.ACTION_UP) {
+			if (turnState == TurnState.DRAW) {
 				hand.handCreated();
 			}
-			if(turnState == TurnState.PLAY){
-				//VCard temp = hand.getMovingCard();
-				if(movingCard != null){
-					
-					System.out.println("happens2");
-					if(discard.checkCollision(movingCard) && !meldViewGroup.playingCards()){
-						hand.removeMovingCard();
-						discard.toss(movingCard);
-						turnState = TurnState.DRAW;
-					}
-					else if(meldViewGroup.checkCollisionByCard(movingCard)){
+			if (turnState == TurnState.PLAY) {
+				// VCard temp = hand.getMovingCard();
+				if (movingCard != null) {
+
+					if (discard.checkCollision(movingCard)
+							&& !meldViewGroup.playingCards()) {
+						if (meldViewGroup.playerCanToss()) {
+							hand.removeMovingCard();
+							discard.toss(movingCard);
+							turnState = TurnState.DRAW;
+						} else {
+							CharSequence text = "You need 40 points for your initial build!";
+							int duration = Toast.LENGTH_SHORT;
+
+							Toast toast = Toast.makeText(context, text, duration);
+							toast.show();
+						}
+					} else if (meldViewGroup.checkCollisionByCard(movingCard)) {
 						hand.removeMovingCard();
 						meldViewGroup.placeCard(movingCard);
 					}
 					movingCard = null;
-					if(!meldViewGroup.playingCards()){
+					if (!meldViewGroup.playingCards()) {
 						meldViewGroup.deinitiateMovingCard();
 						hand.handCreated();
 					}
-				}else if(returnToHand){
-					//return true;
+				} else if (returnToHand) {
+					// return true;
 				}
 			}
 		}
-		
-//		if (hand.isClicked(event)) {
-//			this.bringChildToFront(hand);
-//			// return true;
-//		}
+
+		// if (hand.isClicked(event)) {
+		// this.bringChildToFront(hand);
+		// // return true;
+		// }
 		return false;
 	}
 
-	public boolean onTouchEvent(MotionEvent event){
+	public boolean onTouchEvent(MotionEvent event) {
 		int e = event.getAction();
-		if(e == MotionEvent.ACTION_DOWN){
-			if(turnState == TurnState.START){
+		if (e == MotionEvent.ACTION_DOWN) {
+			if (turnState == TurnState.START) {
 				start = startHand.checkCollision(event);
 				return start;
-			}else if(turnState == TurnState.DRAW){
+			} else if (turnState == TurnState.DRAW) {
 				start = deckV.checkCollision(event);
 				return true;
-			}else if(turnState == TurnState.PLAY){
-				if( meldViewGroup.checkPlayCollisions(event)){
-					//hand.deal(returnToHand);
-					//returnToHand = null;
+			} else if (turnState == TurnState.PLAY) {
+				if (meldViewGroup.checkPlayCollisions(event)) {
+					// hand.deal(returnToHand);
+					// returnToHand = null;
 					returnToHand = true;
 					return true;
 				}
-				if(meldViewGroup.checkPlayMeld(event)){
+				if (meldViewGroup.checkPlayMeld(event)) {
+					System.out.println("not validation1");
 					playCards = true;
 					return true;
 				}
 			}
 		}
-		if(e == MotionEvent.ACTION_MOVE){
-			
+		if (e == MotionEvent.ACTION_MOVE) {
+
 		}
-		if(e == MotionEvent.ACTION_UP){
-			System.out.println("get up");
-			if(animating || turnState == TurnState.BOT){
+		if (e == MotionEvent.ACTION_UP) {
+			if (animating || turnState == TurnState.BOT) {
 				return true;
 			}
-			if(turnState == TurnState.START){
-				if(start){
-					//TODO deal hand
+			if (turnState == TurnState.START) {
+				if (start) {
+					// TODO deal hand
 					this.removeView(startHand);
 					start = false;
 					animating = true;
 					turnState = TurnState.DRAW;
-					//hand.handCreated();
+					// hand.handCreated();
 					Handler handler = new Handler();
-					GameStart gameStart = new GameStart(this, hand, deck, discard);
+					GameStart gameStart = new GameStart(this, hand, deck,
+							discard);
 					handler.postDelayed(gameStart, Constants.DEAL_DELAY);
 					return true;
 				}
-			}else if(turnState == TurnState.DRAW){
+			} else if (turnState == TurnState.DRAW) {
 				hand.handCreated();
-				if(start){
+				if (start) {
 					hand.deal(deck.deal());
 					turnState = TurnState.PLAY;
 				}
-			}
-			else if(turnState == TurnState.PLAY){
-				if(returnToHand){
-					System.out.println("I should be here");
+			} else if (turnState == TurnState.PLAY) {
+				if (returnToHand) {
 					hand.deal(meldViewGroup.removeCardFromPlay());
-					if(!meldViewGroup.playingCards()){
+					if (!meldViewGroup.playingCards()) {
 						hand.handCreated();
 					}
-					//hand.deal(returnToHand);
+					// hand.deal(returnToHand);
 					returnToHand = false;
 					return true;
 				}
-				if(playCards){
-					ArrayList<VCard> tempCards = meldViewGroup.getPlayingCards();
+				if (playCards) {
+					ArrayList<VCard> tempCards = meldViewGroup
+							.getPlayingCards();
 					System.out.println("not validation");
-					if(MeldFactory.validate(tempCards)){
+					if (MeldFactory.validate(tempCards)) {
+
 						meldViewGroup.removeAllPlayingCards();
+						meldViewGroup.addMeld(MeldFactory.buildMeld(tempCards));
 						// TODO place cards
-					}else{
+					} else {
 						// TODO toast cannot play these cards
 					}
 					playCards = false;
@@ -259,6 +271,7 @@ public class GameView extends ViewGroup {
 		}
 		return false;
 	}
+
 	/**
 	 * updates sizes if the display is changed
 	 * 
@@ -286,7 +299,7 @@ public class GameView extends ViewGroup {
 		for (int i = 0; i < this.getChildCount(); i++) {
 			this.getChildAt(i).layout(arg1, arg2, arg3, arg4);
 		}
-		
+
 		this.meldViewGroup.layout(arg1, arg2, arg3, arg4);
 	}
 

@@ -309,7 +309,7 @@ public class HandView extends ViewGroup {
 			}
 		}
 		if (e == MotionEvent.ACTION_UP) {
-			System.out.println("up");
+			//System.out.println("up");
 			if (movingCard != null) {
 				//this.addView(sortHandBtn);
 				for (VCard card : cards) {
