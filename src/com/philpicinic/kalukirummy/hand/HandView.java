@@ -364,4 +364,22 @@ public class HandView extends ViewGroup {
 			cards.get(i).setHandPos(i - left);
 		}
 	}
+
+	public void removeCard(Card card) {
+		for(int i = 0; i < cards.size(); i++){
+			Card temp = cards.get(i).getCard();
+			if(temp.getRank() == card.getRank() && card.getSuit() == temp.getSuit()){
+				this.removeView(cards.get(i));
+				cards.remove(i);
+				System.out.println(left);
+				if(left == cards.size() - 5){
+					left--;
+				}
+				for (int j = 0; j < cards.size(); j++) {
+					cards.get(j).setHandPos(j - left);
+				}
+				return;
+			}
+		}
+	}
 }

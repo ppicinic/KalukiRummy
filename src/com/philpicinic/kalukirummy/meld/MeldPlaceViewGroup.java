@@ -137,4 +137,11 @@ public class MeldPlaceViewGroup extends ViewGroup {
 		}
 		return null;
 	}
+
+	public boolean checkUndo(MotionEvent event) {
+		if(cards.size() == 0){
+			return undoButton.checkCollision(event);
+		}
+		return false;
+	}
 }

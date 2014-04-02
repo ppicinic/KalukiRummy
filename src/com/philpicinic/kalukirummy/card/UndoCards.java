@@ -5,8 +5,9 @@ import java.util.ArrayList;
 public class UndoCards {
 
 	private ArrayList<VCard> playedCards;
-	private VCard drawCard;
+	private Card drawCard;
 	private boolean deckCard;
+	//
 	
 	public UndoCards(){
 		playedCards = new ArrayList<VCard>();
@@ -17,11 +18,15 @@ public class UndoCards {
 		return playedCards;
 	}
 	
-	public VCard getDrawCard(){
+	public Card getDrawCard(){
 		return drawCard;
 	}
 	
-	public void addDrawCard(boolean deck, VCard card){
+	public boolean isFromDeck(){
+		return deckCard;
+	}
+	
+	public void addDrawCard(boolean deck, Card card){
 		deckCard = deck;
 		drawCard = card;
 	}

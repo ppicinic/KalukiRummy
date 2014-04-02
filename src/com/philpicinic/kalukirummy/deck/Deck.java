@@ -48,4 +48,8 @@ public class Deck {
 	public Card deal() {
 		return deck.remove();
 	}
+
+	public void returnToTop(Card card) {
+		deck.add(0, card);		
+	}
 }

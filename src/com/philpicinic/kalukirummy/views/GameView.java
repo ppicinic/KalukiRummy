@@ -11,6 +11,8 @@ import android.widget.Toast;
 import com.philpicinic.kalukirummy.Constants;
 import com.philpicinic.kalukirummy.bot.BotView;
 import com.philpicinic.kalukirummy.buttons.StartHandButton;
+import com.philpicinic.kalukirummy.card.Card;
+import com.philpicinic.kalukirummy.card.UndoCards;
 import com.philpicinic.kalukirummy.card.VCard;
 import com.philpicinic.kalukirummy.deck.Deck;
 import com.philpicinic.kalukirummy.deck.DeckView;
@@ -39,6 +41,7 @@ public class GameView extends ViewGroup {
 	private int screenH;
 
 	private HandView hand;
+	private UndoCards undoCards;
 
 	// private CardMove rightArrow;
 	// private CardMove leftArrow;
@@ -61,6 +64,7 @@ public class GameView extends ViewGroup {
 	private boolean start;
 	private boolean returnToHand;
 	private boolean playCards;
+	private boolean undo;
 
 	private VCard movingCard;
 
@@ -105,6 +109,8 @@ public class GameView extends ViewGroup {
 
 		hand = new HandView(context);
 		this.addView(hand);
+
+		undoCards = new UndoCards();
 
 	}
 
@@ -163,11 +169,13 @@ public class GameView extends ViewGroup {
 							hand.removeMovingCard();
 							discard.toss(movingCard);
 							turnState = TurnState.DRAW;
+							undoCards.reset();
 						} else {
 							CharSequence text = "You need 40 points for your initial build!";
 							int duration = Toast.LENGTH_SHORT;
 
-							Toast toast = Toast.makeText(context, text, duration);
+							Toast toast = Toast.makeText(context, text,
+									duration);
 							toast.show();
 						}
 					} else if (meldViewGroup.checkCollisionByCard(movingCard)) {
@@ -209,8 +217,11 @@ public class GameView extends ViewGroup {
 					return true;
 				}
 				if (meldViewGroup.checkPlayMeld(event)) {
-					System.out.println("not validation1");
 					playCards = true;
+					return true;
+				}
+				if (meldViewGroup.checkUndo(event)) {
+					undo = true;
 					return true;
 				}
 			}
@@ -239,7 +250,9 @@ public class GameView extends ViewGroup {
 			} else if (turnState == TurnState.DRAW) {
 				hand.handCreated();
 				if (start) {
-					hand.deal(deck.deal());
+					Card card = deck.deal();
+					undoCards.addDrawCard(true, card);
+					hand.deal(card);
 					turnState = TurnState.PLAY;
 				}
 			} else if (turnState == TurnState.PLAY) {
@@ -255,21 +268,40 @@ public class GameView extends ViewGroup {
 				if (playCards) {
 					ArrayList<VCard> tempCards = meldViewGroup
 							.getPlayingCards();
-					System.out.println("not validation");
 					if (MeldFactory.validate(tempCards)) {
 
 						meldViewGroup.removeAllPlayingCards();
 						meldViewGroup.addMeld(MeldFactory.buildMeld(tempCards));
 						// TODO place cards
 					} else {
-						// TODO toast cannot play these cards
+						CharSequence text = "This is an invalid meld!";
+						int duration = Toast.LENGTH_SHORT;
+
+						Toast toast = Toast.makeText(context, text,
+								duration);
+						toast.show();
 					}
 					playCards = false;
 					return true;
 				}
+				if (undo) {
+					handleUndo();
+				}
 			}
 		}
 		return false;
+	}
+
+	private void handleUndo() {
+		Card card = undoCards.getDrawCard();
+		hand.removeCard(card);
+		if (undoCards.isFromDeck()) {
+			deck.returnToTop(card);
+		} else {
+			// Return from top of pile
+		}
+		undoCards.reset();
+		turnState = TurnState.DRAW;
 	}
 
 	/**

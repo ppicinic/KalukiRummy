@@ -87,6 +87,9 @@ public class MeldViewGroup extends ViewGroup {
 
 	public void initiateHand() {
 		meldPlaceViewGroup.initiateHand();
-		
+	}
+	
+	public boolean checkUndo(MotionEvent event){
+		return meldPlaceViewGroup.checkUndo(event);
 	}
 }
