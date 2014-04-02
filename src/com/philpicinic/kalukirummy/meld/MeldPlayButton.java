@@ -1,4 +1,4 @@
-package com.philpicinic.kalukirummy.hand;
+package com.philpicinic.kalukirummy.meld;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -8,39 +8,29 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.philpicinic.kalukirummy.R;
+import com.philpicinic.kalukirummy.card.VCard;
 
-public class SortHandButton extends View {
+public class MeldPlayButton extends View {
 
+	@SuppressWarnings("unused")
 	private Context context;
 	private Bitmap button;
-	
-	private int screenW;
-	private int screenH;
-
 	private int x;
 	private int y;
 
-	
-	public SortHandButton(Context context) {
+	private int screenW;
+	private int screenH;
+
+	public MeldPlayButton(Context context) {
 		super(context);
-		
+
 		this.context = context;
-		button = BitmapFactory.decodeResource(getResources(), R.drawable.sort_button);
+
+		button = BitmapFactory.decodeResource(getResources(),
+				R.drawable.play_meld_button);
 		// TODO Auto-generated constructor stub
 	}
-	
-	/**
-	 * updates sizes if the display is changed
-	 * 
-	 * @param w
-	 *            width of the screen
-	 * @param h
-	 *            height of the screen
-	 * @param oldw
-	 *            old width of the screen
-	 * @param oldh
-	 *            old height of the screen
-	 */
+
 	@Override
 	public void onSizeChanged(int w, int h, int oldw, int oldh) {
 		super.onSizeChanged(w, h, oldw, oldh);
@@ -49,12 +39,11 @@ public class SortHandButton extends View {
 		int scaleW = (int) (screenW / 12);
 		int scaleH = (int) (scaleW);
 		button = Bitmap.createScaledBitmap(button, scaleW, scaleH, false);
-		x = (button.getWidth() / 4);
-		y = screenH - (int)(button.getHeight() * 5);
+		x = screenW - (int) (button.getWidth() * 5 / 4);
+		y = screenH - (int) (button.getHeight() * 5 );
 	}
-	
-	@Override
-	public void onDraw(Canvas canvas){
+
+	public void onDraw(Canvas canvas) {
 		canvas.drawBitmap(button, x, y, null);
 	}
 	
@@ -67,4 +56,5 @@ public class SortHandButton extends View {
 		}
 		return false;
 	}
+
 }

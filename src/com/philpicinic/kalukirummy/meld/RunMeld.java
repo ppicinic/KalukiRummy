@@ -8,5 +8,7 @@ public class RunMeld extends AbstractMeld{
 	
 	public RunMeld(ArrayList<VCard> cards){
 		this.cards = cards;
+		undoable = false;
+		calcSize();
 	}
 }

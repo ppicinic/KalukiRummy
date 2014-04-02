@@ -6,7 +6,9 @@ import com.philpicinic.kalukirummy.card.VCard;
 
 public abstract class AbstractMeld implements Meld {
 	
+	protected boolean undoable;
 	protected ArrayList<VCard> cards;
+	protected int cardsize;
 	
 	public int value(){
 		int total = 0;
@@ -18,5 +20,13 @@ public abstract class AbstractMeld implements Meld {
 	
 	public ArrayList<VCard> getCards(){
 		return cards;
+	}
+	
+	protected void calcSize(){
+		cardsize = cards.size() + 5;
+	}
+	
+	public int size(){
+		return cardsize;
 	}
 }

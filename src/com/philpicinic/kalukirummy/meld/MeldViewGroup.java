@@ -1,5 +1,7 @@
 package com.philpicinic.kalukirummy.meld;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
@@ -52,8 +54,19 @@ public class MeldViewGroup extends ViewGroup {
 		return meldPlaceViewGroup.checkPlayCollisions(event);
 	}
 	
+	public ArrayList<VCard> getPlayingCards(){
+		return meldPlaceViewGroup.getCards();
+	}
+	
+	public void removeAllPlayingCards(){
+		meldPlaceViewGroup.removeAllCards();
+	}
+	
 	public VCard removeCardFromPlay(){
 		return meldPlaceViewGroup.removeCard();
 	}
 	
+	public boolean checkPlayMeld(MotionEvent event){
+		return meldPlaceViewGroup.checkPlay(event);
+	}
 }

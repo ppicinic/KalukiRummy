@@ -8,5 +8,7 @@ public class SetMeld extends AbstractMeld{
 
 	public SetMeld(ArrayList<VCard> cards){
 		this.cards = cards;
+		undoable = false;
+		calcSize();
 	}
 }

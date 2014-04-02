@@ -142,8 +142,8 @@ public class HandView extends ViewGroup {
 
 	public void handEnded() {
 		if (seeSort) {
-			this.removeView(sortHandBtn);
-			seeSort = false;
+//			this.removeView(sortHandBtn);
+//			seeSort = false;
 		}
 	}
 

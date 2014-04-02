@@ -1,5 +1,7 @@
 package com.philpicinic.kalukirummy.views;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.os.Handler;
 import android.view.MotionEvent;
@@ -13,6 +15,7 @@ import com.philpicinic.kalukirummy.deck.Deck;
 import com.philpicinic.kalukirummy.deck.DeckView;
 import com.philpicinic.kalukirummy.deck.DiscardView;
 import com.philpicinic.kalukirummy.hand.HandView;
+import com.philpicinic.kalukirummy.meld.MeldFactory;
 import com.philpicinic.kalukirummy.meld.MeldViewGroup;
 import com.philpicinic.kalukirummy.score.ScoreCardView;
 import com.philpicinic.kalukirummy.threads.GameStart;
@@ -56,6 +59,7 @@ public class GameView extends ViewGroup {
 	
 	private boolean start;
 	private boolean returnToHand;
+	private boolean playCards;
 	
 	private VCard movingCard;
 	/**
@@ -194,6 +198,10 @@ public class GameView extends ViewGroup {
 					returnToHand = true;
 					return true;
 				}
+				if(meldViewGroup.checkPlayMeld(event)){
+					playCards = true;
+					return true;
+				}
 			}
 		}
 		if(e == MotionEvent.ACTION_MOVE){
@@ -233,6 +241,18 @@ public class GameView extends ViewGroup {
 					}
 					//hand.deal(returnToHand);
 					returnToHand = false;
+					return true;
+				}
+				if(playCards){
+					ArrayList<VCard> tempCards = meldViewGroup.getPlayingCards();
+					System.out.println("not validation");
+					if(MeldFactory.validate(tempCards)){
+						meldViewGroup.removeAllPlayingCards();
+						// TODO place cards
+					}else{
+						// TODO toast cannot play these cards
+					}
+					playCards = false;
 					return true;
 				}
 			}

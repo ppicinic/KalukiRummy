@@ -36,7 +36,7 @@ public class MeldPlaceArea extends View {
 		screenW = w;
 		screenH = h;
 		int scaleW = (int) (screenW / 1.25);
-		int scaleH = (int) (scaleW / 4.425);
+		int scaleH = (int) (scaleW / 4.045);
 		meldPlace = Bitmap.createScaledBitmap(meldPlace, scaleW, scaleH, false);
 		y = screenH - (int) (meldPlace.getHeight() * 2.25);
 		x = screenW / 10;

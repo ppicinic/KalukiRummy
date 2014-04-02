@@ -13,6 +13,7 @@ public class MeldPlaceViewGroup extends ViewGroup {
 
 	private Context context;
 	private MeldPlaceArea meldPlaceArea;
+	private MeldPlayButton meldPlayButton;
 	private ArrayList<VCard> cards;
 	private int removed;
 
@@ -21,43 +22,62 @@ public class MeldPlaceViewGroup extends ViewGroup {
 		this.context = context;
 
 		meldPlaceArea = new MeldPlaceArea(this.context);
+		meldPlayButton = new MeldPlayButton(this.context);
 
 		cards = new ArrayList<VCard>();
 
 		removed = -1;
 	}
 
+	public ArrayList<VCard> getCards(){
+		return cards;
+	}
+	
+	public void removeAllCards(){
+		for(VCard card : cards){
+			this.removeView(card);
+		}
+		cards = new ArrayList<VCard>();
+		this.removeView(meldPlaceArea);
+		this.removeView(meldPlayButton);
+		removed = -1;
+	}
+	
 	public void initiateMovingCard() {
 		if (cards.size() == 0) {
 			this.addView(meldPlaceArea);
+			//this.addView(meldPlayButton);
 		}
 	}
 
 	public void deinitiateMovingCard() {
 		this.removeView(meldPlaceArea);
+		this.removeView(meldPlayButton);
 	}
 
 	public boolean checkCollisionByCard(VCard card) {
-		System.out.println("yo3");
 		if (cards.size() >= 5) {
 			return false;
 		}
-		System.out.println("yo4");
 		return meldPlaceArea.checkCollisionByCard(card);
 	}
 
 	@Override
 	protected void onLayout(boolean arg0, int arg1, int arg2, int arg3, int arg4) {
-		// TODO Auto-generated method stub
 		meldPlaceArea.layout(arg1, arg2, arg3, arg4);
+		meldPlayButton.layout(arg1, arg2, arg3, arg4);
 	}
 
 	public void placeCard(VCard movingCard) {
+		
 		cards.add(movingCard);
 		this.addView(movingCard);
 		Collections.sort(cards);
 		for (int i = 0; i < cards.size(); i++) {
 			cards.get(i).setMeldPlacePos(i);
+		}
+		if(cards.size() == 3){
+			this.addView(meldPlayButton);
 		}
 	}
 
@@ -77,6 +97,13 @@ public class MeldPlaceViewGroup extends ViewGroup {
 		return false;
 	}
 
+	public boolean checkPlay(MotionEvent event){
+		if(cards.size() >= 3){
+			meldPlayButton.checkCollision(event);
+		}
+		return false;
+	}
+	
 	public VCard removeCard() {
 		if (removed >= 0) {
 			VCard temp = cards.get(removed);
@@ -86,8 +113,12 @@ public class MeldPlaceViewGroup extends ViewGroup {
 			for (int j = 0; j < cards.size(); j++) {
 				cards.get(j).setMeldPlacePos(j);
 			}
+			if(cards.size() < 3){
+				this.removeView(meldPlayButton);
+			}
 			if(cards.size() <= 0){
 				this.removeView(meldPlaceArea);
+				
 			}
 			removed = -1;
 			return temp;
