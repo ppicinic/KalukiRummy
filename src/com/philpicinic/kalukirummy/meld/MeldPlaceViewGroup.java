@@ -14,6 +14,7 @@ public class MeldPlaceViewGroup extends ViewGroup {
 	private Context context;
 	private MeldPlaceArea meldPlaceArea;
 	private MeldPlayButton meldPlayButton;
+	private UndoButton undoButton;
 	private ArrayList<VCard> cards;
 	private int removed;
 
@@ -23,7 +24,9 @@ public class MeldPlaceViewGroup extends ViewGroup {
 
 		meldPlaceArea = new MeldPlaceArea(this.context);
 		meldPlayButton = new MeldPlayButton(this.context);
-
+		undoButton = new UndoButton(this.context);
+//		this.addView(undoButton);
+		
 		cards = new ArrayList<VCard>();
 
 		removed = -1;
@@ -40,19 +43,26 @@ public class MeldPlaceViewGroup extends ViewGroup {
 		cards = new ArrayList<VCard>();
 		this.removeView(meldPlaceArea);
 		this.removeView(meldPlayButton);
+		this.addView(undoButton);
 		removed = -1;
 	}
 	
 	public void initiateMovingCard() {
 		if (cards.size() == 0) {
 			this.addView(meldPlaceArea);
+			this.removeView(undoButton);
 			//this.addView(meldPlayButton);
 		}
+	}
+	
+	public void initiateHand(){
+		this.addView(undoButton);
 	}
 
 	public void deinitiateMovingCard() {
 		this.removeView(meldPlaceArea);
 		this.removeView(meldPlayButton);
+		this.addView(undoButton);
 	}
 
 	public boolean checkCollisionByCard(VCard card) {
@@ -66,6 +76,7 @@ public class MeldPlaceViewGroup extends ViewGroup {
 	protected void onLayout(boolean arg0, int arg1, int arg2, int arg3, int arg4) {
 		meldPlaceArea.layout(arg1, arg2, arg3, arg4);
 		meldPlayButton.layout(arg1, arg2, arg3, arg4);
+		undoButton.layout(arg1, arg2, arg3, arg4);
 	}
 
 	public void placeCard(VCard movingCard) {
@@ -77,6 +88,7 @@ public class MeldPlaceViewGroup extends ViewGroup {
 			cards.get(i).setMeldPlacePos(i);
 		}
 		if(cards.size() == 3){
+			//this.removeView(undoButton);
 			this.addView(meldPlayButton);
 		}
 	}
@@ -118,7 +130,7 @@ public class MeldPlaceViewGroup extends ViewGroup {
 			}
 			if(cards.size() <= 0){
 				this.removeView(meldPlaceArea);
-				
+				this.addView(undoButton);
 			}
 			removed = -1;
 			return temp;

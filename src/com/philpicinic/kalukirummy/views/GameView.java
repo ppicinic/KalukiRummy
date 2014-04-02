@@ -303,4 +303,8 @@ public class GameView extends ViewGroup {
 		this.meldViewGroup.layout(arg1, arg2, arg3, arg4);
 	}
 
+	public void initiateHand() {
+		meldViewGroup.initiateHand();
+	}
+
 }

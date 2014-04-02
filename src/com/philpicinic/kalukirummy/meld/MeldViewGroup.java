@@ -84,4 +84,9 @@ public class MeldViewGroup extends ViewGroup {
 	public int playerMeldValue(){
 		return meldPlayerViewGroup.meldValue();
 	}
+
+	public void initiateHand() {
+		meldPlaceViewGroup.initiateHand();
+		
+	}
 }
