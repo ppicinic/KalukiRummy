@@ -349,9 +349,17 @@ public class HandView extends ViewGroup {
 
 		if ((left + 6) > cards.size()) {
 			left = cards.size() - 6;
+			if(left == 0 && leftArrow.isVisible()){
+				this.removeView(leftArrow);
+				leftArrow.flipVisibility();
+			}
 		}
 		if (cards.size() <= 6) {
 			left = 0;
+			if(leftArrow.isVisible()){
+				this.removeView(leftArrow);
+				leftArrow.flipVisibility();
+			}
 		}
 
 		for (int i = 0; i < cards.size(); i++) {
@@ -386,9 +394,17 @@ public class HandView extends ViewGroup {
 				System.out.println(left);
 				if (left == cards.size() - 5) {
 					left--;
+					if(left == 0 && leftArrow.isVisible()){
+						this.removeView(leftArrow);
+						leftArrow.flipVisibility();
+					}
 				}
 				if (cards.size() <= 6) {
 					left = 0;
+					if(leftArrow.isVisible()){
+						this.removeView(leftArrow);
+						leftArrow.flipVisibility();
+					}
 				}
 				for (int j = 0; j < cards.size(); j++) {
 					cards.get(j).setHandPos(j - left);
