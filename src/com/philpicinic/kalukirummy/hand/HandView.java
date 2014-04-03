@@ -342,6 +342,9 @@ public class HandView extends ViewGroup {
 		if ((left + 6) > cards.size()) {
 			left = cards.size() - 6;
 		}
+		if(cards.size() <= 6){
+			left = 0;
+		}
 
 		for (int i = 0; i < cards.size(); i++) {
 			cards.get(i).setHandPos(i - left);
@@ -374,6 +377,9 @@ public class HandView extends ViewGroup {
 				System.out.println(left);
 				if(left == cards.size() - 5){
 					left--;
+				}
+				if(cards.size() <= 6){
+					left = 0;
 				}
 				for (int j = 0; j < cards.size(); j++) {
 					cards.get(j).setHandPos(j - left);

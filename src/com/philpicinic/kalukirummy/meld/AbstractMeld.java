@@ -37,4 +37,8 @@ public abstract class AbstractMeld implements Meld {
 	public boolean getUndoable(){
 		return undoable;
 	}
+	
+	public void endTurn(){
+		
+	}
 }

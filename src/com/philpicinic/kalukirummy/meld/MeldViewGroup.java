@@ -92,4 +92,12 @@ public class MeldViewGroup extends ViewGroup {
 	public boolean checkUndo(MotionEvent event){
 		return meldPlaceViewGroup.checkUndo(event);
 	}
+
+	public void undoCards() {
+		meldPlayerViewGroup.undoCards();
+	}
+
+	public void endTurn() {
+		meldPlayerViewGroup.endTurn();
+	}
 }

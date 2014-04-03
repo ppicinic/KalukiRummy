@@ -169,6 +169,7 @@ public class GameView extends ViewGroup {
 							hand.removeMovingCard();
 							discard.toss(movingCard);
 							turnState = TurnState.DRAW;
+							meldViewGroup.endTurn();
 							undoCards.reset();
 						} else {
 							CharSequence text = "You need 40 points for your initial build!";
@@ -271,6 +272,7 @@ public class GameView extends ViewGroup {
 					if (MeldFactory.validate(tempCards)) {
 
 						meldViewGroup.removeAllPlayingCards();
+						undoCards.addMeldCards(tempCards);
 						meldViewGroup.addMeld(MeldFactory.buildMeld(tempCards));
 						// TODO place cards
 					} else {
@@ -293,6 +295,11 @@ public class GameView extends ViewGroup {
 	}
 
 	private void handleUndo() {
+		ArrayList<VCard> cards = undoCards.getCards();
+		meldViewGroup.undoCards();
+		for(VCard temp : cards){
+			hand.deal(temp);
+		}
 		Card card = undoCards.getDrawCard();
 		hand.removeCard(card);
 		if (undoCards.isFromDeck()) {
