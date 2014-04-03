@@ -206,13 +206,17 @@ public class GameView extends ViewGroup {
 						meldViewGroup.placeCard(movingCard);
 						if (movingCard.getCard().isJoker()) {
 							jokerCard = movingCard;
-							showChooseSuitDialog();
+							showChooseSuitDialog(false, false);
 						}
-					}else if(meldViewGroup.checkAttachCollision(movingCard)){
-						if(movingCard.getCard().isJoker()){
+					} else if (meldViewGroup.checkAttachCollision(movingCard)) {
+						if (movingCard.getCard().isJoker()) {
+							movingCard.dispatchTouchEvent(event);
+							jokerCard = movingCard;
+							hand.removeMovingCard();
+							showChooseSuitDialog(true, true);
 							// handle a joker dialog and attach
-						}else{
-							if(meldViewGroup.canAttach(movingCard)){
+						} else {
+							if (meldViewGroup.canAttach(movingCard)) {
 								movingCard.dispatchTouchEvent(event);
 								hand.removeMovingCard();
 								meldViewGroup.attachToPlayer(movingCard);
@@ -313,7 +317,7 @@ public class GameView extends ViewGroup {
 			} else if (turnState == TurnState.PLAY) {
 				if (returnToHand) {
 					VCard card = meldViewGroup.removeCardFromPlay();
-					if(card.getCard().isJoker()){
+					if (card.getCard().isJoker()) {
 						card.getCard().unSetJoker();
 					}
 					hand.deal(card);
@@ -356,7 +360,7 @@ public class GameView extends ViewGroup {
 		ArrayList<VCard> cards = undoCards.getCards();
 		meldViewGroup.undoCards();
 		for (VCard temp : cards) {
-			if(temp.getCard().isJoker()){
+			if (temp.getCard().isJoker()) {
 				temp.getCard().unSetJoker();
 			}
 			hand.deal(temp);
@@ -408,7 +412,7 @@ public class GameView extends ViewGroup {
 		meldViewGroup.initiateHand();
 	}
 
-	private void showChooseSuitDialog() {
+	private void showChooseSuitDialog(final boolean isAttach, final boolean player) {
 		final Dialog chooseSuitDialog = new Dialog(context);
 		chooseSuitDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		chooseSuitDialog.setContentView(R.layout.choose_joker_dialog);
@@ -448,7 +452,20 @@ public class GameView extends ViewGroup {
 					break;
 				}
 				jokerCard.getCard().setJoker(rank, suit);
-				meldViewGroup.sortPlayingCards();
+				if (isAttach) {
+					if(player){
+						if(meldViewGroup.canAttach(jokerCard)){
+							meldViewGroup.attachToPlayer(jokerCard);
+							undoCards.addAttachedCards(jokerCard);
+						}else{
+							jokerCard.getCard().unSetJoker();
+							hand.deal(jokerCard);
+						}
+					}
+				} else {
+					meldViewGroup.sortPlayingCards();
+				}
+				jokerCard = null;
 				chooseSuitDialog.dismiss();
 			}
 		});
