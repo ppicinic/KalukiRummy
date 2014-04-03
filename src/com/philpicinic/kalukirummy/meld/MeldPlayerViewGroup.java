@@ -28,7 +28,7 @@ public class MeldPlayerViewGroup extends ViewGroup {
 		ArrayList<VCard> temps = meld.getCards();
 		for (VCard temp : temps) {
 			this.addView(temp);
-			temp.layout(l, t, r, b);
+			//temp.layout(l, t, r, b);
 		}
 		readjustMelds();
 	}
@@ -76,6 +76,7 @@ public class MeldPlayerViewGroup extends ViewGroup {
 				i--;
 			}
 		}
+		undoableMelds = new ArrayList<Meld>();
 	}
 
 	public int meldValue() {
@@ -119,5 +120,9 @@ public class MeldPlayerViewGroup extends ViewGroup {
 			}
 			undoableMelds = new ArrayList<Meld>();
 		}
+	}
+
+	public boolean initialBuild() {
+		return meldValue() >= 40;
 	}
 }

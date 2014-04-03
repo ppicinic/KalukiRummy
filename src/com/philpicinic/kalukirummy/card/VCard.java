@@ -122,6 +122,7 @@ public class VCard extends View implements Comparable<VCard> {
 	}
 
 	public void setTossPos() {
+		this.clearFocus();
 		inHand = false;
 		x = (card.getWidth() * 1) + ((card.getWidth() / 6) * (2));
 		y = (card.getHeight() / 6);
@@ -237,6 +238,7 @@ public class VCard extends View implements Comparable<VCard> {
 		pos = p;
 		inHand = true;
 		inPlaceArea = false;
+		played = false;
 		// touched = false;
 		placeInHand();
 	}

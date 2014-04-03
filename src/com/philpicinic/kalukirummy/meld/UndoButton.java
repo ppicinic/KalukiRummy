@@ -38,7 +38,7 @@ public class UndoButton extends View {
 		int scaleW = (int) (screenW / 12);
 		int scaleH = (int) (scaleW);
 		button = Bitmap.createScaledBitmap(button, scaleW, scaleH, false);
-		x = screenW - (int) (button.getWidth() * 5 / 4);
+		x = screenW - (int) (button.getWidth() * 7 / 6);
 		y = screenH - (int) (button.getHeight() * 5 );
 	}
 

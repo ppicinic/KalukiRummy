@@ -11,8 +11,8 @@ public interface Meld {
 	public int size();
 	public void setUndoable(boolean undoable);
 	public boolean getUndoable();
-//	public boolean canAttach();
-//	public void attach();
+	public boolean canAttach(VCard card);
+	public void attach(VCard card);
 //	public boolean canReplaceJoker();
 //	public VCard replaceJoker();
 	

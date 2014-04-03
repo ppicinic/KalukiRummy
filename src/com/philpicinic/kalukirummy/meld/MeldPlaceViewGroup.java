@@ -144,4 +144,11 @@ public class MeldPlaceViewGroup extends ViewGroup {
 		}
 		return false;
 	}
+
+	public void sortPlayingCards() {
+		Collections.sort(this.cards);
+		for (int i = 0; i < cards.size(); i++) {
+			cards.get(i).setMeldPlacePos(i);
+		}
+	}
 }

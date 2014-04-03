@@ -19,6 +19,7 @@ import com.philpicinic.kalukirummy.R;
 import com.philpicinic.kalukirummy.bot.BotView;
 import com.philpicinic.kalukirummy.buttons.StartHandButton;
 import com.philpicinic.kalukirummy.card.Card;
+import com.philpicinic.kalukirummy.card.Suit;
 import com.philpicinic.kalukirummy.card.UndoCards;
 import com.philpicinic.kalukirummy.card.VCard;
 import com.philpicinic.kalukirummy.deck.Deck;
@@ -72,8 +73,11 @@ public class GameView extends ViewGroup {
 	private boolean returnToHand;
 	private boolean playCards;
 	private boolean undo;
+	private boolean drawFromDiscard;
+	private boolean hasDrawnFromDiscard;
 
 	private VCard movingCard;
+	private VCard jokerCard;
 
 	/**
 	 * Create the GameView Group Creates all child elements of the layout
@@ -173,11 +177,23 @@ public class GameView extends ViewGroup {
 					if (discard.checkCollision(movingCard)
 							&& !meldViewGroup.playingCards()) {
 						if (meldViewGroup.playerCanToss()) {
-							hand.removeMovingCard();
-							discard.toss(movingCard);
-							turnState = TurnState.DRAW;
-							meldViewGroup.endTurn();
-							undoCards.reset();
+							if (hasDrawnFromDiscard
+									&& !meldViewGroup.hasInitialBuild()) {
+								CharSequence text = "You need an initial build to draw from the discard pile!";
+								int duration = Toast.LENGTH_SHORT;
+
+								Toast toast = Toast.makeText(context, text,
+										duration);
+								toast.show();
+							} else {
+								hasDrawnFromDiscard = false;
+								hand.removeMovingCard();
+								movingCard.dispatchTouchEvent(event);
+								discard.toss(movingCard);
+								turnState = TurnState.DRAW;
+								meldViewGroup.endTurn();
+								undoCards.reset();
+							}
 						} else {
 							CharSequence text = "You need 40 points for your initial build!";
 							int duration = Toast.LENGTH_SHORT;
@@ -189,6 +205,10 @@ public class GameView extends ViewGroup {
 					} else if (meldViewGroup.checkCollisionByCard(movingCard)) {
 						hand.removeMovingCard();
 						meldViewGroup.placeCard(movingCard);
+						if (movingCard.getCard().isJoker()) {
+							jokerCard = movingCard;
+							showChooseSuitDialog();
+						}
 					}
 					movingCard = null;
 					if (!meldViewGroup.playingCards()) {
@@ -215,8 +235,14 @@ public class GameView extends ViewGroup {
 				start = startHand.checkCollision(event);
 				return start;
 			} else if (turnState == TurnState.DRAW) {
-				start = deckV.checkCollision(event);
-				return true;
+				if (deckV.checkCollision(event)) {
+					start = true;
+					return true;
+				}
+				if (discard.checkDraw(event)) {
+					drawFromDiscard = true;
+					return true;
+				}
 			} else if (turnState == TurnState.PLAY) {
 				if (meldViewGroup.checkPlayCollisions(event)) {
 					// hand.deal(returnToHand);
@@ -262,10 +288,25 @@ public class GameView extends ViewGroup {
 					undoCards.addDrawCard(true, card);
 					hand.deal(card);
 					turnState = TurnState.PLAY;
+					start = false;
+					return true;
+				}
+				if (drawFromDiscard) {
+					VCard card = discard.drawFromPile();
+					undoCards.addDrawCard(false, card.getCard());
+					hand.deal(card);
+					turnState = TurnState.PLAY;
+					drawFromDiscard = false;
+					hasDrawnFromDiscard = true;
+					return true;
 				}
 			} else if (turnState == TurnState.PLAY) {
 				if (returnToHand) {
-					hand.deal(meldViewGroup.removeCardFromPlay());
+					VCard card = meldViewGroup.removeCardFromPlay();
+					if(card.getCard().isJoker()){
+						card.getCard().unSetJoker();
+					}
+					hand.deal(card);
 					if (!meldViewGroup.playingCards()) {
 						hand.handCreated();
 					}
@@ -286,8 +327,7 @@ public class GameView extends ViewGroup {
 						CharSequence text = "This is an invalid meld!";
 						int duration = Toast.LENGTH_SHORT;
 
-						Toast toast = Toast.makeText(context, text,
-								duration);
+						Toast toast = Toast.makeText(context, text, duration);
 						toast.show();
 					}
 					playCards = false;
@@ -304,7 +344,10 @@ public class GameView extends ViewGroup {
 	private void handleUndo() {
 		ArrayList<VCard> cards = undoCards.getCards();
 		meldViewGroup.undoCards();
-		for(VCard temp : cards){
+		for (VCard temp : cards) {
+			if(temp.getCard().isJoker()){
+				temp.getCard().unSetJoker();
+			}
 			hand.deal(temp);
 		}
 		Card card = undoCards.getDrawCard();
@@ -312,9 +355,10 @@ public class GameView extends ViewGroup {
 		if (undoCards.isFromDeck()) {
 			deck.returnToTop(card);
 		} else {
-			// Return from top of pile
+			discard.toss(card);
 		}
 		undoCards.reset();
+		hasDrawnFromDiscard = false;
 		turnState = TurnState.DRAW;
 	}
 
@@ -357,16 +401,44 @@ public class GameView extends ViewGroup {
 		final Dialog chooseSuitDialog = new Dialog(context);
 		chooseSuitDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		chooseSuitDialog.setContentView(R.layout.choose_joker_dialog);
+		final Spinner rankSpinner = (Spinner) chooseSuitDialog
+				.findViewById(R.id.rankSpinner);
+		ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(
+				context, R.array.ranks, android.R.layout.simple_spinner_item);
+		adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		rankSpinner.setAdapter(adapter2);
 		final Spinner suitSpinner = (Spinner) chooseSuitDialog
 				.findViewById(R.id.suitSpinner);
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
 				context, R.array.suits, android.R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		suitSpinner.setAdapter(adapter);
+
 		Button okButton = (Button) chooseSuitDialog.findViewById(R.id.okButton);
 		okButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
-				// TODO set Joker card
+				int rank = rankSpinner.getSelectedItemPosition() + 2;
+				int i = suitSpinner.getSelectedItemPosition();
+				Suit suit = Suit.DIAMONDS;
+				switch (i) {
+				case 0:
+					suit = Suit.DIAMONDS;
+					break;
+				case 1:
+					suit = Suit.CLUBS;
+					break;
+				case 2:
+					suit = Suit.HEARTS;
+					break;
+				case 3:
+					suit = Suit.SPADES;
+					break;
+				default:
+					break;
+				}
+				jokerCard.getCard().setJoker(rank, suit);
+				meldViewGroup.sortPlayingCards();
+				chooseSuitDialog.dismiss();
 			}
 		});
 		chooseSuitDialog.show();

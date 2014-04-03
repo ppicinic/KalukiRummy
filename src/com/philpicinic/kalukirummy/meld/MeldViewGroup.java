@@ -100,4 +100,13 @@ public class MeldViewGroup extends ViewGroup {
 	public void endTurn() {
 		meldPlayerViewGroup.endTurn();
 	}
+
+	public boolean hasInitialBuild() {
+		return meldPlayerViewGroup.initialBuild();
+	}
+
+	public void sortPlayingCards() {
+		meldPlaceViewGroup.sortPlayingCards();
+		
+	}
 }

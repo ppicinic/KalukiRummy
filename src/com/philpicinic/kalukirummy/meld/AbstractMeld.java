@@ -1,6 +1,7 @@
 package com.philpicinic.kalukirummy.meld;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import com.philpicinic.kalukirummy.card.VCard;
 
@@ -40,5 +41,12 @@ public abstract class AbstractMeld implements Meld {
 	
 	public void endTurn(){
 		
+	}
+	
+	public void attach(VCard card){
+		if(canAttach(card)){
+			cards.add(card);
+			Collections.sort(cards);
+		}
 	}
 }

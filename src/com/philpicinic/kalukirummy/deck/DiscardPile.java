@@ -23,5 +23,9 @@ public class DiscardPile {
 	public void push(Card card){
 		discard.push(card);
 	}
+
+	public boolean isEmpty() {
+		return discard.isEmpty();
+	}
 	
 }

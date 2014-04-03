@@ -108,6 +108,8 @@ public class Card implements Comparable<Card> {
 
 	public void unSetJoker() {
 		playedJoker = false;
+		jRank = 0;
+		jSuit = null;
 	}
 
 	/**

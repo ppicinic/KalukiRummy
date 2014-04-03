@@ -27,7 +27,6 @@ public class MeldPlayButton extends View {
 
 		button = BitmapFactory.decodeResource(getResources(),
 				R.drawable.play_meld_button);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -38,7 +37,7 @@ public class MeldPlayButton extends View {
 		int scaleW = (int) (screenW / 12);
 		int scaleH = (int) (scaleW);
 		button = Bitmap.createScaledBitmap(button, scaleW, scaleH, false);
-		x = screenW - (int) (button.getWidth() * 5 / 4);
+		x = screenW - (int) (button.getWidth() * 7 / 6);
 		y = screenH - (int) (button.getHeight() * 5 );
 	}
 
@@ -47,12 +46,10 @@ public class MeldPlayButton extends View {
 	}
 	
 	public boolean checkCollision(MotionEvent event){
-		System.out.println("get here");
 		int X = (int) event.getX();
 		int Y = (int) event.getY();
 		
 		if(X > x && X < (x + button.getWidth()) && Y > y && Y < (y + button.getHeight())){
-			System.out.println("get here 2");
 			return true;
 		}
 		return false;

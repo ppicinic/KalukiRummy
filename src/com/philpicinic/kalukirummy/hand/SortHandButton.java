@@ -49,7 +49,7 @@ public class SortHandButton extends View {
 		int scaleW = (int) (screenW / 12);
 		int scaleH = (int) (scaleW);
 		button = Bitmap.createScaledBitmap(button, scaleW, scaleH, false);
-		x = (button.getWidth() / 4);
+		x = (button.getWidth() / 6);
 		y = screenH - (int)(button.getHeight() * 5);
 	}
 	
