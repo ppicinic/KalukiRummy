@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string-array name="suits">
+     <item>Diamonds</item>
+     <item>Clubs</item>
+     <item>Hearts</item>
+     <item>Spades</item>  
+</string-array>
+<string-array name="ranks">
+     <item>2</item>
+     <item>3</item>
+     <item>4</item>
+     <item>5</item>
+     <item>6</item>
+     <item>7</item>
+     <item>8</item>
+     <item>9</item>
+     <item>10</item>
+     <item>Jack</item>
+     <item>Queen</item>
+     <item>King</item>
+     <item>Ace</item>  
+</string-array>    
+</resources>

@@ -2,13 +2,20 @@ package com.philpicinic.kalukirummy.views;
 
 import java.util.ArrayList;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Handler;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.philpicinic.kalukirummy.Constants;
+import com.philpicinic.kalukirummy.R;
 import com.philpicinic.kalukirummy.bot.BotView;
 import com.philpicinic.kalukirummy.buttons.StartHandButton;
 import com.philpicinic.kalukirummy.card.Card;
@@ -346,4 +353,22 @@ public class GameView extends ViewGroup {
 		meldViewGroup.initiateHand();
 	}
 
+	private void showChooseSuitDialog() {
+		final Dialog chooseSuitDialog = new Dialog(context);
+		chooseSuitDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		chooseSuitDialog.setContentView(R.layout.choose_joker_dialog);
+		final Spinner suitSpinner = (Spinner) chooseSuitDialog
+				.findViewById(R.id.suitSpinner);
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+				context, R.array.suits, android.R.layout.simple_spinner_item);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		suitSpinner.setAdapter(adapter);
+		Button okButton = (Button) chooseSuitDialog.findViewById(R.id.okButton);
+		okButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+				// TODO set Joker card
+			}
+		});
+		chooseSuitDialog.show();
+	}
 }

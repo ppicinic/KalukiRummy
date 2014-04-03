@@ -3,11 +3,19 @@ package com.philpicinic.kalukirummy.hand;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.Toast;
 
+import com.philpicinic.kalukirummy.R;
 import com.philpicinic.kalukirummy.card.Card;
 import com.philpicinic.kalukirummy.card.VCard;
 
@@ -142,8 +150,8 @@ public class HandView extends ViewGroup {
 
 	public void handEnded() {
 		if (seeSort) {
-//			this.removeView(sortHandBtn);
-//			seeSort = false;
+			// this.removeView(sortHandBtn);
+			// seeSort = false;
 		}
 	}
 
@@ -309,9 +317,9 @@ public class HandView extends ViewGroup {
 			}
 		}
 		if (e == MotionEvent.ACTION_UP) {
-			//System.out.println("up");
+			// System.out.println("up");
 			if (movingCard != null) {
-				//this.addView(sortHandBtn);
+				// this.addView(sortHandBtn);
 				for (VCard card : cards) {
 					if (!movingCard.equalsInHand(card)) {
 						if (movingCard.collideWithCard(card)) {
@@ -342,7 +350,7 @@ public class HandView extends ViewGroup {
 		if ((left + 6) > cards.size()) {
 			left = cards.size() - 6;
 		}
-		if(cards.size() <= 6){
+		if (cards.size() <= 6) {
 			left = 0;
 		}
 
@@ -369,16 +377,17 @@ public class HandView extends ViewGroup {
 	}
 
 	public void removeCard(Card card) {
-		for(int i = 0; i < cards.size(); i++){
+		for (int i = 0; i < cards.size(); i++) {
 			Card temp = cards.get(i).getCard();
-			if(temp.getRank() == card.getRank() && card.getSuit() == temp.getSuit()){
+			if (temp.getRank() == card.getRank()
+					&& card.getSuit() == temp.getSuit()) {
 				this.removeView(cards.get(i));
 				cards.remove(i);
 				System.out.println(left);
-				if(left == cards.size() - 5){
+				if (left == cards.size() - 5) {
 					left--;
 				}
-				if(cards.size() <= 6){
+				if (cards.size() <= 6) {
 					left = 0;
 				}
 				for (int j = 0; j < cards.size(); j++) {
@@ -388,4 +397,6 @@ public class HandView extends ViewGroup {
 			}
 		}
 	}
+
+	
 }
