@@ -40,7 +40,6 @@ import com.philpicinic.kalukirummy.threads.GameStart;
  */
 public class GameView extends ViewGroup {
 
-	@SuppressWarnings("unused")
 	private Context context;
 
 	@SuppressWarnings("unused")
@@ -209,6 +208,17 @@ public class GameView extends ViewGroup {
 							jokerCard = movingCard;
 							showChooseSuitDialog();
 						}
+					}else if(meldViewGroup.checkAttachCollision(movingCard)){
+						if(movingCard.getCard().isJoker()){
+							// handle a joker dialog and attach
+						}else{
+							if(meldViewGroup.canAttach(movingCard)){
+								movingCard.dispatchTouchEvent(event);
+								hand.removeMovingCard();
+								meldViewGroup.attachToPlayer(movingCard);
+								undoCards.addAttachedCards(movingCard);
+							}
+						}
 					}
 					movingCard = null;
 					if (!meldViewGroup.playingCards()) {
@@ -342,6 +352,7 @@ public class GameView extends ViewGroup {
 	}
 
 	private void handleUndo() {
+		meldViewGroup.removeAttachedPlayerCards();
 		ArrayList<VCard> cards = undoCards.getCards();
 		meldViewGroup.undoCards();
 		for (VCard temp : cards) {

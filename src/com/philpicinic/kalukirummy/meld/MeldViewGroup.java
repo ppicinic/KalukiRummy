@@ -107,6 +107,21 @@ public class MeldViewGroup extends ViewGroup {
 
 	public void sortPlayingCards() {
 		meldPlaceViewGroup.sortPlayingCards();
-		
+	}
+	
+	public boolean checkAttachCollision(VCard card){
+		return meldPlayerViewGroup.checkMeldCollision(card);
+	}
+	
+	public boolean canAttach(VCard card){
+		return meldPlayerViewGroup.canAttach(card);
+	}
+
+	public void attachToPlayer(VCard card) {
+		meldPlayerViewGroup.attach(card);
+	}
+
+	public void removeAttachedPlayerCards() {
+		meldPlayerViewGroup.removeAttachedCards();
 	}
 }

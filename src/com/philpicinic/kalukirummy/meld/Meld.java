@@ -13,6 +13,7 @@ public interface Meld {
 	public boolean getUndoable();
 	public boolean canAttach(VCard card);
 	public void attach(VCard card);
+	public VCard removeAttached(VCard card);
 //	public boolean canReplaceJoker();
 //	public VCard replaceJoker();
 	

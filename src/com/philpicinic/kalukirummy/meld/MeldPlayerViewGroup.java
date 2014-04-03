@@ -1,6 +1,7 @@
 package com.philpicinic.kalukirummy.meld;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.content.Context;
 import android.view.ViewGroup;
@@ -11,6 +12,11 @@ public class MeldPlayerViewGroup extends ViewGroup {
 
 	private ArrayList<Meld> melds;
 	private ArrayList<Meld> undoableMelds;
+	private Meld attachMeld;
+	private int attachSpot;
+	private ArrayList<VCard> attachCards;
+	private HashMap<VCard, ArrayList<Integer>> attachSpots;
+
 	private int l;
 	private int t;
 	private int r;
@@ -20,6 +26,9 @@ public class MeldPlayerViewGroup extends ViewGroup {
 		super(context);
 		melds = new ArrayList<Meld>();
 		undoableMelds = new ArrayList<Meld>();
+		attachSpot = -1;
+		attachCards = new ArrayList<VCard>();
+		attachSpots = new HashMap<VCard, ArrayList<Integer>>();
 	}
 
 	public void addMeld(Meld meld) {
@@ -28,7 +37,7 @@ public class MeldPlayerViewGroup extends ViewGroup {
 		ArrayList<VCard> temps = meld.getCards();
 		for (VCard temp : temps) {
 			this.addView(temp);
-			//temp.layout(l, t, r, b);
+			// temp.layout(l, t, r, b);
 		}
 		readjustMelds();
 	}
@@ -43,6 +52,7 @@ public class MeldPlayerViewGroup extends ViewGroup {
 			}
 			ArrayList<VCard> cards = meld.getCards();
 			for (VCard card : cards) {
+				this.bringChildToFront(card);
 				card.setMeldPos(true, level, pos);
 				pos++;
 			}
@@ -124,5 +134,64 @@ public class MeldPlayerViewGroup extends ViewGroup {
 
 	public boolean initialBuild() {
 		return meldValue() >= 40;
+	}
+
+	public boolean checkMeldCollision(VCard card) {
+		for (int i = 0; i < melds.size(); i++) {
+			ArrayList<VCard> cards = melds.get(i).getCards();
+			for (VCard temp : cards) {
+				if (card.collideWithCard(temp)) {
+					attachMeld = melds.get(i);
+					attachSpot = i;
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public boolean canAttach(VCard card) {
+		if (attachMeld.canAttach(card)) {
+			return true;
+		} else {
+			attachSpot = -1;
+			attachMeld = null;
+			return false;
+		}
+	}
+
+	public void attach(VCard card) {
+		attachCards.add(card);
+		if (attachSpots.containsKey(card)) {
+			ArrayList<Integer> temp = attachSpots.get(card);
+			temp.add(attachSpot);
+			attachSpots.put(card, temp);
+		} else {
+			ArrayList<Integer> temp = new ArrayList<Integer>(2);
+			temp.add(attachSpot);
+			attachSpots.put(card, temp);
+		}
+		attachSpot = -1;
+		attachMeld.attach(card);
+		this.addView(card);
+		attachMeld = null;
+		readjustMelds();
+	}
+
+	public void removeAttachedCards() {
+		if (attachCards.size() > 0) {
+			for (VCard temp : attachCards) {
+				ArrayList<Integer> i = attachSpots.get(temp);
+				for(Integer x : i){
+					Meld meld = melds.get(x);
+					this.removeView(meld.removeAttached(temp));
+					removeAttachedCard(temp, meld);
+				}
+			}
+		}
+	}
+
+	public void removeAttachedCard(VCard card, Meld meld) {
+		
 	}
 }

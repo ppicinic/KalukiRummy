@@ -37,6 +37,10 @@ public class UndoCards {
 		}
 	}
 	
+	public void addAttachedCards(VCard card){
+		playedCards.add(card);
+	}
+	
 	public void reset(){
 		playedCards = new ArrayList<VCard>();
 		deckCard = false;
