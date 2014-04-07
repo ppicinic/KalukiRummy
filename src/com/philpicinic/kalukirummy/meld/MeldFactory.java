@@ -28,6 +28,9 @@ public class MeldFactory {
 				if(firstCard.getMeldSuit().ordinal() == secondCard.getMeldSuit().ordinal()){
 					return false;
 				}
+				if(!(firstCard.getMeldRank() == secondCard.getMeldRank())){
+					return false;
+				}
 				firstCard = secondCard;
 			}
 			return true;

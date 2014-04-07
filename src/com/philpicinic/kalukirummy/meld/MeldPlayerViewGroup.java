@@ -6,6 +6,7 @@ import java.util.HashMap;
 import android.content.Context;
 import android.view.ViewGroup;
 
+import com.philpicinic.kalukirummy.card.Card;
 import com.philpicinic.kalukirummy.card.VCard;
 
 public class MeldPlayerViewGroup extends ViewGroup {
@@ -130,6 +131,9 @@ public class MeldPlayerViewGroup extends ViewGroup {
 			}
 			undoableMelds = new ArrayList<Meld>();
 		}
+		attachCards = new ArrayList<VCard>();
+		attachSpot = -1;
+		attachSpots = new HashMap<VCard, ArrayList<Integer>>();
 	}
 
 	public boolean initialBuild() {
@@ -154,8 +158,6 @@ public class MeldPlayerViewGroup extends ViewGroup {
 		if (attachMeld.canAttach(card)) {
 			return true;
 		} else {
-			attachSpot = -1;
-			attachMeld = null;
 			return false;
 		}
 	}
@@ -185,13 +187,50 @@ public class MeldPlayerViewGroup extends ViewGroup {
 				for(Integer x : i){
 					Meld meld = melds.get(x);
 					this.removeView(meld.removeAttached(temp));
-					removeAttachedCard(temp, meld);
 				}
 			}
 		}
+		readjustMelds();
+	}
+	
+	public boolean canReplaceJoker(VCard card){
+		if(attachMeld.canReplaceJoker(card)){
+			return true;
+		}
+		attachSpot = -1;
+		attachMeld = null;
+		return false;
+	}
+	
+	public VCard replaceJoker(VCard card, JokerUndo undo){
+		VCard temp = attachMeld.replaceJoker(card);
+		undo.setMeld(attachMeld);
+		this.addView(card);
+		this.removeView(temp);
+		readjustMelds();
+		endAttach();
+		return temp;
+	}
+	
+	public void endAttach(){
+		attachSpot = -1;
+		attachMeld = null;
+	}
+	
+	public void undoJoker(JokerUndo undo){
+		undo.getMeld().removeReplaceCard(undo.getReplaceCard());
+		undo.getMeld().attach(undo.getJokerCard());
+		this.removeView(undo.getReplaceCard());
+		this.addView(undo.getJokerCard());
 	}
 
-	public void removeAttachedCard(VCard card, Meld meld) {
-		
+	public void undoReplaceJoker(JokerUndo undo) {
+		this.removeView(undo.getReplaceCard());
+		undo.getMeld().removeReplaceCard(undo.getReplaceCard());
+		VCard joker = undo.getJokerCard();
+		Card card = undo.getReplaceCard().getCard();
+		joker.getCard().setJoker(card.getRank(), card.getSuit());
+		undo.getMeld().attach(joker);
+		this.addView(joker);
 	}
 }

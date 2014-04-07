@@ -349,14 +349,14 @@ public class HandView extends ViewGroup {
 
 		if ((left + 6) > cards.size()) {
 			left = cards.size() - 6;
-			if(left == 0 && leftArrow.isVisible()){
+			if (left == 0 && leftArrow.isVisible()) {
 				this.removeView(leftArrow);
 				leftArrow.flipVisibility();
 			}
 		}
 		if (cards.size() <= 6) {
 			left = 0;
-			if(leftArrow.isVisible()){
+			if (leftArrow.isVisible()) {
 				this.removeView(leftArrow);
 				leftArrow.flipVisibility();
 			}
@@ -391,17 +391,16 @@ public class HandView extends ViewGroup {
 					&& card.getSuit() == temp.getSuit()) {
 				this.removeView(cards.get(i));
 				cards.remove(i);
-				System.out.println(left);
 				if (left == cards.size() - 5) {
 					left--;
-					if(left == 0 && leftArrow.isVisible()){
+					if (left == 0 && leftArrow.isVisible()) {
 						this.removeView(leftArrow);
 						leftArrow.flipVisibility();
 					}
 				}
 				if (cards.size() <= 6) {
 					left = 0;
-					if(leftArrow.isVisible()){
+					if (leftArrow.isVisible()) {
 						this.removeView(leftArrow);
 						leftArrow.flipVisibility();
 					}
@@ -414,5 +413,28 @@ public class HandView extends ViewGroup {
 		}
 	}
 
-	
+	public void removeJokerCard(VCard card) {
+		System.out.println("looking for card");
+		System.out.println(card.getCard().getRank());
+		System.out.println(card.getCard().getSuit());
+		for (int i = 0; i < cards.size(); i++) {
+			VCard temp = cards.get(i);
+			System.out.println(temp.getCard().getRank());
+			System.out.println(temp.getCard().getSuit());
+			if (temp.getCard().isJoker()) {
+				if (temp.getCard().getRank() == card.getCard().getRank()
+						&& temp.getCard().getSuit().ordinal() == card.getCard()
+								.getSuit().ordinal()) {
+					cards.remove(i);
+					System.out.println("found card");
+					this.removeView(card);
+					for (int j = 0; j < cards.size(); j++) {
+						cards.get(j).setHandPos(j - left);
+					}
+					return;
+				}
+			}
+		}
+	}
+
 }

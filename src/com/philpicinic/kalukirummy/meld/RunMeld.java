@@ -11,6 +11,7 @@ public class RunMeld extends AbstractMeld{
 		this.cards = cards;
 		undoable = true;
 		calcSize();
+		jokerSpot = -1;
 	}
 
 	@Override

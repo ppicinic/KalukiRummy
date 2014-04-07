@@ -1,6 +1,7 @@
 package com.philpicinic.kalukirummy.views;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -26,6 +27,7 @@ import com.philpicinic.kalukirummy.deck.Deck;
 import com.philpicinic.kalukirummy.deck.DeckView;
 import com.philpicinic.kalukirummy.deck.DiscardView;
 import com.philpicinic.kalukirummy.hand.HandView;
+import com.philpicinic.kalukirummy.meld.JokerUndo;
 import com.philpicinic.kalukirummy.meld.MeldFactory;
 import com.philpicinic.kalukirummy.meld.MeldViewGroup;
 import com.philpicinic.kalukirummy.score.ScoreCardView;
@@ -77,6 +79,7 @@ public class GameView extends ViewGroup {
 
 	private VCard movingCard;
 	private VCard jokerCard;
+	private Stack<JokerUndo> jokerUndo;
 
 	/**
 	 * Create the GameView Group Creates all child elements of the layout
@@ -121,7 +124,7 @@ public class GameView extends ViewGroup {
 		this.addView(hand);
 
 		undoCards = new UndoCards();
-
+		jokerUndo = new Stack<JokerUndo>();
 	}
 
 	public void setAnimating(boolean animating) {
@@ -221,6 +224,15 @@ public class GameView extends ViewGroup {
 								hand.removeMovingCard();
 								meldViewGroup.attachToPlayer(movingCard);
 								undoCards.addAttachedCards(movingCard);
+							}else if(meldViewGroup.canReplacePlayerJoker(movingCard)){
+								movingCard.dispatchTouchEvent(event);
+								hand.removeMovingCard();
+								JokerUndo tempUndo = new JokerUndo(movingCard);
+								VCard temp = meldViewGroup.replacePlayerJoker(movingCard, tempUndo);
+								temp.getCard().unSetJoker();
+								tempUndo.setJokerCard(temp);
+								jokerUndo.push(tempUndo);
+								hand.deal(temp);
 							}
 						}
 					}
@@ -356,6 +368,12 @@ public class GameView extends ViewGroup {
 	}
 
 	private void handleUndo() {
+		while(!jokerUndo.isEmpty()){
+			JokerUndo tempUndo = jokerUndo.pop();
+			hand.removeJokerCard(tempUndo.getJokerCard());
+			meldViewGroup.undoJokerReplace(tempUndo);
+			hand.deal(tempUndo.getReplaceCard());
+		}
 		meldViewGroup.removeAttachedPlayerCards();
 		ArrayList<VCard> cards = undoCards.getCards();
 		meldViewGroup.undoCards();
@@ -462,6 +480,7 @@ public class GameView extends ViewGroup {
 							hand.deal(jokerCard);
 						}
 					}
+					meldViewGroup.endPlayerAttach();
 				} else {
 					meldViewGroup.sortPlayingCards();
 				}

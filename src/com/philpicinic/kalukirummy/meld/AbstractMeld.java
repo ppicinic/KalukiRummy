@@ -11,6 +11,7 @@ public abstract class AbstractMeld implements Meld {
 	protected boolean undoable;
 	protected ArrayList<VCard> cards;
 	protected int cardsize;
+	protected int jokerSpot;
 
 	public int value() {
 		int total = 0;
@@ -79,5 +80,56 @@ public abstract class AbstractMeld implements Meld {
 			}
 		}
 		return null;
+	}
+
+	public boolean canReplaceJoker(VCard card) {
+		if (card.getCard().isJoker()) {
+			return false;
+		}
+		if (containsJoker()) {
+			for (int i = 0; i < cards.size(); i++) {
+				if (cards.get(i).getCard().isJoker()) {
+					if (cards.get(i).getCard().getMeldRank() == card.getCard()
+							.getMeldRank()
+							&& cards.get(i).getCard().getMeldSuit().ordinal() == cards
+									.get(i).getCard().getMeldSuit().ordinal()) {
+						jokerSpot = i;
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	public VCard replaceJoker(VCard card) {
+		VCard temp = cards.remove(jokerSpot);
+		cards.add(card);
+		Collections.sort(cards);
+		return temp;
+	}
+
+	protected boolean containsJoker() {
+		for (VCard card : cards) {
+			if (card.getCard().isJoker()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void removeReplaceCard(VCard card) {
+		for (int i = 0; i < cards.size(); i++) {
+			VCard temp = cards.get(i);
+			if (!temp.getCard().isJoker()) {
+				if (temp.getCard().getMeldRank() == card.getCard()
+						.getMeldRank()
+						&& temp.getCard().getMeldSuit().ordinal() == card
+								.getCard().getMeldSuit().ordinal()) {
+					cards.remove(i);
+				}
+				
+			}
+		}
 	}
 }

@@ -14,7 +14,8 @@ public interface Meld {
 	public boolean canAttach(VCard card);
 	public void attach(VCard card);
 	public VCard removeAttached(VCard card);
-//	public boolean canReplaceJoker();
-//	public VCard replaceJoker();
+	public boolean canReplaceJoker(VCard card);
+	public VCard replaceJoker(VCard card);
+	public void removeReplaceCard(VCard replaceCard);
 	
 }

@@ -1,6 +1,7 @@
 package com.philpicinic.kalukirummy.meld;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 import android.content.Context;
 import android.view.MotionEvent;
@@ -123,5 +124,21 @@ public class MeldViewGroup extends ViewGroup {
 
 	public void removeAttachedPlayerCards() {
 		meldPlayerViewGroup.removeAttachedCards();
+	}
+	
+	public boolean canReplacePlayerJoker(VCard card){
+		return meldPlayerViewGroup.canReplaceJoker(card);
+	}
+	
+	public VCard replacePlayerJoker(VCard card, JokerUndo undo){
+		return meldPlayerViewGroup.replaceJoker(card, undo);
+	}
+	
+	public void endPlayerAttach(){
+		meldPlayerViewGroup.endAttach();
+	}
+
+	public void undoJokerReplace(JokerUndo undo) {
+		meldPlayerViewGroup.undoReplaceJoker(undo);
 	}
 }
