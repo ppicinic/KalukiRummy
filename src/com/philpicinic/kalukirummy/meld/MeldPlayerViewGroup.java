@@ -11,12 +11,12 @@ import com.philpicinic.kalukirummy.card.VCard;
 
 public class MeldPlayerViewGroup extends ViewGroup {
 
-	private ArrayList<Meld> melds;
-	private ArrayList<Meld> undoableMelds;
-	private Meld attachMeld;
-	private int attachSpot;
-	private ArrayList<VCard> attachCards;
-	private HashMap<VCard, ArrayList<Integer>> attachSpots;
+	protected ArrayList<Meld> melds;
+	protected ArrayList<Meld> undoableMelds;
+	protected Meld attachMeld;
+	protected int attachSpot;
+	protected ArrayList<VCard> attachCards;
+	protected HashMap<VCard, ArrayList<Integer>> attachSpots;
 
 	private int l;
 	private int t;
@@ -37,13 +37,14 @@ public class MeldPlayerViewGroup extends ViewGroup {
 		undoableMelds.add(meld);
 		ArrayList<VCard> temps = meld.getCards();
 		for (VCard temp : temps) {
+			temp.layout(l, t, r, b);
 			this.addView(temp);
 			// temp.layout(l, t, r, b);
 		}
 		readjustMelds();
 	}
 
-	private void readjustMelds() {
+	protected void readjustMelds() {
 		int level = 0;
 		int pos = 0;
 		for (Meld meld : melds) {

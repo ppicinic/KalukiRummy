@@ -3,19 +3,11 @@ package com.philpicinic.kalukirummy.hand;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.Spinner;
-import android.widget.Toast;
 
-import com.philpicinic.kalukirummy.R;
 import com.philpicinic.kalukirummy.card.Card;
 import com.philpicinic.kalukirummy.card.VCard;
 

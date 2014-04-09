@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.philpicinic.kalukirummy.Constants;
 import com.philpicinic.kalukirummy.R;
+import com.philpicinic.kalukirummy.bot.Bot;
 import com.philpicinic.kalukirummy.bot.BotView;
 import com.philpicinic.kalukirummy.buttons.StartHandButton;
 import com.philpicinic.kalukirummy.card.Card;
@@ -31,6 +32,7 @@ import com.philpicinic.kalukirummy.meld.JokerUndo;
 import com.philpicinic.kalukirummy.meld.MeldFactory;
 import com.philpicinic.kalukirummy.meld.MeldViewGroup;
 import com.philpicinic.kalukirummy.score.ScoreCardView;
+import com.philpicinic.kalukirummy.threads.BotTurn;
 import com.philpicinic.kalukirummy.threads.GameStart;
 
 /**
@@ -80,6 +82,9 @@ public class GameView extends ViewGroup {
 	private VCard movingCard;
 	private VCard jokerCard;
 	private Stack<JokerUndo> jokerUndo;
+	
+	private Bot botPlayer;
+	private BotTurn botTurn;
 
 	/**
 	 * Create the GameView Group Creates all child elements of the layout
@@ -125,6 +130,8 @@ public class GameView extends ViewGroup {
 
 		undoCards = new UndoCards();
 		jokerUndo = new Stack<JokerUndo>();
+		botPlayer = new Bot(context, this, deck, discard, meldViewGroup.getBotView());
+		botTurn = new BotTurn(botPlayer);
 	}
 
 	public void setAnimating(boolean animating) {
@@ -192,9 +199,11 @@ public class GameView extends ViewGroup {
 								hand.removeMovingCard();
 								movingCard.dispatchTouchEvent(event);
 								discard.toss(movingCard);
-								turnState = TurnState.DRAW;
+								turnState = TurnState.BOT;
 								meldViewGroup.endTurn();
 								undoCards.reset();
+								Handler handler = new Handler();
+								handler.postDelayed(botTurn, 2000);
 							}
 						} else {
 							CharSequence text = "You need 40 points for your initial build!";
@@ -303,7 +312,7 @@ public class GameView extends ViewGroup {
 					// hand.handCreated();
 					Handler handler = new Handler();
 					GameStart gameStart = new GameStart(this, hand, deck,
-							discard);
+							discard, botPlayer);
 					handler.postDelayed(gameStart, Constants.DEAL_DELAY);
 					return true;
 				}
@@ -489,5 +498,14 @@ public class GameView extends ViewGroup {
 			}
 		});
 		chooseSuitDialog.show();
+	}
+
+	public void endBotTurn() {
+		CharSequence text = "It's your turn!";
+		int duration = Toast.LENGTH_SHORT;
+
+		Toast toast = Toast.makeText(context, text, duration);
+		toast.show();
+		turnState = TurnState.DRAW;
 	}
 }

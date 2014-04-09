@@ -11,6 +11,7 @@ import com.philpicinic.kalukirummy.R;
 
 public class SortHandButton extends View {
 
+	@SuppressWarnings("unused")
 	private Context context;
 	private Bitmap button;
 	

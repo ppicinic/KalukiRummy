@@ -20,7 +20,6 @@ public class DiscardView extends ViewGroup {
 	private DiscardPile pile;
 	@SuppressWarnings("unused")
 	private int screenH;
-	@SuppressWarnings("unused")
 	private int screenW;
 
 	private int x;
