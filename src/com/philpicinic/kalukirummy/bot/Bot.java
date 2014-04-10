@@ -70,7 +70,7 @@ public class Bot {
 				playCards = new ArrayList<Meld>();
 			}
 		}
-		attach();
+		jokerReplaceWrapper();
 	}
 
 	private void attach() {
@@ -600,5 +600,57 @@ public class Bot {
 		attached = false;
 		return cards;
 	}
-
+	
+	public void jokerReplaceWrapper(){
+		jokerReplace();
+		attach();
+	}
+	public void jokerReplace(){
+		ArrayList<Meld> melds = view.getMelds();
+		for(int i = 0; i < melds.size(); i++){
+			ArrayList<VCard> temp = melds.get(i).getCards();
+			for(VCard card: temp){
+				if(card.getCard().isJoker()){
+					Card c = card.getCard();
+					for(int j = 0; j < cards.size(); j++){
+						Card c2 = cards.get(j);
+						if(!c2.isJoker() && c2.getRank() == c.getMeldRank() && c2.getSuit().ordinal() == c.getMeldSuit().ordinal()){
+							view.botReplaceJoker(i);
+							if(view.canReplaceJoker(new VCard(context, 0, c2))){
+								VCard c3 = view.replaceJoker(new VCard(context, 0, c2), null);
+								cards.remove(j);
+								cards.add(c3.getCard());
+								jokerReplace();
+								return;
+							}
+						}
+					}
+				}
+			}
+		}
+		melds = playerView.getMelds();
+		for(int i = 0; i < melds.size(); i++){
+			ArrayList<VCard> temp = melds.get(i).getCards();
+			for(VCard card: temp){
+				if(card.getCard().isJoker()){
+					Card c = card.getCard();
+					for(int j = 0; j < cards.size(); j++){
+						Card c2 = cards.get(j);
+						if(!c2.isJoker() && c2.getRank() == c.getMeldRank() && c2.getSuit().ordinal() == c.getMeldSuit().ordinal()){
+							playerView.botReplaceJoker(i);
+							if(playerView.canReplaceJoker(new VCard(context, 0, c2))){
+								VCard c3 = playerView.replaceJoker(new VCard(context, 0, c2), null);
+								cards.remove(j);
+								c3.getCard().unSetJoker();
+								cards.add(c3.getCard());
+								jokerReplace();
+								return;
+							}
+						}
+					}
+				}
+			}
+		}
+		
+	}
 }

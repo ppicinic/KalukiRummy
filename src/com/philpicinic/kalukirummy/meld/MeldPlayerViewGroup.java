@@ -157,10 +157,10 @@ public class MeldPlayerViewGroup extends ViewGroup {
 		return false;
 	}
 
-	public boolean canBotAttach(VCard card){
-		for(int i = 0; i < melds.size(); i++){
+	public boolean canBotAttach(VCard card) {
+		for (int i = 0; i < melds.size(); i++) {
 			Meld meld = melds.get(i);
-			if(meld.canAttach(card)){
+			if (meld.canAttach(card)) {
 				attachMeld = meld;
 				attachSpot = i;
 				return true;
@@ -168,6 +168,7 @@ public class MeldPlayerViewGroup extends ViewGroup {
 		}
 		return false;
 	}
+
 	public boolean canAttach(VCard card) {
 		if (attachMeld.canAttach(card)) {
 			return true;
@@ -199,7 +200,7 @@ public class MeldPlayerViewGroup extends ViewGroup {
 		if (attachCards.size() > 0) {
 			for (VCard temp : attachCards) {
 				ArrayList<Integer> i = attachSpots.get(temp);
-				for(Integer x : i){
+				for (Integer x : i) {
 					Meld meld = melds.get(x);
 					this.removeView(meld.removeAttached(temp));
 				}
@@ -207,33 +208,36 @@ public class MeldPlayerViewGroup extends ViewGroup {
 		}
 		readjustMelds();
 	}
-	
-	public boolean canReplaceJoker(VCard card){
-		if(attachMeld.canReplaceJoker(card)){
+
+	public boolean canReplaceJoker(VCard card) {
+		if (attachMeld.canReplaceJoker(card)) {
 			return true;
 		}
 		attachSpot = -1;
 		attachMeld = null;
 		return false;
 	}
-	
-	public VCard replaceJoker(VCard card, JokerUndo undo){
+
+	public VCard replaceJoker(VCard card, JokerUndo undo) {
 		VCard temp = attachMeld.replaceJoker(card);
-		undo.setMeld(attachMeld);
-		undo.setPlayerSide(playerSide);
+		if (undo != null) {
+			undo.setMeld(attachMeld);
+			undo.setPlayerSide(playerSide);
+		}
+		card.layout(l, t, r, b);
 		this.addView(card);
 		this.removeView(temp);
 		readjustMelds();
 		endAttach();
 		return temp;
 	}
-	
-	public void endAttach(){
+
+	public void endAttach() {
 		attachSpot = -1;
 		attachMeld = null;
 	}
-	
-	public void undoJoker(JokerUndo undo){
+
+	public void undoJoker(JokerUndo undo) {
 		undo.getMeld().removeReplaceCard(undo.getReplaceCard());
 		undo.getMeld().attach(undo.getJokerCard());
 		this.removeView(undo.getReplaceCard());
@@ -257,9 +261,9 @@ public class MeldPlayerViewGroup extends ViewGroup {
 
 	public ArrayList<Card> endGame() {
 		ArrayList<Card> temp = new ArrayList<Card>();
-		for(Meld meld: melds){
+		for (Meld meld : melds) {
 			ArrayList<VCard> temp2 = meld.getCards();
-			for(VCard card: temp2){
+			for (VCard card : temp2) {
 				this.removeView(card);
 				temp.add(card.getCard());
 			}
@@ -270,5 +274,9 @@ public class MeldPlayerViewGroup extends ViewGroup {
 		attachCards = new ArrayList<VCard>();
 		attachSpots = new HashMap<VCard, ArrayList<Integer>>();
 		return temp;
+	}
+
+	public void botReplaceJoker(int i) {
+		attachMeld = melds.get(i);
 	}
 }

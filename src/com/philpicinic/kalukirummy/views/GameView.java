@@ -333,6 +333,7 @@ public class GameView extends ViewGroup {
 					deck.returnCards(temp);
 					temp = hand.endGame();
 					deck.returnCards(temp);
+					temp = discard.endGame();
 					deck.shuffle();
 					Handler handler = new Handler();
 					GameStart gameStart = new GameStart(this, hand, deck,

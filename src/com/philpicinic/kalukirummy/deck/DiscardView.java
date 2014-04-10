@@ -1,5 +1,7 @@
 package com.philpicinic.kalukirummy.deck;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
@@ -122,5 +124,10 @@ public class DiscardView extends ViewGroup {
 		this.w = t;
 		this.ol = r;
 		this.ow = b;
+	}
+
+	public ArrayList<Card> endGame() {
+		this.removeView(this.card);
+		return pile.endGame();
 	}
 }
