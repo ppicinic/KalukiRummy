@@ -581,4 +581,24 @@ public class Bot {
 		gameView.endBotTurn();
 	}
 
+	public int handSize() {
+		return cards.size() + playCards.size();
+	}
+
+	public ArrayList<Card> endHand() {
+		ArrayList<Card> temp = cards;
+		for(Meld meld : playCards){
+			ArrayList<VCard> temp2 = meld.getCards();
+			for(VCard card: temp2){
+				temp.add(card.getCard());
+			}
+		}
+		cards = new ArrayList<Card>();
+		playCards = new ArrayList<Meld>();
+		playedValue = 0;
+		initial = false;
+		attached = false;
+		return cards;
+	}
+
 }

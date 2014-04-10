@@ -7,6 +7,7 @@ import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.philpicinic.kalukirummy.card.Card;
 import com.philpicinic.kalukirummy.card.VCard;
 
 public class MeldViewGroup extends ViewGroup {
@@ -191,5 +192,15 @@ public class MeldViewGroup extends ViewGroup {
 	public MeldPlayerViewGroup getPlayerView() {
 		// TODO Auto-generated method stub
 		return meldPlayerViewGroup;
+	}
+
+	public ArrayList<Card> endGame() {
+		ArrayList<Card> temp = meldPlayerViewGroup.endGame();
+		ArrayList<Card> temp2 = meldBotViewGroup.endGame();
+		for(Card card: temp2){
+			temp.add(card);
+		}
+		meldPlaceViewGroup.endGame();
+		return temp;
 	}
 }

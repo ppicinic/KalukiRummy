@@ -82,7 +82,7 @@ public class GameView extends ViewGroup {
 	private VCard movingCard;
 	private VCard jokerCard;
 	private Stack<JokerUndo> jokerUndo;
-	
+
 	private Bot botPlayer;
 	private BotTurn botTurn;
 
@@ -130,7 +130,8 @@ public class GameView extends ViewGroup {
 
 		undoCards = new UndoCards();
 		jokerUndo = new Stack<JokerUndo>();
-		botPlayer = new Bot(context, this, deck, discard, meldViewGroup.getBotView(), meldViewGroup.getPlayerView());
+		botPlayer = new Bot(context, this, deck, discard,
+				meldViewGroup.getBotView(), meldViewGroup.getPlayerView());
 		botTurn = new BotTurn(botPlayer);
 	}
 
@@ -199,11 +200,25 @@ public class GameView extends ViewGroup {
 								hand.removeMovingCard();
 								movingCard.dispatchTouchEvent(event);
 								discard.toss(movingCard);
-								turnState = TurnState.BOT;
+
 								meldViewGroup.endTurn();
 								undoCards.reset();
-								Handler handler = new Handler();
-								handler.postDelayed(botTurn, 200);
+								if (hand.handSize() == 0) {
+									turnState = TurnState.START;
+									
+									CharSequence text = "You won the hand!";
+									int duration = Toast.LENGTH_LONG;
+									
+									Toast toast = Toast.makeText(context, text,
+											duration);
+									toast.show();
+									
+									this.addView(startHand);
+								} else {
+									turnState = TurnState.BOT;
+									Handler handler = new Handler();
+									handler.postDelayed(botTurn, 200);
+								}
 							}
 						} else {
 							CharSequence text = "You need 40 points for your initial build!";
@@ -233,11 +248,13 @@ public class GameView extends ViewGroup {
 								hand.removeMovingCard();
 								meldViewGroup.attachToPlayer(movingCard);
 								undoCards.addAttachedCards(movingCard);
-							}else if(meldViewGroup.canReplacePlayerJoker(movingCard)){
+							} else if (meldViewGroup
+									.canReplacePlayerJoker(movingCard)) {
 								movingCard.dispatchTouchEvent(event);
 								hand.removeMovingCard();
 								JokerUndo tempUndo = new JokerUndo(movingCard);
-								VCard temp = meldViewGroup.replacePlayerJoker(movingCard, tempUndo);
+								VCard temp = meldViewGroup.replacePlayerJoker(
+										movingCard, tempUndo);
 								temp.getCard().unSetJoker();
 								tempUndo.setJokerCard(temp);
 								jokerUndo.push(tempUndo);
@@ -310,6 +327,13 @@ public class GameView extends ViewGroup {
 					animating = true;
 					turnState = TurnState.DRAW;
 					// hand.handCreated();
+					ArrayList<Card> temp = botPlayer.endHand();
+					deck.returnCards(temp);
+					temp = meldViewGroup.endGame();
+					deck.returnCards(temp);
+					temp = hand.endGame();
+					deck.returnCards(temp);
+					deck.shuffle();
 					Handler handler = new Handler();
 					GameStart gameStart = new GameStart(this, hand, deck,
 							discard, botPlayer);
@@ -377,7 +401,7 @@ public class GameView extends ViewGroup {
 	}
 
 	private void handleUndo() {
-		while(!jokerUndo.isEmpty()){
+		while (!jokerUndo.isEmpty()) {
 			JokerUndo tempUndo = jokerUndo.pop();
 			hand.removeJokerCard(tempUndo.getJokerCard());
 			meldViewGroup.undoJokerReplace(tempUndo);
@@ -439,7 +463,8 @@ public class GameView extends ViewGroup {
 		meldViewGroup.initiateHand();
 	}
 
-	private void showChooseSuitDialog(final boolean isAttach, final boolean player) {
+	private void showChooseSuitDialog(final boolean isAttach,
+			final boolean player) {
 		final Dialog chooseSuitDialog = new Dialog(context);
 		chooseSuitDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		chooseSuitDialog.setContentView(R.layout.choose_joker_dialog);
@@ -480,11 +505,11 @@ public class GameView extends ViewGroup {
 				}
 				jokerCard.getCard().setJoker(rank, suit);
 				if (isAttach) {
-					if(player){
-						if(meldViewGroup.canAttach(jokerCard)){
+					if (player) {
+						if (meldViewGroup.canAttach(jokerCard)) {
 							meldViewGroup.attachToPlayer(jokerCard);
 							undoCards.addAttachedCards(jokerCard);
-						}else{
+						} else {
 							jokerCard.getCard().unSetJoker();
 							hand.deal(jokerCard);
 						}
@@ -501,11 +526,22 @@ public class GameView extends ViewGroup {
 	}
 
 	public void endBotTurn() {
-		CharSequence text = "It's your turn!";
-		int duration = Toast.LENGTH_SHORT;
+		if (botPlayer.handSize() == 0) {
+			CharSequence text = "You lost the hand!";
+			int duration = Toast.LENGTH_LONG;
 
-		Toast toast = Toast.makeText(context, text, duration);
-		toast.show();
-		turnState = TurnState.DRAW;
+			Toast toast = Toast.makeText(context, text, duration);
+			toast.show();
+			this.addView(startHand);
+			
+			turnState = TurnState.START;
+		} else {
+			CharSequence text = "It's your turn!";
+			int duration = Toast.LENGTH_SHORT;
+
+			Toast toast = Toast.makeText(context, text, duration);
+			toast.show();
+			turnState = TurnState.DRAW;
+		}
 	}
 }

@@ -1,5 +1,6 @@
 package com.philpicinic.kalukirummy.deck;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 
@@ -51,5 +52,18 @@ public class Deck {
 
 	public void returnToTop(Card card) {
 		deck.add(0, card);		
+	}
+
+	public void returnCards(ArrayList<Card> temp) {
+		for(Card card: temp){
+			deck.add(0, card);
+			if(card.isJoker()){
+				card.unSetJoker();
+			}
+		}
+	}
+
+	public void shuffle() {
+		Collections.shuffle(deck);
 	}
 }

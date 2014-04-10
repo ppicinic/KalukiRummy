@@ -82,7 +82,4 @@ public class BotView extends View{
 		canvas.drawBitmap(bot, x, y, null);
 		canvas.drawBitmap(cardCount, x2, y2, null);
 	}
-	
-	
-
 }

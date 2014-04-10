@@ -41,27 +41,6 @@ public class HandView extends ViewGroup {
 		this.context = context;
 
 		cards = new ArrayList<VCard>();
-		// deal = new LinkedList<VCard>();
-
-		// this.start = false;
-		// this.started = false;
-		//
-		// cards = new ArrayList<VCard>();
-		// // Creates 13 cards in the players hand
-		// cards = new ArrayList<VCard>();
-		// VCard vCard = new VCard(context, 0, Suit.DIAMONDS, 1);
-		// this.addView(vCard);
-		// cards.add(vCard);
-		// vCard = new VCard(context, 1, Suit.CLUBS, 1);
-		// this.addView(vCard);
-		// cards.add(vCard);
-		//
-		// for (int i = 0; i < 11; i++) {
-		// vCard = new VCard(context, (i + 2), Suit.SPADES, (i + 2));
-		// this.addView(vCard);
-		//
-		// cards.add(vCard);
-		// }
 
 		// Creates right arrow
 		rightArrow = new CardMove(context, true);
@@ -427,6 +406,33 @@ public class HandView extends ViewGroup {
 				}
 			}
 		}
+	}
+
+	public int handSize() {
+		return cards.size();
+	}
+
+	public ArrayList<Card> endGame() {
+		ArrayList<Card> temp = new ArrayList<Card>();
+		for(VCard card : cards){
+			this.removeView(card);
+			temp.add(card.getCard());
+		}
+		cardMove = false;
+		right = false;
+		left = 0;
+		seeSort = false;
+		this.removeView(sortHandBtn);
+		if(leftArrow.isVisible()){
+			this.removeView(leftArrow);
+			leftArrow.flipVisibility();
+		}
+		if(rightArrow.isVisible()){
+			this.removeView(rightArrow);
+			rightArrow.flipVisibility();
+		}
+		this.removeView(sortHandBtn);
+		return temp;
 	}
 
 }

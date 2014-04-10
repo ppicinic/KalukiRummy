@@ -254,4 +254,21 @@ public class MeldPlayerViewGroup extends ViewGroup {
 		// TODO Auto-generated method stub
 		return melds;
 	}
+
+	public ArrayList<Card> endGame() {
+		ArrayList<Card> temp = new ArrayList<Card>();
+		for(Meld meld: melds){
+			ArrayList<VCard> temp2 = meld.getCards();
+			for(VCard card: temp2){
+				this.removeView(card);
+				temp.add(card.getCard());
+			}
+		}
+		melds = new ArrayList<Meld>();
+		undoableMelds = new ArrayList<Meld>();
+		attachSpot = -1;
+		attachCards = new ArrayList<VCard>();
+		attachSpots = new HashMap<VCard, ArrayList<Integer>>();
+		return temp;
+	}
 }

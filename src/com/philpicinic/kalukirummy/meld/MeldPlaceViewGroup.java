@@ -36,6 +36,10 @@ public class MeldPlaceViewGroup extends ViewGroup {
 		return cards;
 	}
 	
+	public void endGame(){
+		this.removeView(undoButton);
+	}
+	
 	public void removeAllCards(){
 		for(VCard card : cards){
 			this.removeView(card);
