@@ -16,23 +16,6 @@ public class MeldBotViewGroup extends MeldPlayerViewGroup {
 		attachSpot = -1;
 		attachCards = new ArrayList<VCard>();
 		attachSpots = new HashMap<VCard, ArrayList<Integer>>();
-	}
-
-	protected void readjustMelds() {
-		int level = 0;
-		int pos = 0;
-		for (Meld meld : melds) {
-			if (pos + meld.size() > 26) {
-				pos = 0;
-				level++;
-			}
-			ArrayList<VCard> cards = meld.getCards();
-			for (VCard card : cards) {
-				this.bringChildToFront(card);
-				card.setMeldPos(false, level, pos);
-				pos++;
-			}
-			pos += 4;
-		}
+		playerSide = false;
 	}
 }

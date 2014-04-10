@@ -17,6 +17,7 @@ public class MeldPlayerViewGroup extends ViewGroup {
 	protected int attachSpot;
 	protected ArrayList<VCard> attachCards;
 	protected HashMap<VCard, ArrayList<Integer>> attachSpots;
+	protected boolean playerSide;
 
 	private int l;
 	private int t;
@@ -25,6 +26,7 @@ public class MeldPlayerViewGroup extends ViewGroup {
 
 	public MeldPlayerViewGroup(Context context) {
 		super(context);
+		playerSide = true;
 		melds = new ArrayList<Meld>();
 		undoableMelds = new ArrayList<Meld>();
 		attachSpot = -1;
@@ -55,7 +57,7 @@ public class MeldPlayerViewGroup extends ViewGroup {
 			ArrayList<VCard> cards = meld.getCards();
 			for (VCard card : cards) {
 				this.bringChildToFront(card);
-				card.setMeldPos(true, level, pos);
+				card.setMeldPos(playerSide, level, pos);
 				pos++;
 			}
 			pos += 4;
@@ -218,6 +220,7 @@ public class MeldPlayerViewGroup extends ViewGroup {
 	public VCard replaceJoker(VCard card, JokerUndo undo){
 		VCard temp = attachMeld.replaceJoker(card);
 		undo.setMeld(attachMeld);
+		undo.setPlayerSide(playerSide);
 		this.addView(card);
 		this.removeView(temp);
 		readjustMelds();

@@ -15,7 +15,8 @@ public class MeldViewGroup extends ViewGroup {
 	private MeldPlaceViewGroup meldPlaceViewGroup;
 	private MeldPlayerViewGroup meldPlayerViewGroup;
 	private MeldBotViewGroup meldBotViewGroup;
-	
+	private MeldPlayerViewGroup attach;
+
 	public MeldViewGroup(Context context) {
 		super(context);
 
@@ -119,43 +120,68 @@ public class MeldViewGroup extends ViewGroup {
 
 	public boolean checkAttachCollision(VCard card) {
 		boolean result = meldPlayerViewGroup.checkMeldCollision(card);
+		if (result) {
+			attach = meldPlayerViewGroup;
+		} else {
+			result = meldBotViewGroup.checkMeldCollision(card);
+			if (result) {
+				attach = meldBotViewGroup;
+			}
+		}
 		if (result && meldPlayerViewGroup.meldValue() < 40) {
 			CharSequence text = "You need 40 points to attach a card!";
 			int duration = Toast.LENGTH_SHORT;
 
 			Toast toast = Toast.makeText(context, text, duration);
 			toast.show();
+			attach = null;
 			return false;
 		}
 		return result;
 	}
 
 	public boolean canAttach(VCard card) {
-		return meldPlayerViewGroup.canAttach(card);
+		if (attach != null) {
+			return attach.canAttach(card);
+		}
+		return false;
 	}
 
 	public void attachToPlayer(VCard card) {
-		meldPlayerViewGroup.attach(card);
+		attach.attach(card);
+		// attach = null;
 	}
 
 	public void removeAttachedPlayerCards() {
 		meldPlayerViewGroup.removeAttachedCards();
+		meldBotViewGroup.removeAttachedCards();
 	}
 
 	public boolean canReplacePlayerJoker(VCard card) {
-		return meldPlayerViewGroup.canReplaceJoker(card);
+		if (attach != null) {
+			boolean result = attach.canReplaceJoker(card);
+			if (!result) {
+				// attach = null;
+			}
+			return result;
+		}
+		return false;
 	}
 
 	public VCard replacePlayerJoker(VCard card, JokerUndo undo) {
-		return meldPlayerViewGroup.replaceJoker(card, undo);
+		return attach.replaceJoker(card, undo);
 	}
 
 	public void endPlayerAttach() {
-		meldPlayerViewGroup.endAttach();
+		attach.endAttach();
 	}
 
 	public void undoJokerReplace(JokerUndo undo) {
-		meldPlayerViewGroup.undoReplaceJoker(undo);
+		if (undo.isPlayerSide()) {
+			meldPlayerViewGroup.undoReplaceJoker(undo);
+		} else {
+			meldBotViewGroup.undoReplaceJoker(undo);
+		}
 	}
 
 	public MeldBotViewGroup getBotView() {

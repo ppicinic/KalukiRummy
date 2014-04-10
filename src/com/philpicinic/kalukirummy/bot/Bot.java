@@ -34,7 +34,8 @@ public class Bot {
 	private MeldPlayerViewGroup playerView;
 
 	public Bot(Context context, GameView gameView, Deck deck,
-			DiscardView discard, MeldBotViewGroup meldBotViewGroup, MeldPlayerViewGroup playerView) {
+			DiscardView discard, MeldBotViewGroup meldBotViewGroup,
+			MeldPlayerViewGroup playerView) {
 		cards = new ArrayList<Card>();
 		this.context = context;
 		this.gameView = gameView;
@@ -61,7 +62,7 @@ public class Bot {
 	private void playMelds() {
 		if (playCards.size() > 0) {
 			System.out.println("play: " + playedValue);
-			if (true) {// playedValue >= 40) {
+			if (true){//playedValue >= 40) {
 				for (Meld meld : playCards) {
 					view.addMeld(meld);
 				}
@@ -78,19 +79,123 @@ public class Bot {
 			for (int i = 0; i < cards.size(); i++) {
 				if (cards.size() <= 3
 						|| (priorities[i] * (random.nextInt(100) + 1) < 200)) {
-					if(cards.get(i).isJoker()){
+					if (cards.get(i).isJoker()) {
 						ArrayList<Meld> melds = playerView.getMelds();
-						for(Meld meld: melds){
-							ArrayList<VCard> cards = meld.getCards();
-							Card first = cards.get(0).getCard();
-							Card second = cards.get(1).getCard();
-							if(first.getRank() == second.getRank()){
+						for (Meld meld : melds) {
+							ArrayList<VCard> temp = meld.getCards();
+							Card first = temp.get(0).getCard();
+							Card second = temp.get(1).getCard();
+							if (first.getRank() == second.getRank()) {
 								// handle set
-								if(cards.size() < 4){
-									
+								if (temp.size() < 4) {
+									Suit suit = Suit.DIAMONDS;
+									if (temp.get(0).getCard().getSuit()
+											.ordinal() == 0) {
+										suit = Suit.CLUBS;
+										if (temp.get(1).getCard().getSuit()
+												.ordinal() == 1) {
+											suit = Suit.HEARTS;
+											if (temp.get(2).getCard().getSuit()
+													.ordinal() == 2) {
+												suit = Suit.SPADES;
+											}
+										}
+									}
+									cards.get(i)
+											.setJoker(first.getRank(), suit);
+									if (playerView.canBotAttach(new VCard(
+											context, 2, cards.get(i)))) {
+										view.attach(new VCard(context, 0, cards
+												.get(i)));
+										cards.remove(i);
+										attached = true;
+										break;
+									} else {
+										cards.get(i).unSetJoker();
+									}
 								}
-							}else{
-								// handle run
+							} else {
+								if (temp.size() < 12) {
+									int rank = temp.get(temp.size() - 1)
+											.getCard().getRank() + 1;
+									if (rank == 15) {
+										rank = temp.get(0).getCard().getRank() - 1;
+									}
+									cards.get(i).setJoker(rank,
+											temp.get(0).getCard().getSuit());
+									if (playerView.canBotAttach(new VCard(
+											context, 2, cards.get(i)))) {
+										view.attach(new VCard(context, 0, cards
+												.get(i)));
+										cards.remove(i);
+										attached = true;
+										break;
+									} else {
+										cards.get(i).unSetJoker();
+									}
+								}
+							}
+						}
+						if (!attached) {
+							melds = view.getMelds();
+							for (Meld meld : melds) {
+								ArrayList<VCard> temp = meld.getCards();
+								Card first = temp.get(0).getCard();
+								Card second = temp.get(1).getCard();
+								if (first.getRank() == second.getRank()) {
+									// handle set
+									if (temp.size() < 4) {
+										Suit suit = Suit.DIAMONDS;
+										if (temp.get(0).getCard().getSuit()
+												.ordinal() == 0) {
+											suit = Suit.CLUBS;
+											if (temp.get(1).getCard().getSuit()
+													.ordinal() == 1) {
+												suit = Suit.HEARTS;
+												if (temp.get(2).getCard()
+														.getSuit().ordinal() == 2) {
+													suit = Suit.SPADES;
+												}
+											}
+										}
+										cards.get(i).setJoker(first.getRank(),
+												suit);
+										if (playerView.canBotAttach(new VCard(
+												context, 2, cards.get(i)))) {
+											view.attach(new VCard(context, 0,
+													cards.get(i)));
+											cards.remove(i);
+											attached = true;
+											break;
+										} else {
+											cards.get(i).unSetJoker();
+										}
+									}
+								} else {
+									if (temp.size() < 12) {
+										int rank = temp.get(temp.size() - 1)
+												.getCard().getRank() + 1;
+										if (rank == 15) {
+											rank = temp.get(0).getCard()
+													.getRank() - 1;
+										}
+										cards.get(i)
+												.setJoker(
+														rank,
+														temp.get(0).getCard()
+																.getSuit());
+										if (playerView.canBotAttach(new VCard(
+												context, 2, cards.get(i)))) {
+											view.attach(new VCard(context, 0,
+													cards.get(i)));
+											cards.remove(i);
+											attached = true;
+											break;
+										} else {
+											cards.get(i).unSetJoker();
+										}
+									}
+								}
 							}
 						}
 						break;
@@ -101,7 +206,8 @@ public class Bot {
 						attached = true;
 						break;
 					}
-					if(playerView.canBotAttach(new VCard(context, 2, cards.get(i)))) {
+					if (playerView.canBotAttach(new VCard(context, 2, cards
+							.get(i)))) {
 						playerView.attach(new VCard(context, 0, cards.get(i)));
 						cards.remove(i);
 						attached = true;
@@ -180,14 +286,18 @@ public class Bot {
 												.get(j).getSuit().ordinal()) {
 									// Create set with joker
 									Suit suit = Suit.DIAMONDS;
-									if(cards.get(i).getSuit().ordinal() == 0 || cards.get(j).getSuit().ordinal() == 0){
-										if(cards.get(i).getSuit().ordinal() == 1 || cards.get(j).getSuit().ordinal() == 1){
+									if (cards.get(i).getSuit().ordinal() == 0
+											|| cards.get(j).getSuit().ordinal() == 0) {
+										if (cards.get(i).getSuit().ordinal() == 1
+												|| cards.get(j).getSuit()
+														.ordinal() == 1) {
 											suit = Suit.SPADES;
-										}else{
+										} else {
 											suit = Suit.CLUBS;
 										}
 									}
-									cards.get(cards.size() - 1).setJoker(cards.get(i).getRank(), suit);
+									cards.get(cards.size() - 1).setJoker(
+											cards.get(i).getRank(), suit);
 									ArrayList<VCard> temp = new ArrayList<VCard>();
 									temp.add(new VCard(context, 0, cards.get(i)));
 									temp.add(new VCard(context, 0, cards.get(j)));
@@ -466,6 +576,8 @@ public class Bot {
 	}
 
 	public void endTurn() {
+		view.endTurn();
+		playerView.endTurn();
 		gameView.endBotTurn();
 	}
 
