@@ -289,7 +289,7 @@ public class VCard extends View implements Comparable<VCard> {
 			y = screenH - ((int) (card.getHeight() * (3 + level)) + (card.getHeight() * (1 + level) / 4));
 		} else {
 			// TODO Bot positioning
-			x = (card.getWidth() / 6) + (card.getWidth() * pos / 4);
+			x = screenW - ((card.getWidth() / 6) + (card.getWidth() * (pos + 4) / 4));
 			y = ((int) (card.getHeight() * (1 + level)) + (card.getHeight() * (1 + level) / 4));
 		}
 		invalidate();

@@ -59,7 +59,7 @@ public abstract class AbstractMeld implements Meld {
 			if (card.isJoker()) {
 				if (temp.isJoker()) {
 					if (card.getMeldRank() == temp.getMeldRank()) {
-						if (card.getMeldSuit() == card.getMeldSuit()) {
+						if (card.getMeldSuit().ordinal() == card.getMeldSuit().ordinal()) {
 							VCard result = cards.remove(i);
 							Collections.sort(cards);
 							return result;
