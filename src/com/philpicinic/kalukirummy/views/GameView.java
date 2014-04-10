@@ -130,7 +130,7 @@ public class GameView extends ViewGroup {
 
 		undoCards = new UndoCards();
 		jokerUndo = new Stack<JokerUndo>();
-		botPlayer = new Bot(context, this, deck, discard, meldViewGroup.getBotView());
+		botPlayer = new Bot(context, this, deck, discard, meldViewGroup.getBotView(), meldViewGroup.getPlayerView());
 		botTurn = new BotTurn(botPlayer);
 	}
 
@@ -203,7 +203,7 @@ public class GameView extends ViewGroup {
 								meldViewGroup.endTurn();
 								undoCards.reset();
 								Handler handler = new Handler();
-								handler.postDelayed(botTurn, 2000);
+								handler.postDelayed(botTurn, 200);
 							}
 						} else {
 							CharSequence text = "You need 40 points for your initial build!";

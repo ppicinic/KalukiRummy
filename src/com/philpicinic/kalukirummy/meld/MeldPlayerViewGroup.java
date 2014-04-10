@@ -155,6 +155,17 @@ public class MeldPlayerViewGroup extends ViewGroup {
 		return false;
 	}
 
+	public boolean canBotAttach(VCard card){
+		for(int i = 0; i < melds.size(); i++){
+			Meld meld = melds.get(i);
+			if(meld.canAttach(card)){
+				attachMeld = meld;
+				attachSpot = i;
+				return true;
+			}
+		}
+		return false;
+	}
 	public boolean canAttach(VCard card) {
 		if (attachMeld.canAttach(card)) {
 			return true;
@@ -164,6 +175,7 @@ public class MeldPlayerViewGroup extends ViewGroup {
 	}
 
 	public void attach(VCard card) {
+		card.layout(l, t, r, b);
 		attachCards.add(card);
 		if (attachSpots.containsKey(card)) {
 			ArrayList<Integer> temp = attachSpots.get(card);
@@ -233,5 +245,10 @@ public class MeldPlayerViewGroup extends ViewGroup {
 		joker.getCard().setJoker(card.getRank(), card.getSuit());
 		undo.getMeld().attach(joker);
 		this.addView(joker);
+	}
+
+	public ArrayList<Meld> getMelds() {
+		// TODO Auto-generated method stub
+		return melds;
 	}
 }

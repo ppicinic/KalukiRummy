@@ -161,4 +161,9 @@ public class MeldViewGroup extends ViewGroup {
 	public MeldBotViewGroup getBotView() {
 		return meldBotViewGroup;
 	}
+
+	public MeldPlayerViewGroup getPlayerView() {
+		// TODO Auto-generated method stub
+		return meldPlayerViewGroup;
+	}
 }
