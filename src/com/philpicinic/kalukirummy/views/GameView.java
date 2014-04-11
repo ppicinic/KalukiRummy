@@ -212,7 +212,7 @@ public class GameView extends ViewGroup {
 									Toast toast = Toast.makeText(context, text,
 											duration);
 									toast.show();
-									
+									scoreCard.addGame(0, botPlayer.handValue());
 									this.addView(startHand);
 								} else {
 									turnState = TurnState.BOT;
@@ -534,7 +534,7 @@ public class GameView extends ViewGroup {
 			Toast toast = Toast.makeText(context, text, duration);
 			toast.show();
 			this.addView(startHand);
-			
+			scoreCard.addGame(hand.handValue(), 0);
 			turnState = TurnState.START;
 		} else {
 			CharSequence text = "It's your turn!";

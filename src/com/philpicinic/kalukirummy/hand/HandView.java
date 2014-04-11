@@ -435,4 +435,12 @@ public class HandView extends ViewGroup {
 		return temp;
 	}
 
+	public int handValue() {
+		int total = 0;
+		for(VCard card: cards){
+			total += card.getCard().handValue();
+		}
+		return total;
+	}
+
 }

@@ -82,6 +82,11 @@ public class ScoreCardView extends View{
 	protected void onDraw(Canvas canvas) {
 		canvas.drawBitmap(scorecard, x, y, null);
 	}
+	
+	public void addGame(int player, int bot){
+		playerGames.add(player);
+		botGames.add(bot);
+	}
 
 	public boolean onTouchEvent(MotionEvent event){
 		int e = event.getAction();
@@ -114,8 +119,8 @@ public class ScoreCardView extends View{
 		String botScores = "";
 		for(int i = 0; i < playerGames.size(); i++){
 			games += i + "\n";
-			playerScores += playerGames.get(i) + "\n";
-			botScores += botGames.get(i) + "\n";
+			playerScores += playerGames.get(i).intValue() + "\n";
+			botScores += botGames.get(i).intValue() + "\n";
 		}
 		TextView textView1 = (TextView) chooseSuitDialog.findViewById(R.id.textView4);
 		textView1.setText(games);
