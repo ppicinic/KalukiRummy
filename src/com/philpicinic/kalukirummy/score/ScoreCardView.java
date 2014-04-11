@@ -131,7 +131,7 @@ public class ScoreCardView extends View {
 		String playerScores = "";
 		String botScores = "";
 		for (int i = 0; i < playerGames.size(); i++) {
-			games += i + "\n";
+			games += (i + 1) + "\n";
 			playerScores += playerGames.get(i).intValue() + "\n";
 			botScores += botGames.get(i).intValue() + "\n";
 		}

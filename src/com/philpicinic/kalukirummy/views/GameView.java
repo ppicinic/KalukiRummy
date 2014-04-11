@@ -225,6 +225,7 @@ public class GameView extends ViewGroup {
 									this.addView(startHand);
 									turnState = TurnState.START;
 								} else {
+									endTurn();
 									turnState = TurnState.BOT;
 									Handler handler = new Handler();
 									handler.postDelayed(botTurn, 200);
@@ -288,6 +289,11 @@ public class GameView extends ViewGroup {
 		// // return true;
 		// }
 		return false;
+	}
+
+	private void endTurn() {
+		this.jokerUndo = new Stack<JokerUndo>();
+		
 	}
 
 	public boolean onTouchEvent(MotionEvent event) {
