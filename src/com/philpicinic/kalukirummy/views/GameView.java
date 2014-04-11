@@ -85,6 +85,8 @@ public class GameView extends ViewGroup {
 
 	private Bot botPlayer;
 	private BotTurn botTurn;
+	
+	private ToastView toastView;
 
 	/**
 	 * Create the GameView Group Creates all child elements of the layout
@@ -97,6 +99,9 @@ public class GameView extends ViewGroup {
 		this.context = context;
 
 		deck = new Deck();
+		
+		toastView = new ToastView(context);
+		this.addView(toastView);
 
 		animating = false;
 		turnState = TurnState.START;
@@ -117,7 +122,7 @@ public class GameView extends ViewGroup {
 		bot = new BotView(context);
 		this.addView(bot);
 
-		meldViewGroup = new MeldViewGroup(context);
+		meldViewGroup = new MeldViewGroup(context, toastView);
 		this.addView(meldViewGroup);
 		// this.addView(meldArea);
 
@@ -131,7 +136,7 @@ public class GameView extends ViewGroup {
 		undoCards = new UndoCards();
 		jokerUndo = new Stack<JokerUndo>();
 		botPlayer = new Bot(context, this, deck, discard,
-				meldViewGroup.getBotView(), meldViewGroup.getPlayerView());
+				meldViewGroup.getBotView(), meldViewGroup.getPlayerView(), bot);
 		botTurn = new BotTurn(botPlayer);
 	}
 
@@ -189,55 +194,32 @@ public class GameView extends ViewGroup {
 						if (meldViewGroup.playerCanToss()) {
 							if (hasDrawnFromDiscard
 									&& !meldViewGroup.hasInitialBuild()) {
-								CharSequence text = "You need an initial build to draw from the discard pile!";
-								int duration = Toast.LENGTH_SHORT;
-
-								Toast toast = Toast.makeText(context, text,
-										duration);
-								toast.show();
+								toastView.showToast(getResources().getString(R.string.initial_discard), Toast.LENGTH_SHORT);
 							} else {
 								hasDrawnFromDiscard = false;
 								hand.removeMovingCard();
 								movingCard.dispatchTouchEvent(event);
 								discard.toss(movingCard);
-
-								meldViewGroup.endTurn();
-								undoCards.reset();
+								endTurn();
+								
 								if (hand.handSize() == 0) {
 									scoreCard.addGame(0, botPlayer.handValue());
 									if (scoreCard.getBotScore() > 100) {
-										CharSequence text = "You won the entire game!";
-										int duration = Toast.LENGTH_LONG;
-
-										Toast toast = Toast.makeText(context,
-												text, duration);
-										toast.show();
+										toastView.showToast(getResources().getString(R.string.game_win), Toast.LENGTH_LONG);
 										scoreCard.endGame();
 									} else {
-
-										CharSequence text = "You won the hand!";
-										int duration = Toast.LENGTH_LONG;
-
-										Toast toast = Toast.makeText(context,
-												text, duration);
-										toast.show();
+										toastView.showToast(getResources().getString(R.string.hand_win), Toast.LENGTH_LONG);
 									}
 									this.addView(startHand);
 									turnState = TurnState.START;
 								} else {
-									endTurn();
 									turnState = TurnState.BOT;
 									Handler handler = new Handler();
 									handler.postDelayed(botTurn, 200);
 								}
 							}
 						} else {
-							CharSequence text = "You need 40 points for your initial build!";
-							int duration = Toast.LENGTH_SHORT;
-
-							Toast toast = Toast.makeText(context, text,
-									duration);
-							toast.show();
+							toastView.showToast(getResources().getString(R.string.initial_build), Toast.LENGTH_SHORT);
 						}
 					} else if (meldViewGroup.checkCollisionByCard(movingCard)) {
 						hand.removeMovingCard();
@@ -292,8 +274,9 @@ public class GameView extends ViewGroup {
 	}
 
 	private void endTurn() {
+		meldViewGroup.endTurn();
 		this.jokerUndo = new Stack<JokerUndo>();
-		
+		undoCards.reset();
 	}
 
 	public boolean onTouchEvent(MotionEvent event) {
@@ -352,6 +335,7 @@ public class GameView extends ViewGroup {
 					temp = discard.endGame();
 					deck.returnCards(temp);
 					deck.shuffle();
+					bot.update(13);
 					Handler handler = new Handler();
 					GameStart gameStart = new GameStart(this, hand, deck,
 							discard, botPlayer);
@@ -401,11 +385,7 @@ public class GameView extends ViewGroup {
 						meldViewGroup.addMeld(MeldFactory.buildMeld(tempCards));
 						// TODO place cards
 					} else {
-						CharSequence text = "This is an invalid meld!";
-						int duration = Toast.LENGTH_SHORT;
-
-						Toast toast = Toast.makeText(context, text, duration);
-						toast.show();
+						toastView.showToast(getResources().getString(R.string.invalid_meld), Toast.LENGTH_SHORT);
 					}
 					playCards = false;
 					return true;
@@ -544,30 +524,19 @@ public class GameView extends ViewGroup {
 	}
 
 	public void endBotTurn() {
+		endTurn();
 		if (botPlayer.handSize() == 0) {
 			scoreCard.addGame(hand.handValue(), 0);
 			if (scoreCard.getPlayerScore() > 100) {
-				CharSequence text = "You lost the entire game!";
-				int duration = Toast.LENGTH_LONG;
-
-				Toast toast = Toast.makeText(context, text, duration);
-				toast.show();
+				toastView.showToast(getResources().getString(R.string.game_lose), Toast.LENGTH_LONG);
 				scoreCard.endGame();
 			} else {
-				CharSequence text = "You lost the hand!";
-				int duration = Toast.LENGTH_LONG;
-
-				Toast toast = Toast.makeText(context, text, duration);
-				toast.show();
+				toastView.showToast(getResources().getString(R.string.hand_lose), Toast.LENGTH_LONG);
 			}
 			this.addView(startHand);
 			turnState = TurnState.START;
 		} else {
-			CharSequence text = "It's your turn!";
-			int duration = Toast.LENGTH_SHORT;
-
-			Toast toast = Toast.makeText(context, text, duration);
-			toast.show();
+			toastView.showToast(getResources().getString(R.string.your_turn), Toast.LENGTH_SHORT);
 			turnState = TurnState.DRAW;
 		}
 	}

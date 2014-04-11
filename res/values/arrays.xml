@@ -21,4 +21,13 @@
      <item>King</item>
      <item>Ace</item>  
 </string-array>    
+<string-array name="bot_names">
+    <item>Phil (CPU)</item>
+    <item>Mike (CPU)</item>
+    <item>Ron (CPU)</item>
+    <item>Nick (CPU)</item>
+    <item>Matt (CPU)</item>
+    <item>Carl (CPU)</item>
+    <item>Jim (CPU)</item>
+</string-array>
 </resources>

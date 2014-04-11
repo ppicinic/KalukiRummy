@@ -11,48 +11,59 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="5dip" >
- 
+
         <TextView
             android:id="@+id/textView1"
-            android:text="#"
             android:padding="5dip"
+            android:text="@string/game"
             android:textAppearance="?android:attr/textAppearanceLarge" />
-        
+
         <TextView
             android:id="@+id/textView2"
-            android:text="Player (You)"
             android:padding="5dip"
+            android:text="@string/player_name"
             android:textAppearance="?android:attr/textAppearanceLarge" />
- 
+
         <TextView
             android:id="@+id/textView3"
-            android:text="Mike (CPU)"
             android:padding="5dip"
             android:textAppearance="?android:attr/textAppearanceLarge" />
     </TableRow>
+
     <TableRow
         android:id="@+id/tableRow2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="5dip" >
- 
+
         <TextView
             android:id="@+id/textView4"
-            android:text="1"
             android:padding="5dip"
             android:textAppearance="?android:attr/textAppearanceLarge" />
-        
+
         <TextView
             android:id="@+id/textView5"
-            android:text="5"
             android:padding="5dip"
             android:textAppearance="?android:attr/textAppearanceLarge" />
- 
+
         <TextView
             android:id="@+id/textView6"
-            android:text="0"
             android:padding="5dip"
             android:textAppearance="?android:attr/textAppearanceLarge" />
     </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dip" >
+    </TableRow>
+
+    <Button
+        android:id="@+id/okButton2"
+        android:layout_width="125dp"
+        android:layout_height="wrap_content"
+        android:text="@string/ok" >
+    </Button>
 
 </TableLayout>

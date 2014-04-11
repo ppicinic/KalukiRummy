@@ -104,6 +104,7 @@ public abstract class AbstractMeld implements Meld {
 
 	public VCard replaceJoker(VCard card) {
 		VCard temp = cards.remove(jokerSpot);
+		temp.getCard().unSetJoker();
 		cards.add(card);
 		Collections.sort(cards);
 		return temp;

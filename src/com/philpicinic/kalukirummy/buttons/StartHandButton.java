@@ -36,8 +36,8 @@ public class StartHandButton extends View{
 		screenH = h;
 		
 		// Scale Background
-		int scaleW = (int) (screenW);
-		int scaleH = (int) (scaleW * .5);
+		int scaleW = (int) (screenW * 2 / 3);
+		int scaleH = (int) (scaleW / 3);
 		start = Bitmap.createScaledBitmap(start, scaleW, scaleH, false);
 		x = (screenW / 2) - (start.getWidth() / 2);
 		y = (screenH / 2) - (start.getHeight() / 2);
@@ -54,9 +54,7 @@ public class StartHandButton extends View{
 	public boolean checkCollision(MotionEvent event){
 		int X = (int) event.getX();
 		int Y = (int) event.getY();
-		System.out.println("check start collision");
 		if(X >= x && X <= (x + start.getWidth()) && Y >= y && Y <= (y + start.getHeight())){
-			System.out.println("pass");
 			return true;
 		}
 		return false;

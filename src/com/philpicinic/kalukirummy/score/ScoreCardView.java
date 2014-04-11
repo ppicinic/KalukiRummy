@@ -1,6 +1,7 @@
 package com.philpicinic.kalukirummy.score;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -10,6 +11,7 @@ import android.graphics.Canvas;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.philpicinic.kalukirummy.R;
@@ -22,7 +24,6 @@ import com.philpicinic.kalukirummy.R;
  */
 public class ScoreCardView extends View {
 
-	@SuppressWarnings("unused")
 	private Context context;
 	private Bitmap scorecard;
 
@@ -33,7 +34,6 @@ public class ScoreCardView extends View {
 	private int x;
 	private int y;
 	private String botName;
-	private String playerName;
 	private ArrayList<Integer> playerGames;
 	private ArrayList<Integer> botGames;
 
@@ -48,9 +48,10 @@ public class ScoreCardView extends View {
 		this.context = context;
 		scorecard = BitmapFactory.decodeResource(getResources(),
 				R.drawable.scorecard);
-
-		botName = "Mike (CPU)";
-		playerName = "Player (You)";
+		String[] names = getResources().getStringArray(R.array.bot_names);
+		Random random = new Random(System.currentTimeMillis());
+		int spot = random.nextInt(names.length);
+		botName = names[spot];
 		playerGames = new ArrayList<Integer>();
 		botGames = new ArrayList<Integer>();
 	}
@@ -124,48 +125,45 @@ public class ScoreCardView extends View {
 	}
 
 	private void showScoreDialog() {
-		final Dialog chooseSuitDialog = new Dialog(context);
-		chooseSuitDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		chooseSuitDialog.setContentView(R.layout.scorecard_layout);
-		String games = "";
-		String playerScores = "";
-		String botScores = "";
+		final Dialog scoreCardDialog = new Dialog(context);
+		scoreCardDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		scoreCardDialog.setContentView(R.layout.scorecard_layout);
+		StringBuilder g = new StringBuilder();
+		StringBuilder p = new StringBuilder();
+		StringBuilder b = new StringBuilder();
 		for (int i = 0; i < playerGames.size(); i++) {
-			games += (i + 1) + "\n";
-			playerScores += playerGames.get(i).intValue() + "\n";
-			botScores += botGames.get(i).intValue() + "\n";
+			g.append("" + (i + 1) + "\n");
+			p.append("" + playerGames.get(i).intValue() + "\n");
+			b.append(botGames.get(i).intValue() + "\n");
 		}
-		TextView textView1 = (TextView) chooseSuitDialog
+		if (playerGames.size() > 0) {
+			g.deleteCharAt(g.length() - 1);
+			p.deleteCharAt(p.length() - 1);
+			b.deleteCharAt(b.length() - 1);
+		}
+		
+		TextView botNameView = (TextView) scoreCardDialog.findViewById(R.id.textView3);
+		botNameView.setText(botName);
+		
+		TextView textView1 = (TextView) scoreCardDialog
 				.findViewById(R.id.textView4);
-		textView1.setText(games);
+		textView1.setText(g.toString());
 
-		TextView textView2 = (TextView) chooseSuitDialog
+		TextView textView2 = (TextView) scoreCardDialog
 				.findViewById(R.id.textView5);
-		textView2.setText(playerScores);
+		textView2.setText(p.toString());
 
-		TextView textView3 = (TextView) chooseSuitDialog
+		TextView textView3 = (TextView) scoreCardDialog
 				.findViewById(R.id.textView6);
-		textView3.setText(botScores);
-		// final Spinner rankSpinner = (Spinner) chooseSuitDialog
-		// .findViewById(R.id.rankSpinner);
-		// ArrayAdapter<CharSequence> adapter2 =
-		// ArrayAdapter.createFromResource(
-		// context, R.array.ranks, android.R.layout.simple_spinner_item);
-		// adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		// rankSpinner.setAdapter(adapter2);
-		// final Spinner suitSpinner = (Spinner) chooseSuitDialog
-		// .findViewById(R.id.suitSpinner);
-		// ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-		// context, R.array.suits, android.R.layout.simple_spinner_item);
-		// adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		// suitSpinner.setAdapter(adapter);
+		textView3.setText(b.toString());
 
-		// Button okButton = (Button)
-		// chooseSuitDialog.findViewById(R.id.okButton);
-		// okButton.setOnClickListener(new View.OnClickListener() {
-		// public void onClick(View view) {
-		// });
-		chooseSuitDialog.show();
+		Button okButton = (Button) scoreCardDialog.findViewById(R.id.okButton2);
+		okButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+				scoreCardDialog.dismiss();
+			}
+		});
+		scoreCardDialog.show();
 	}
 
 	public int getPlayerScore() {

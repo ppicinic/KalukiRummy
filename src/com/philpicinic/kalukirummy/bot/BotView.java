@@ -17,7 +17,6 @@ import android.view.View;
  */
 public class BotView extends View{
 
-	@SuppressWarnings("unused")
 	private Context context;
 	
 	private Bitmap bot;
@@ -26,6 +25,8 @@ public class BotView extends View{
 	@SuppressWarnings("unused")
 	private int screenH;
 	private int screenW;
+	private int scaleW;
+	private int scaleH;
 	
 	private int x;
 	private int y;
@@ -42,7 +43,7 @@ public class BotView extends View{
 		
 		this.context = context;
 		this.bot = BitmapFactory.decodeResource(getResources(), R.drawable.bot);
-		this.cardCount = BitmapFactory.decodeResource(getResources(), R.drawable.card_count13);
+		this.cardCount = BitmapFactory.decodeResource(getResources(), R.drawable.botcard113);
 	}
 	
 	/**
@@ -60,14 +61,14 @@ public class BotView extends View{
 		screenH = h;
 		
 		// Scale and place bot image
-		int scaleW = (int) (screenW / 7);
-		int scaleH = (int) (scaleW);
+		scaleW = (int) (screenW / 7);
+		scaleH = (int) (scaleW);
 		bot = Bitmap.createScaledBitmap(bot, scaleW, scaleH, false);
 		x = (bot.getWidth() * 2) + ( (bot.getWidth() / 6) * (3));
 		y = (bot.getHeight()  / 3);
 		
 		// Scale and place card count image
-		scaleH = (int) (scaleW * 1.28);
+		scaleH = (int) (scaleW * 1.4);
 		cardCount = Bitmap.createScaledBitmap(cardCount, scaleW, scaleH, false);
 		x2 = (cardCount.getWidth() * 3) + ( (cardCount.getWidth() / 6) * (4));
 		y2 = (cardCount.getHeight()  / 6);
@@ -81,5 +82,18 @@ public class BotView extends View{
 	protected void onDraw(Canvas canvas) {
 		canvas.drawBitmap(bot, x, y, null);
 		canvas.drawBitmap(cardCount, x2, y2, null);
+	}
+	
+	public void update(int handSize) {
+		String str = "botcard1";
+		if(handSize < 10){
+			str += "0";
+		}
+		str += handSize;
+		int resourceId = getResources().getIdentifier(str, "drawable",
+				this.context.getPackageName());
+		cardCount = BitmapFactory.decodeResource(getResources(), resourceId);
+		cardCount = Bitmap.createScaledBitmap(cardCount, scaleW, scaleH, false);
+		invalidate();
 	}
 }

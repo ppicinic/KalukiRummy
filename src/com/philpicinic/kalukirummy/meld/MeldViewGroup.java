@@ -7,8 +7,10 @@ import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.philpicinic.kalukirummy.R;
 import com.philpicinic.kalukirummy.card.Card;
 import com.philpicinic.kalukirummy.card.VCard;
+import com.philpicinic.kalukirummy.views.ToastView;
 
 public class MeldViewGroup extends ViewGroup {
 
@@ -17,8 +19,13 @@ public class MeldViewGroup extends ViewGroup {
 	private MeldPlayerViewGroup meldPlayerViewGroup;
 	private MeldBotViewGroup meldBotViewGroup;
 	private MeldPlayerViewGroup attach;
+	private ToastView toastView;
 
-	public MeldViewGroup(Context context) {
+	public MeldViewGroup(Context context){
+		super(context);
+	}
+	
+	public MeldViewGroup(Context context, ToastView toastView) {
 		super(context);
 
 		this.context = context;
@@ -29,6 +36,7 @@ public class MeldViewGroup extends ViewGroup {
 		this.addView(meldPlayerViewGroup);
 		meldBotViewGroup = new MeldBotViewGroup(this.context);
 		this.addView(meldBotViewGroup);
+		this.toastView = toastView;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -109,6 +117,7 @@ public class MeldViewGroup extends ViewGroup {
 
 	public void endTurn() {
 		meldPlayerViewGroup.endTurn();
+		meldBotViewGroup.endTurn();
 	}
 
 	public boolean hasInitialBuild() {
@@ -130,11 +139,7 @@ public class MeldViewGroup extends ViewGroup {
 			}
 		}
 		if (result && meldPlayerViewGroup.meldValue() < 40) {
-			CharSequence text = "You need 40 points to attach a card!";
-			int duration = Toast.LENGTH_SHORT;
-
-			Toast toast = Toast.makeText(context, text, duration);
-			toast.show();
+			toastView.showToast(getResources().getString(R.string.cannot_attach), Toast.LENGTH_SHORT);
 			attach = null;
 			return false;
 		}
@@ -197,7 +202,7 @@ public class MeldViewGroup extends ViewGroup {
 	public ArrayList<Card> endGame() {
 		ArrayList<Card> temp = meldPlayerViewGroup.endGame();
 		ArrayList<Card> temp2 = meldBotViewGroup.endGame();
-		for(Card card: temp2){
+		for (Card card : temp2) {
 			temp.add(card);
 		}
 		meldPlaceViewGroup.endGame();

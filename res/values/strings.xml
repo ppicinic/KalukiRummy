@@ -4,5 +4,19 @@
     <string name="app_name">Kaluki Rummy</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
+    <string name="ok">OK</string>
+    <string name="cannot_attach">You need 40 points to attach a card!</string>
+    <string name="invalid_meld">This is an invalid meld!</string>
+    <string name="game_lose">You lost the entire game!</string>
+    <string name="hand_lose">You lost the hand!</string>
+    <string name="your_turn">It\'s your turn!</string>
+    <string name="initial_discard">You need an initial build to draw from the discard pile!</string>
+    <string name="game_win">You won the entire game!</string>
+    <string name="hand_win">You won the hand!</string>
+    <string name="initial_build">You need 40 points for your initial build!</string>
+    <string name="player_name">Player (YOU)</string>
+    <string name="game">#</string>
+    <string name="choose_rank">Choose a rank.</string>
+	<string name="choose_suit">Choose a suit.</string>
 
 </resources>

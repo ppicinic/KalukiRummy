@@ -32,10 +32,11 @@ public class Bot {
 	private boolean attached;
 	private Random random;
 	private MeldPlayerViewGroup playerView;
+	private BotView botView;
 
 	public Bot(Context context, GameView gameView, Deck deck,
 			DiscardView discard, MeldBotViewGroup meldBotViewGroup,
-			MeldPlayerViewGroup playerView) {
+			MeldPlayerViewGroup playerView, BotView botView) {
 		cards = new ArrayList<Card>();
 		this.context = context;
 		this.gameView = gameView;
@@ -46,6 +47,7 @@ public class Bot {
 		view = meldBotViewGroup;
 		random = new Random(System.currentTimeMillis());
 		this.playerView = playerView;
+		this.botView = botView;
 	}
 
 	public void deal(Card card) {
@@ -576,6 +578,7 @@ public class Bot {
 	}
 
 	public void endTurn() {
+		botView.update(handSize());
 		view.endTurn();
 		playerView.endTurn();
 		gameView.endBotTurn();
