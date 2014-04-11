@@ -47,6 +47,7 @@ public class Deck {
 	}
 
 	public Card deal() {
+		System.out.println("deck size: " + deck.size());
 		return deck.remove();
 	}
 

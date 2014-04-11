@@ -204,16 +204,26 @@ public class GameView extends ViewGroup {
 								meldViewGroup.endTurn();
 								undoCards.reset();
 								if (hand.handSize() == 0) {
-									turnState = TurnState.START;
-									
-									CharSequence text = "You won the hand!";
-									int duration = Toast.LENGTH_LONG;
-									
-									Toast toast = Toast.makeText(context, text,
-											duration);
-									toast.show();
 									scoreCard.addGame(0, botPlayer.handValue());
+									if (scoreCard.getBotScore() > 100) {
+										CharSequence text = "You won the entire game!";
+										int duration = Toast.LENGTH_LONG;
+
+										Toast toast = Toast.makeText(context,
+												text, duration);
+										toast.show();
+										scoreCard.endGame();
+									} else {
+
+										CharSequence text = "You won the hand!";
+										int duration = Toast.LENGTH_LONG;
+
+										Toast toast = Toast.makeText(context,
+												text, duration);
+										toast.show();
+									}
 									this.addView(startHand);
+									turnState = TurnState.START;
 								} else {
 									turnState = TurnState.BOT;
 									Handler handler = new Handler();
@@ -334,6 +344,7 @@ public class GameView extends ViewGroup {
 					temp = hand.endGame();
 					deck.returnCards(temp);
 					temp = discard.endGame();
+					deck.returnCards(temp);
 					deck.shuffle();
 					Handler handler = new Handler();
 					GameStart gameStart = new GameStart(this, hand, deck,
@@ -528,13 +539,22 @@ public class GameView extends ViewGroup {
 
 	public void endBotTurn() {
 		if (botPlayer.handSize() == 0) {
-			CharSequence text = "You lost the hand!";
-			int duration = Toast.LENGTH_LONG;
-
-			Toast toast = Toast.makeText(context, text, duration);
-			toast.show();
-			this.addView(startHand);
 			scoreCard.addGame(hand.handValue(), 0);
+			if (scoreCard.getPlayerScore() > 100) {
+				CharSequence text = "You lost the entire game!";
+				int duration = Toast.LENGTH_LONG;
+
+				Toast toast = Toast.makeText(context, text, duration);
+				toast.show();
+				scoreCard.endGame();
+			} else {
+				CharSequence text = "You lost the hand!";
+				int duration = Toast.LENGTH_LONG;
+
+				Toast toast = Toast.makeText(context, text, duration);
+				toast.show();
+			}
+			this.addView(startHand);
 			turnState = TurnState.START;
 		} else {
 			CharSequence text = "It's your turn!";

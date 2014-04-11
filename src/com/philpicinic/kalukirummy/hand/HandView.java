@@ -418,6 +418,7 @@ public class HandView extends ViewGroup {
 			this.removeView(card);
 			temp.add(card.getCard());
 		}
+		cards = new ArrayList<VCard>();
 		cardMove = false;
 		right = false;
 		left = 0;

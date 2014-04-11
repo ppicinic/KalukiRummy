@@ -586,7 +586,10 @@ public class Bot {
 	}
 
 	public ArrayList<Card> endHand() {
-		ArrayList<Card> temp = cards;
+		ArrayList<Card> temp = new ArrayList<Card>();
+		for(Card card : cards){
+			temp.add(card);
+		}
 		for (Meld meld : playCards) {
 			ArrayList<VCard> temp2 = meld.getCards();
 			for (VCard card : temp2) {
@@ -598,7 +601,7 @@ public class Bot {
 		playedValue = 0;
 		initial = false;
 		attached = false;
-		return cards;
+		return temp;
 	}
 
 	public void jokerReplaceWrapper() {
