@@ -1,5 +1,7 @@
 package com.philpicinic.kalukirummy.card;
 
+import com.philpicinic.kalukirummy.db.GameState;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -71,7 +73,12 @@ public class VCard extends View implements Comparable<VCard> {
 		int rank = this.cardModel.getRank();
 
 		// Create the card name
-		String cardName = "card1";
+		String cardName = "card";
+		if(GameState.getInstance(this.context).isChoice()){
+			cardName += "2";
+		}else{
+			cardName += "1";
+		}
 		cardName += (suit.ordinal() + 1);
 		String rTemp = "" + rank;
 

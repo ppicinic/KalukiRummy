@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.philpicinic.kalukirummy.db.GameState;
 import com.philpicinic.kalukirummy.views.GameView;
 
 /**
@@ -22,6 +23,8 @@ public class GameActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        GameState.getInstance(this).update();
         GameView gView = new GameView(this);
         gView.setKeepScreenOn(true);
         requestWindowFeature(Window.FEATURE_NO_TITLE);

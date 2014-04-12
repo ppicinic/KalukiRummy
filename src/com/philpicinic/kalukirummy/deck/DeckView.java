@@ -8,46 +8,58 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.philpicinic.kalukirummy.R;
+import com.philpicinic.kalukirummy.db.GameState;
 
 /**
  * 
  * @author Phil Picinic
- *
- * DeckView class is a View Class for the Deck. 
- * DeckView class shows the top card of the Deck
+ * 
+ *         DeckView class is a View Class for the Deck. DeckView class shows the
+ *         top card of the Deck
  */
 public class DeckView extends View {
 
 	@SuppressWarnings("unused")
 	private Context context;
 	private Bitmap backCard;
-	
+
 	@SuppressWarnings("unused")
 	private int screenH;
 	private int screenW;
-	
+
 	private int x;
 	private int y;
 
 	/**
-	 * Constructor for the DeckView
-	 * Creates the the Bitmap of the back of the card.
-	 * @param context the context of the Activity it exists in
+	 * Constructor for the DeckView Creates the the Bitmap of the back of the
+	 * card.
+	 * 
+	 * @param context
+	 *            the context of the Activity it exists in
 	 */
 	public DeckView(Context context) {
 		super(context);
 		this.context = context;
-
-		backCard = BitmapFactory.decodeResource(getResources(),
-				R.drawable.card_back1);
+		if (GameState.getInstance(context).isChoice()) {
+			backCard = BitmapFactory.decodeResource(getResources(),
+					R.drawable.card_back2);
+		} else {
+			backCard = BitmapFactory.decodeResource(getResources(),
+					R.drawable.card_back1);
+		}
 	}
 
 	/**
 	 * updates sizes if the display is changed
-	 * @param w width of the screen
-	 * @param h height of the screen
-	 * @param oldw old width of the screen
-	 * @param oldh old height of the screen
+	 * 
+	 * @param w
+	 *            width of the screen
+	 * @param h
+	 *            height of the screen
+	 * @param oldw
+	 *            old width of the screen
+	 * @param oldh
+	 *            old height of the screen
 	 */
 	@Override
 	public void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -59,8 +71,8 @@ public class DeckView extends View {
 		int scaleH = (int) (scaleW * 1.4);
 		backCard = Bitmap.createScaledBitmap(backCard, scaleW, scaleH, false);
 		// Place the card bitmap in the top left corner
-		x = (backCard.getWidth() * 0) + ( (backCard.getWidth() / 6) * (1));
-		y = (backCard.getHeight()  / 6);
+		x = (backCard.getWidth() * 0) + ((backCard.getWidth() / 6) * (1));
+		y = (backCard.getHeight() / 6);
 	}
 
 	/**
@@ -70,15 +82,16 @@ public class DeckView extends View {
 	protected void onDraw(Canvas canvas) {
 		canvas.drawBitmap(backCard, x, y, null);
 	}
-	
-	public boolean checkCollision(MotionEvent event){
+
+	public boolean checkCollision(MotionEvent event) {
 		int X = (int) event.getX();
 		int Y = (int) event.getY();
-		
-		if(X >= x && X <= (x + backCard.getWidth()) && Y >= y && Y <= (y + backCard.getHeight())){
+
+		if (X >= x && X <= (x + backCard.getWidth()) && Y >= y
+				&& Y <= (y + backCard.getHeight())) {
 			return true;
 		}
-		
+
 		return false;
 	}
 

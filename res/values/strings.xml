@@ -17,6 +17,11 @@
     <string name="player_name">Player (YOU)</string>
     <string name="game">#</string>
     <string name="choose_rank">Choose a rank.</string>
-	<string name="choose_suit">Choose a suit.</string>
+    <string name="choose_suit">Choose a suit.</string>
+    <string name="title_activity_options">OptionsActivity</string>
+    <string name="option_1">Sound</string>
+    <string name="option_2">Card Type</string>
+    <string name="choice_1">Choice 1</string>
+    <string name="choice_2">Choice 2</string>
 
 </resources>

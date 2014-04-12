@@ -10,6 +10,7 @@ import android.view.View;
 
 import com.philpicinic.kalukirummy.R;
 import com.philpicinic.kalukirummy.activity.GameActivity;
+import com.philpicinic.kalukirummy.activity.OptionsActivity;
 
 /**
  *
@@ -130,6 +131,8 @@ public class TitleView extends View {
 				context.startActivity(gameIntent);
 			} else if (isOptionsPressed) {
 				// TODO Go To Options Screen
+				Intent gameIntent = new Intent(context, OptionsActivity.class);
+				context.startActivity(gameIntent);
 			}
 			isOptionsPressed = false;
 			playButtonPressed = false;
