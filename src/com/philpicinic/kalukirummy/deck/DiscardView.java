@@ -130,4 +130,14 @@ public class DiscardView extends ViewGroup {
 		this.removeView(this.card);
 		return pile.endGame();
 	}
+
+	public ArrayList<Card> returnAllButTop() {
+		Card top = pile.pop();
+		ArrayList<Card> result = new ArrayList<Card>();
+		while(!pile.isEmpty()){
+			result.add(pile.pop());
+		}
+		pile.push(top);
+		return result;
+	}
 }

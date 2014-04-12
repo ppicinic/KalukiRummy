@@ -141,10 +141,11 @@ public class ScoreCardView extends View {
 			p.deleteCharAt(p.length() - 1);
 			b.deleteCharAt(b.length() - 1);
 		}
-		
-		TextView botNameView = (TextView) scoreCardDialog.findViewById(R.id.textView3);
+
+		TextView botNameView = (TextView) scoreCardDialog
+				.findViewById(R.id.textView3);
 		botNameView.setText(botName);
-		
+
 		TextView textView1 = (TextView) scoreCardDialog
 				.findViewById(R.id.textView4);
 		textView1.setText(g.toString());
@@ -167,12 +168,17 @@ public class ScoreCardView extends View {
 	}
 
 	public int getPlayerScore() {
-		// TODO Auto-generated method stub
-		return playerGames.get(playerGames.size() - 1);
+		if (playerGames.size() > 0) {
+			return playerGames.get(playerGames.size() - 1);
+		}
+		return 0;
 	}
 
 	public int getBotScore() {
-		return botGames.get(botGames.size() - 1);
+		if (botGames.size() > 0) {
+			return botGames.get(botGames.size() - 1);
+		}
+		return 0;
 	}
 
 	public void endGame() {

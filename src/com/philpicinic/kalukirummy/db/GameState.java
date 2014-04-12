@@ -12,6 +12,8 @@ public class GameState {
 	
 	private GameState(Context context){
 		this.context = context;
+		sound = false;
+		choice = false;
 	}
 	
 	public static GameState getInstance(Context context){

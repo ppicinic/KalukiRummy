@@ -98,7 +98,7 @@ public class GameView extends ViewGroup {
 		super(context);
 		this.context = context;
 
-		deck = new Deck();
+		
 		
 		toastView = new ToastView(context);
 		this.addView(toastView);
@@ -117,6 +117,7 @@ public class GameView extends ViewGroup {
 		this.addView(deckV);
 		discard = new DiscardView(context);
 		this.addView(discard);
+		deck = new Deck(discard);
 
 		// Create the bot opponent
 		bot = new BotView(context);
@@ -136,7 +137,7 @@ public class GameView extends ViewGroup {
 		undoCards = new UndoCards();
 		jokerUndo = new Stack<JokerUndo>();
 		botPlayer = new Bot(context, this, deck, discard,
-				meldViewGroup.getBotView(), meldViewGroup.getPlayerView(), bot);
+				meldViewGroup.getBotView(), meldViewGroup.getPlayerView(), bot, hand, scoreCard);
 		botTurn = new BotTurn(botPlayer);
 	}
 

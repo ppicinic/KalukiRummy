@@ -10,8 +10,10 @@ import com.philpicinic.kalukirummy.card.Suit;
 public class Deck {
 
 	private LinkedList<Card> deck;
+	private DiscardView pile;
 
-	public Deck() {
+	public Deck(DiscardView discard) {
+		this.pile = discard;
 		deck = new LinkedList<Card>();
 		for (int i = 0; i < 2; i++) {
 			for (int x = 0; x < 4; x++) {
@@ -48,6 +50,13 @@ public class Deck {
 
 	public Card deal() {
 		System.out.println("deck size: " + deck.size());
+		if(deck.isEmpty()){
+			ArrayList<Card> temp = pile.returnAllButTop();
+			for(Card card: temp){
+				deck.add(card);
+			}
+			Collections.shuffle(deck);
+		}
 		return deck.remove();
 	}
 

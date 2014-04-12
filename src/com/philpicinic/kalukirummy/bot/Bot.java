@@ -11,10 +11,12 @@ import com.philpicinic.kalukirummy.card.Suit;
 import com.philpicinic.kalukirummy.card.VCard;
 import com.philpicinic.kalukirummy.deck.Deck;
 import com.philpicinic.kalukirummy.deck.DiscardView;
+import com.philpicinic.kalukirummy.hand.HandView;
 import com.philpicinic.kalukirummy.meld.Meld;
 import com.philpicinic.kalukirummy.meld.MeldBotViewGroup;
 import com.philpicinic.kalukirummy.meld.MeldFactory;
 import com.philpicinic.kalukirummy.meld.MeldPlayerViewGroup;
+import com.philpicinic.kalukirummy.score.ScoreCardView;
 import com.philpicinic.kalukirummy.views.GameView;
 
 public class Bot {
@@ -33,10 +35,12 @@ public class Bot {
 	private Random random;
 	private MeldPlayerViewGroup playerView;
 	private BotView botView;
+	private HandView hand;
+	private ScoreCardView scorecard;
 
 	public Bot(Context context, GameView gameView, Deck deck,
 			DiscardView discard, MeldBotViewGroup meldBotViewGroup,
-			MeldPlayerViewGroup playerView, BotView botView) {
+			MeldPlayerViewGroup playerView, BotView botView, HandView hand, ScoreCardView scorecard) {
 		cards = new ArrayList<Card>();
 		this.context = context;
 		this.gameView = gameView;
@@ -48,6 +52,9 @@ public class Bot {
 		random = new Random(System.currentTimeMillis());
 		this.playerView = playerView;
 		this.botView = botView;
+		this.hand = hand;
+		this.scorecard = scorecard;
+		
 	}
 
 	public void deal(Card card) {
@@ -64,7 +71,7 @@ public class Bot {
 	private void playMelds() {
 		if (playCards.size() > 0) {
 			System.out.println("play: " + playedValue);
-			if (true) {// playedValue >= 40) {
+			if (playedValue >= 40 && ( (cards.size() == 0) || ( random.nextInt(101) >= ( (((hand.handSize() % 3) + 1) * (hand.handSize() * 2))) - (scorecard.getBotScore() / 3) ) )  ) {
 				for (Meld meld : playCards) {
 					view.addMeld(meld);
 				}
@@ -277,7 +284,7 @@ public class Bot {
 				}
 			}
 			if ((jokers >= 1 && cards.size() <= 5)
-					|| (jokers >= 1 && random.nextInt(100) < 50)) {
+					|| (jokers >= 1 && ( random.nextInt(101) >= ( (((hand.handSize() % 3) + 1) * (hand.handSize() * 3))) - (scorecard.getBotScore() / 5) ) )) {
 				for (int i = 0; i < cards.size() - 1; i++) {
 					if (!cards.get(i).isJoker()) {
 						for (int j = 0; j < cards.size() - 1; j++) {
@@ -585,7 +592,7 @@ public class Bot {
 	}
 
 	public int handSize() {
-		return cards.size() + playCards.size();
+		return cards.size() + (playCards.size() * 3);
 	}
 
 	public ArrayList<Card> endHand() {
