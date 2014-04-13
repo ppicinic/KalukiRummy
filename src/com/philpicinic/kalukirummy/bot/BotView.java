@@ -97,6 +97,10 @@ public class BotView extends View {
 		canvas.drawBitmap(cardCount, x2, y2, null);
 	}
 
+	/**
+	 * Update the bitmap to show the number of card's the bot is holding
+	 * @param handSize the size of the bot's hand
+	 */
 	public void update(int handSize) {
 		String str = "botcard";
 		if(GameState.getInstance(this.context).isChoice()){

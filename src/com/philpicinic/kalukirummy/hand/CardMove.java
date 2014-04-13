@@ -61,10 +61,17 @@ public class CardMove extends View {
 		}
 	}
 
+	/**
+	 * Tells if the card move button is visible
+	 * @return true if visible, otherwise false
+	 */
 	public boolean isVisible() {
 		return visible;
 	}
 
+	/**
+	 * flips the visibility on and off
+	 */
 	public void flipVisibility() {
 		visible = !visible;
 	}
@@ -105,8 +112,12 @@ public class CardMove extends View {
 		canvas.drawBitmap(arrow, x, y, null);
 	}
 
+	/**
+	 * Checks if the card move is pressed
+	 * @param event the player's input
+	 * @return true if pressed, otherwise false
+	 */
 	public boolean isPressed(MotionEvent event) {
-		// System.out.println("derp")
 		if (visible) {
 			int e = event.getAction();
 			int X = (int) event.getX();
@@ -114,7 +125,6 @@ public class CardMove extends View {
 			if (e == MotionEvent.ACTION_DOWN) {
 				if (X > x && X < (x + arrow.getWidth()) && Y > y
 						&& Y < (y + arrow.getHeight())) {
-					// System.out.println("yu");
 					return true;
 				}
 			}

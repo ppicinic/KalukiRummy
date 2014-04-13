@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Random;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.philpicinic.kalukirummy.card.Card;
 import com.philpicinic.kalukirummy.card.Suit;
@@ -19,6 +20,11 @@ import com.philpicinic.kalukirummy.meld.MeldPlayerViewGroup;
 import com.philpicinic.kalukirummy.score.ScoreCardView;
 import com.philpicinic.kalukirummy.views.GameView;
 
+/**
+ * 
+ * @author Phil Picinic This is the bot AI that handles making move decisions
+ *         and tells what views to update.
+ */
 public class Bot {
 
 	private Context context;
@@ -38,9 +44,14 @@ public class Bot {
 	private HandView hand;
 	private ScoreCardView scorecard;
 
+	/**
+	 * Constructor for the bot It has references to many views so it can
+	 * interact with them on a need basis.
+	 */
 	public Bot(Context context, GameView gameView, Deck deck,
 			DiscardView discard, MeldBotViewGroup meldBotViewGroup,
-			MeldPlayerViewGroup playerView, BotView botView, HandView hand, ScoreCardView scorecard) {
+			MeldPlayerViewGroup playerView, BotView botView, HandView hand,
+			ScoreCardView scorecard) {
 		cards = new ArrayList<Card>();
 		this.context = context;
 		this.gameView = gameView;
@@ -54,24 +65,37 @@ public class Bot {
 		this.botView = botView;
 		this.hand = hand;
 		this.scorecard = scorecard;
-		
+
 	}
 
+	/**
+	 * Adds a card to the bots hand
+	 * 
+	 * @param card
+	 *            the card to add
+	 */
 	public void deal(Card card) {
 		cards.add(card);
 	}
 
+	/**
+	 * Initiates the bots turn
+	 */
 	public void startTurn() {
 		draw();
-		// calcPriority();
 		pickMeldsWrapper();
 
 	}
 
+	/**
+	 * Decides to play possible melds or not
+	 */
 	private void playMelds() {
 		if (playCards.size() > 0) {
-			System.out.println("play: " + playedValue);
-			if (playedValue >= 40 && ( (cards.size() == 0) || ( random.nextInt(101) >= ( (((hand.handSize() % 3) + 1) * (hand.handSize() * 2))) - (scorecard.getBotScore() / 3) ) )  ) {
+			if (playedValue >= 40
+					&& ((cards.size() == 0) || (random.nextInt(101) >= ((((hand
+							.handSize() % 3) + 1) * (hand.handSize() * 2)))
+							- (scorecard.getBotScore() / 3)))) {
 				for (Meld meld : playCards) {
 					view.addMeld(meld);
 				}
@@ -82,6 +106,9 @@ public class Bot {
 		jokerReplaceWrapper();
 	}
 
+	/**
+	 * Decides to play a possible attach or not
+	 */
 	private void attach() {
 		calcPriority();
 		if (initial && !attached) {
@@ -228,12 +255,18 @@ public class Bot {
 		toss();
 	}
 
+	/**
+	 * Wrapper method for playing melds to handle recursive calls
+	 */
 	private void pickMeldsWrapper() {
 		pickMelds();
 		pickJokerMelds();
 		playMelds();
 	}
 
+	/**
+	 * Decides and finds possible melds with the use of a Joker card
+	 */
 	private void pickJokerMelds() {
 		if (cards.size() >= 4) {
 			int jokers = jokerCount();
@@ -284,7 +317,9 @@ public class Bot {
 				}
 			}
 			if ((jokers >= 1 && cards.size() <= 5)
-					|| (jokers >= 1 && ( random.nextInt(101) >= ( (((hand.handSize() % 3) + 1) * (hand.handSize() * 3))) - (scorecard.getBotScore() / 5) ) )) {
+					|| (jokers >= 1 && (random.nextInt(101) >= ((((hand
+							.handSize() % 3) + 1) * (hand.handSize() * 3)))
+							- (scorecard.getBotScore() / 5)))) {
 				for (int i = 0; i < cards.size() - 1; i++) {
 					if (!cards.get(i).isJoker()) {
 						for (int j = 0; j < cards.size() - 1; j++) {
@@ -369,6 +404,11 @@ public class Bot {
 		}
 	}
 
+	/**
+	 * Counts the number of jokers in hand
+	 * 
+	 * @return the number of jokers
+	 */
 	private int jokerCount() {
 		int result = 0;
 		for (int i = cards.size() - 1; i >= 0; i--) {
@@ -381,24 +421,23 @@ public class Bot {
 		return result;
 	}
 
+	/**
+	 * Looks for any possible melds and moves the card to playCards
+	 */
 	private void pickMelds() {
-		// calcPriority();
 		if (cards.size() >= 4) {
 			Collections.sort(cards);
 			for (int i = cards.size() - 1; i >= 0; i--) {
-				// System.out.println("i " + i);
 				// main loop through cards in reverse
 				// check for set meld
 				if (!cards.get(i).isJoker()) {
 					for (int j = cards.size() - 1; j >= 0; j--) {
-						// System.out.println("j " + j);
 						if (j != i
 								&& cards.get(i).getRank() == cards.get(j)
 										.getRank()
 								&& cards.get(i).getSuit().ordinal() != cards
 										.get(j).getSuit().ordinal()) {
 							for (int k = cards.size() - 1; k >= 0; k--) {
-								// System.out.println("k " + k);
 								if (k != i && k != j) {
 									if (cards.get(i).getRank() == cards.get(k)
 											.getRank()) {
@@ -415,7 +454,6 @@ public class Bot {
 													cards.get(j)));
 											temp.add(new VCard(context, 0,
 													cards.get(k)));
-											System.out.println(temp.size());
 											Meld meld = MeldFactory
 													.buildMeld(temp);
 											playedValue += meld.value();
@@ -463,7 +501,6 @@ public class Bot {
 									temp.add(new VCard(context, 0, cards.get(i)));
 									temp.add(new VCard(context, 0, cards.get(j)));
 									temp.add(new VCard(context, 0, cards.get(k)));
-									System.out.println(temp.size());
 									Meld meld = MeldFactory.buildMeld(temp);
 									playedValue += meld.value();
 									playCards.add(meld);
@@ -487,6 +524,9 @@ public class Bot {
 		}
 	}
 
+	/**
+	 * Calculates the priority of all cards in the bot's hand
+	 */
 	private void calcPriority() {
 		priorities = new int[cards.size()];
 		Collections.sort(cards);
@@ -496,6 +536,15 @@ public class Bot {
 		}
 	}
 
+	/**
+	 * Calculate the priority of a single card
+	 * 
+	 * @param card
+	 *            the card being calculated
+	 * @param i
+	 *            the position of the card in the bot's hand
+	 * @return the priority of the card
+	 */
 	private int calcSingleCard(Card card, int i) {
 		if (card.isJoker()) {
 			return 1000;
@@ -529,13 +578,11 @@ public class Bot {
 			total *= occurrences;
 			if (playedValue < 40) {
 				if (card.getRank() >= 7) {
-					// total *= 2;
 					total += card.getRank();
 				}
 			} else {
 				if (card.getRank() <= 6) {
 					total += (28 / card.getRank());
-					// total *= 2;
 				}
 			}
 			for (int j = 0; j < cards.size(); j++) {
@@ -552,10 +599,16 @@ public class Bot {
 
 	}
 
+	/**
+	 * Draw a card from the deck
+	 */
 	public void draw() {
 		cards.add(deck.deal());
 	}
 
+	/**
+	 * Tosses the card with the lowest calculated priority
+	 */
 	public void toss() {
 		calcPriority();
 		int spot = 0;
@@ -564,26 +617,19 @@ public class Bot {
 				spot = i;
 			}
 		}
-		// Log info
+		// Log bot's hand for debug
 		for (int i = 0; i < cards.size(); i++) {
 			String result = "Card " + i + ": " + cards.get(i).getRank() + " "
 					+ cards.get(i).getSuit();
-			System.out.println(result);
+			Log.d("Bot", result);
 		}
-		printPriorities();
-		System.out.println(spot);
 		discard.toss(cards.remove(spot));
 		endTurn();
 	}
 
-	private void printPriorities() {
-		String str = "";
-		for (int i = 0; i < priorities.length; i++) {
-			str += priorities[i] + ", ";
-		}
-		System.out.println(str);
-	}
-
+	/**
+	 * Ends the turn and tells everything that must be told
+	 */
 	public void endTurn() {
 		botView.update(handSize());
 		view.endTurn();
@@ -591,13 +637,23 @@ public class Bot {
 		gameView.endBotTurn();
 	}
 
+	/**
+	 * Calculates the size of the bot's hand
+	 * 
+	 * @return the size of the bot's hand
+	 */
 	public int handSize() {
 		return cards.size() + (playCards.size() * 3);
 	}
 
+	/**
+	 * Internal handling of the bot's end game
+	 * 
+	 * @return the cards the bot was holding
+	 */
 	public ArrayList<Card> endHand() {
 		ArrayList<Card> temp = new ArrayList<Card>();
-		for(Card card : cards){
+		for (Card card : cards) {
 			temp.add(card);
 		}
 		for (Meld meld : playCards) {
@@ -614,11 +670,19 @@ public class Bot {
 		return temp;
 	}
 
+	/**
+	 * Wrapper method for replacing jokers to handle recursive calls
+	 */
 	public void jokerReplaceWrapper() {
-		jokerReplace();
+		if (initial) {
+			jokerReplace();
+		}
 		attach();
 	}
 
+	/**
+	 * Looks for a joker that is played that can be replaces
+	 */
 	public void jokerReplace() {
 		ArrayList<Meld> melds = view.getMelds();
 		for (int i = 0; i < melds.size(); i++) {
@@ -677,6 +741,10 @@ public class Bot {
 
 	}
 
+	/**
+	 * The value of the cards in the bot's hand
+	 * @return the value of all the cards
+	 */
 	public int handValue() {
 		int total = 0;
 		for (Card card : cards) {

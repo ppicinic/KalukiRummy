@@ -9,6 +9,11 @@ import android.view.View;
 
 import com.philpicinic.kalukirummy.R;
 
+/**
+ * 
+ * @author Phil Picinic
+ * View of the Sort Hand Button
+ */
 public class SortHandButton extends View {
 
 	@SuppressWarnings("unused")
@@ -21,13 +26,15 @@ public class SortHandButton extends View {
 	private int x;
 	private int y;
 
-	
+	/**
+	 * Constructor
+	 * @param context the context of the activity
+	 */
 	public SortHandButton(Context context) {
 		super(context);
 		
 		this.context = context;
 		button = BitmapFactory.decodeResource(getResources(), R.drawable.sort_button);
-		// TODO Auto-generated constructor stub
 	}
 	
 	/**
@@ -59,6 +66,11 @@ public class SortHandButton extends View {
 		canvas.drawBitmap(button, x, y, null);
 	}
 	
+	/**
+	 * Check if player touched the button
+	 * @param event the player's input
+	 * @return true if touched, otherwise false
+	 */
 	public boolean checkCollision(MotionEvent event){
 		int X = (int) event.getX();
 		int Y = (int) event.getY();

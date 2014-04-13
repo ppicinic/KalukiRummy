@@ -7,11 +7,21 @@ import java.util.LinkedList;
 import com.philpicinic.kalukirummy.card.Card;
 import com.philpicinic.kalukirummy.card.Suit;
 
+/**
+ * 
+ * @author Phil Picinic
+ * Deck class holds all the cards for the player to play from
+ */
 public class Deck {
 
 	private LinkedList<Card> deck;
 	private DiscardView pile;
 
+	/**
+	 * Constructor creates all the cards
+	 * This creates a double deck each containing 2 jokers
+	 * @param discard the discard pile if the deck runs out of cards it can grab them
+	 */
 	public Deck(DiscardView discard) {
 		this.pile = discard;
 		deck = new LinkedList<Card>();
@@ -44,12 +54,20 @@ public class Deck {
 		Collections.shuffle(deck);
 	}
 
+	/**
+	 * Checks if the deck is empty
+	 * @return true if it is empty, otherwise false
+	 */
 	public boolean isEmpty() {
 		return deck.isEmpty();
 	}
 
+	/**
+	 * Deals a card
+	 * Will grab from the discard pile if it runs out of cards
+	 * @return the card to be dealt
+	 */
 	public Card deal() {
-		System.out.println("deck size: " + deck.size());
 		if(deck.isEmpty()){
 			ArrayList<Card> temp = pile.returnAllButTop();
 			for(Card card: temp){
@@ -60,10 +78,18 @@ public class Deck {
 		return deck.remove();
 	}
 
+	/**
+	 * Returns a card to top of the deck
+	 * @param card the card being returned
+	 */
 	public void returnToTop(Card card) {
 		deck.add(0, card);		
 	}
 
+	/**
+	 * Returns a list of cards to the deck
+	 * @param temp all the cards being returned
+	 */
 	public void returnCards(ArrayList<Card> temp) {
 		for(Card card: temp){
 			deck.add(0, card);
@@ -73,6 +99,9 @@ public class Deck {
 		}
 	}
 
+	/**
+	 * Shuffles the deck
+	 */
 	public void shuffle() {
 		Collections.shuffle(deck);
 	}

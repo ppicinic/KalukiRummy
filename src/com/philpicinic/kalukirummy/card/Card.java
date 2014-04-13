@@ -98,6 +98,11 @@ public class Card implements Comparable<Card> {
 		}
 	}
 
+	/**
+	 * Sets the joker's played rank and suit
+	 * @param rank the rank it takes on
+	 * @param suit the suit it takes on
+	 */
 	public void setJoker(int rank, Suit suit) {
 		if (isJoker()) {
 			playedJoker = true;
@@ -106,6 +111,9 @@ public class Card implements Comparable<Card> {
 		}
 	}
 
+	/**
+	 * Unsets the joker to its normal form
+	 */
 	public void unSetJoker() {
 		playedJoker = false;
 		jRank = 0;
@@ -118,11 +126,6 @@ public class Card implements Comparable<Card> {
 	 * @return true if ace, otherwise false
 	 */
 	public boolean isAce() {
-//		if (rank == 14) {
-//			return true;
-//		} else {
-//			return false;
-//		}
 		return (rank == 14);
 	}
 
@@ -132,11 +135,6 @@ public class Card implements Comparable<Card> {
 	 * @return true if a face card, otherwise false
 	 */
 	public boolean isFace() {
-//		if (rank == 11 || rank == 12 || rank == 13) {
-//			return true;
-//		} else {
-//			return false;
-//		}
 		return (rank == 11 || rank == 12 || rank == 13);
 	}
 
@@ -146,11 +144,6 @@ public class Card implements Comparable<Card> {
 	 * @return true if a joker, otherwise false
 	 */
 	public boolean isJoker() {
-		// if rank == 1) {
-		// return true;
-		// } else {
-		// return false;
-		// }
 		return (rank == 1);
 	}
 
@@ -188,7 +181,6 @@ public class Card implements Comparable<Card> {
 			return 10;
 		}
 		if (isAce()) {
-			// TODO consider Ace acts as a 1? implement aRank?
 			return 11;
 		}
 		return rank;
@@ -206,6 +198,10 @@ public class Card implements Comparable<Card> {
 		return suit;
 	}
 
+	/**
+	 * Get the rank of a played card
+	 * @return the rank
+	 */
 	public int getMeldRank() {
 		if (isJoker()) {
 			return jRank;
@@ -213,6 +209,9 @@ public class Card implements Comparable<Card> {
 		return rank;
 	}
 
+	/**
+	 * Compare to function that allows implementing Comparable and makes it possible to sort
+	 */
 	@Override
 	public int compareTo(Card arg0) {
 
@@ -295,6 +294,10 @@ public class Card implements Comparable<Card> {
 		}
 	}
 
+	/**
+	 * Get the suit of a played card
+	 * @return the suit
+	 */
 	public Suit getMeldSuit() {
 		if (isJoker()) {
 			return jSuit;

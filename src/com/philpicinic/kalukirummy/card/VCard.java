@@ -129,6 +129,9 @@ public class VCard extends View implements Comparable<VCard> {
 		canvas.drawBitmap(card, x, y, null);
 	}
 
+	/**
+	 * Sets the cards position to the discard pile
+	 */
 	public void setTossPos() {
 		this.clearFocus();
 		inHand = false;
@@ -137,22 +140,44 @@ public class VCard extends View implements Comparable<VCard> {
 		invalidate();
 	}
 
+	/**
+	 * Gets the card's X position
+	 * @return X position
+	 */
 	public int getMyX() {
 		return x;
 	}
 
+	/**
+	 * Gets the card's Y position
+	 * @return Y position
+	 */
 	public int getMyY() {
 		return y;
 	}
 
+	/**
+	 * Gets the card's width
+	 * @return the width
+	 */
 	public int getMyWidth() {
 		return card.getWidth();
 	}
 
+	/**
+	 * Gets the card's height
+	 * @return the height
+	 */
 	public int getMyHeight() {
 		return card.getHeight();
 	}
 
+	// TODO check if deprecated
+	/**
+	 * Set's the card's position in a meld
+	 * @param pos the position
+	 * DEPRECATED?!
+	 */
 	public void setMeldPlacePos(int pos) {
 		touched = false;
 		this.pos = pos;
@@ -171,12 +196,9 @@ public class VCard extends View implements Comparable<VCard> {
 	 *            the action the user does
 	 */
 	public boolean onTouchEvent(MotionEvent event) {
-		// System.out.println("yo hey 1");
 		if (!inHand) {
-			// System.out.println("yo hey");
 			return false;
 		}
-		// System.out.println("yo hey 3");
 		// Get event action and location
 		int eventaction = event.getAction();
 		int X = (int) event.getX();
@@ -214,6 +236,10 @@ public class VCard extends View implements Comparable<VCard> {
 		return touched;
 	}
 
+	/**
+	 * Get the position of the card in the player's hand
+	 * @return the position
+	 */
 	public int getHandPos() {
 		return this.pos;
 	}
@@ -251,6 +277,9 @@ public class VCard extends View implements Comparable<VCard> {
 		placeInHand();
 	}
 
+	/**
+	 * Place the card in the player's hand
+	 */
 	public void placeInHand() {
 		x = (card.getWidth() * pos) + ((card.getWidth() / 6) * (pos))
 				+ (card.getWidth() / 10);
@@ -259,6 +288,11 @@ public class VCard extends View implements Comparable<VCard> {
 
 	}
 
+	/**
+	 * Check if a card collides with another card
+	 * @param arg0 the card it is comparing too
+	 * @return true if the card's collide, else false
+	 */
 	public boolean collideWithCard(VCard arg0) {
 		if ((this.x >= arg0.x && this.x < (arg0.x + (card.getWidth() / 2)))
 				|| (((this.x + card.getWidth()) > (arg0.x + (card.getWidth() / 2))) && (this.x + card
@@ -273,19 +307,38 @@ public class VCard extends View implements Comparable<VCard> {
 		return false;
 	}
 
+	/**
+	 * Check if the card is itself
+	 * @param arg0 the card
+	 * @return true if it is the same card, otherwise false
+	 */
 	public boolean equalsInHand(VCard arg0) {
 		return this.pos == arg0.pos;
 	}
 
+	/**
+	 * Get the model of the card VCard holds
+	 * @return the card model
+	 */
 	public Card getCard() {
 		return cardModel;
 	}
 
+	/**
+	 * CompareTo function to implement comparable to use for sorting
+	 * Calls the card models compareto
+	 */
 	@Override
 	public int compareTo(VCard arg0) {
 		return getCard().compareTo(arg0.getCard());
 	}
 
+	/**
+	 * Set the meld position of the card
+	 * @param playerSide if the card is played on the player side or bot side
+	 * @param level the level of positioning of the card
+	 * @param pos the position of the card
+	 */
 	public void setMeldPos(boolean playerSide, int level, int pos) {
 		this.pos = pos;
 		inHand = false;
@@ -295,7 +348,6 @@ public class VCard extends View implements Comparable<VCard> {
 			x = (card.getWidth() / 6) + (card.getWidth() * pos / 4);
 			y = screenH - ((int) (card.getHeight() * (3 + level)) + (card.getHeight() * (1 + level) / 4));
 		} else {
-			// TODO Bot positioning
 			x = screenW - ((card.getWidth() / 6) + (card.getWidth() * (pos + 4) / 4));
 			y = ((int) (card.getHeight() * (1 + level)) + (card.getHeight() * (1 + level) / 4));
 		}

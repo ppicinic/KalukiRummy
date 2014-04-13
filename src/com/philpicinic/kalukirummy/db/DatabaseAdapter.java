@@ -8,6 +8,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+/**
+ * 
+ * @author Phil Picinic
+ * Database Adapter class to save game settings
+ * based on the database adapter in Whack-A-Mole from
+ * Android Game Programming For Dummies
+ */
 public class DatabaseAdapter {
 
 	private static final String KEY_ROWID = "_id";

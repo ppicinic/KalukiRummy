@@ -7,6 +7,10 @@ import com.philpicinic.kalukirummy.card.VCard;
 
 import android.content.Context;
 
+/**
+ * @author Phil Picinic
+ * Bot's meld view Group, probably unneccessary,  TODO revamp constructor 
+ */
 public class MeldBotViewGroup extends MeldPlayerViewGroup {
 
 	public MeldBotViewGroup(Context context) {

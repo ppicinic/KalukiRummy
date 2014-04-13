@@ -6,9 +6,18 @@ import java.util.Collections;
 import com.philpicinic.kalukirummy.card.Card;
 import com.philpicinic.kalukirummy.card.VCard;
 
-
+/**
+ * 
+ * @author Phil Picinic
+ * Factory to validate and create melds
+ */
 public class MeldFactory {
 
+	/**
+	 * Validate a set of cards as a meld
+	 * @param cards the cards to be played
+	 * @return true if it is a valid meld, false if not
+	 */
 	public static boolean validate(ArrayList<VCard> cards){
 		// check size is between 3 and 5
 		if(cards.size() < 3 || cards.size() > 5){
@@ -50,6 +59,11 @@ public class MeldFactory {
 		}
 	}
 	
+	/**
+	 * Build a meld, create the meld object
+	 * @param cards the cards to create a meld
+	 * @return the meld created
+	 */
 	public static Meld buildMeld(ArrayList<VCard> cards){
 		if(validate(cards)){
 			Card firstCard = cards.get(0).getCard();

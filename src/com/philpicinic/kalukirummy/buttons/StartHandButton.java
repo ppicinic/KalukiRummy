@@ -9,6 +9,11 @@ import android.view.View;
 
 import com.philpicinic.kalukirummy.R;
 
+/**
+ * 
+ * @author Phil Picinic
+ * View for the Start Hand Button.
+ */
 public class StartHandButton extends View{
 
 	@SuppressWarnings("unused")
@@ -20,6 +25,10 @@ public class StartHandButton extends View{
 	private int x;
 	private int y;
 	
+	/**
+	 * Constructor to create the view and fetch the bit map
+	 * @param context
+	 */
 	public StartHandButton(Context context) {
 		super(context);
 		
@@ -29,6 +38,9 @@ public class StartHandButton extends View{
 		// TODO Auto-generated constructor stub
 	}
 	
+	/**
+	 * Resizes and Positions the button
+	 */
 	@Override
 	public void onSizeChanged(int w, int h, int oldw, int oldh) {
 		super.onSizeChanged(w, h, oldw, oldh);
@@ -44,13 +56,18 @@ public class StartHandButton extends View{
 	}
 
 	/**
-	 * Draw the card on the screen
+	 * Draw the button on the screen
 	 */
 	@Override
 	protected void onDraw(Canvas canvas) {
 		canvas.drawBitmap(start, x, y, null);
 	}
 	
+	/**
+	 * Checks if player input collides with the button
+	 * @param event the touch event
+	 * @return true if the player touches, otherwise false
+	 */
 	public boolean checkCollision(MotionEvent event){
 		int X = (int) event.getX();
 		int Y = (int) event.getY();

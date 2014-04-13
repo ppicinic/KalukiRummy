@@ -18,7 +18,6 @@ import com.philpicinic.kalukirummy.card.VCard;
 public class DiscardView extends ViewGroup {
 
 	private Context context;
-	// private Bitmap discardCard;
 	private DiscardPile pile;
 	@SuppressWarnings("unused")
 	private int screenH;
@@ -36,15 +35,21 @@ public class DiscardView extends ViewGroup {
 
 	private VCard card;
 
+	/**
+	 * Constructor
+	 * @param context the context of the activity
+	 */
 	public DiscardView(Context context) {
 		super(context);
 		this.context = context;
 
 		pile = new DiscardPile();
-		// x =
-
 	}
 
+	/**
+	 * Add a card to the top of the pile
+	 * @param mCard the card
+	 */
 	public void toss(Card mCard) {
 		pile.push(mCard);
 		VCard temp = new VCard(this.context, 0, mCard);
@@ -58,6 +63,11 @@ public class DiscardView extends ViewGroup {
 
 	}
 
+	/**
+	 * check if a player draws from the discard pile
+	 * @param event the player's input
+	 * @return true if the player touched the card, otherwise false
+	 */
 	public boolean checkDraw(MotionEvent event) {
 		return card.detectCollision(event);
 	}
@@ -77,6 +87,10 @@ public class DiscardView extends ViewGroup {
 
 	}
 
+	/**
+	 * Draws the top card
+	 * @return the card on top
+	 */
 	public VCard drawFromPile() {
 		pile.pop();
 		VCard temp = card;
@@ -92,6 +106,10 @@ public class DiscardView extends ViewGroup {
 		return temp;
 	}
 
+	/**
+	 * Add a card to the top of the pile
+	 * @param mCard the card
+	 */
 	public void toss(VCard vCard) {
 		pile.push(vCard.getCard());
 		if (card != null) {
@@ -104,6 +122,11 @@ public class DiscardView extends ViewGroup {
 
 	}
 
+	/**
+	 * Checks collision of the discard pile with a card
+	 * @param arg0 the card being compared
+	 * @return true if the card is in the discard, otherwise false
+	 */
 	public boolean checkCollision(VCard arg0) {
 		if ((this.x >= arg0.getMyX() && this.x < (arg0.getMyX() + (x2 / 2)))
 				|| (((this.x + x2) > (arg0.getMyX() + (x2 / 2))) && (this.x + x2) <= (arg0
@@ -119,18 +142,25 @@ public class DiscardView extends ViewGroup {
 
 	@Override
 	protected void onLayout(boolean changed, int l, int t, int r, int b) {
-		// TODO Auto-generated method stub
 		this.l = l;
 		this.w = t;
 		this.ol = r;
 		this.ow = b;
 	}
 
+	/**
+	 * End game method removes all cards from the pile
+	 * @return all the cards in the pile
+	 */
 	public ArrayList<Card> endGame() {
 		this.removeView(this.card);
 		return pile.endGame();
 	}
 
+	/**
+	 * Removes all cards from the pile but the top one
+	 * @return all the cards but the top card
+	 */
 	public ArrayList<Card> returnAllButTop() {
 		Card top = pile.pop();
 		ArrayList<Card> result = new ArrayList<Card>();

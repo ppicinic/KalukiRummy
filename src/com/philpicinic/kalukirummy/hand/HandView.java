@@ -4,13 +4,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 
 import com.philpicinic.kalukirummy.card.Card;
 import com.philpicinic.kalukirummy.card.VCard;
 
+/**
+ * 
+ * @author Phil Picinic
+ *
+ * ViewGroup of the player's hand
+ */
 public class HandView extends ViewGroup {
 
 	private int l;
@@ -30,12 +35,12 @@ public class HandView extends ViewGroup {
 
 	private SortHandButton sortHandBtn;
 
-	// private boolean start;
-	// private boolean started;
-	// private LinkedList<VCard> deal;
-
 	private int left;
 
+	/**
+	 * Constructor
+	 * @param context the context of the activity
+	 */
 	public HandView(Context context) {
 		super(context);
 		this.context = context;
@@ -58,41 +63,12 @@ public class HandView extends ViewGroup {
 		seeSort = false;
 	}
 
-	public void onDraw(Canvas canvas) {
-		super.onDraw(canvas);
-		// if(!deal.isEmpty()){
-		// System.out.println("shit happening");
-		// VCard temp = deal.remove();
-		// this.addView(temp);
-		// this.layout(l, w, ol, ow);
-		// cards.add(0, temp);
-		// for(int i = 0; i < cards.size(); i++){
-		// cards.get(i).setHandPos(i);
-		// }
-		// }
-	}
-
+	/**
+	 * Deal a card to the player's hand
+	 * @param card the card being dealt
+	 */
 	public void deal(Card card) {
-		// for(int i = 0; i < 13; i++){
-		// Card card = deck.deal();
-		// for(VCard temp : cards){
-		// temp.setHandPos(temp.getHandPos() + 1);
-		// }
-		// System.out.println(card.getRank());
-		// VCard temp = new VCard(this.context, 0, card);
-		// cards.add(0, vCard);
-		// deal.add(temp);
-		// this.addView(vCard);
-		// vCard.layout(l, w, ol, ow);
 
-		// this.invalidate();
-		// try{
-		// Thread.sleep(1000);
-		// }catch(InterruptedException ie){
-
-		// }
-		// SystemClock.sleep(1000);
-		// }
 		left = 0;
 		VCard temp = new VCard(this.context, 0, card);
 		cards.add(0, temp);
@@ -112,6 +88,9 @@ public class HandView extends ViewGroup {
 		}
 	}
 
+	/**
+	 * Hand is created
+	 */
 	public void handCreated() {
 		if (!seeSort) {
 			this.addView(sortHandBtn);
@@ -119,15 +98,21 @@ public class HandView extends ViewGroup {
 		}
 	}
 
+	/**
+	 * Hand is ended does nothing
+	 * TODO DEPRECATED!?
+	 */
 	public void handEnded() {
 		if (seeSort) {
-			// this.removeView(sortHandBtn);
-			// seeSort = false;
+
 		}
 	}
 
+	/**
+	 * Return a card to the player's hand
+	 * @param returnToHand the card being returned
+	 */
 	public void deal(VCard returnToHand) {
-		// TODO Auto-generated method stub
 		left = 0;
 		cards.add(0, returnToHand);
 		this.addView(returnToHand);
@@ -158,19 +143,17 @@ public class HandView extends ViewGroup {
 		sortHandBtn.layout(l, w, ol, ow);
 	}
 
+	/**
+	 * Get the card the player is moving
+	 * @return the card
+	 */
 	public VCard getMovingCard() {
 		return movingCard;
 	}
 
 	public boolean onTouchEvent(MotionEvent event) {
-		// System.out.println(event);
 		int e = event.getAction();
-		// System.out.println(e);
 		if (e == MotionEvent.ACTION_DOWN) {
-			// if(!started){
-			// start = true;
-			// return true;
-			// }
 			for (VCard card : cards) {
 				if (card.detectCollision(event)) {
 					this.bringChildToFront(card);
@@ -179,7 +162,6 @@ public class HandView extends ViewGroup {
 				}
 			}
 			if (rightArrow.isPressed(event)) {
-				// System.out.println("happenny0");
 				cardMove = true;
 				right = true;
 				return true;
@@ -194,12 +176,6 @@ public class HandView extends ViewGroup {
 				return toBeSorted = true;
 			}
 		}
-		if (e == MotionEvent.ACTION_MOVE) {
-			if (movingCard != null) {
-				// movingCard.onTouchEvent(event);
-			}
-		}
-
 		if (e == MotionEvent.ACTION_UP) {
 			if (movingCard != null) {
 				for (VCard card : cards) {
@@ -218,27 +194,22 @@ public class HandView extends ViewGroup {
 					movingCard = null;
 				}
 			}
-			// System.out.println("before");
+
 			if (cardMove) {
-				// System.out.println("test");
 				for (VCard card : cards) {
 					if (right) {
 						card.setHandPos(card.getHandPos() - 1);
 					} else {
 						card.setHandPos(card.getHandPos() + 1);
 					}
-					// card.;
 				}
 				cardMove = false;
-				System.out.println(right);
 				if (right) {
 					left += 1;
 					if ((!leftArrow.isVisible()) && left >= 1) {
 						this.addView(leftArrow);
 						leftArrow.layout(l, w, ol, ow);
 						leftArrow.flipVisibility();
-
-						// this.inva
 					}
 					if (rightArrow.isVisible() && (left + 6) >= cards.size()) {
 						this.removeView(rightArrow);
@@ -258,7 +229,6 @@ public class HandView extends ViewGroup {
 
 				}
 				right = false;
-				// this.invalidate();
 			}
 			if (toBeSorted) {
 				sortHand();
@@ -267,12 +237,10 @@ public class HandView extends ViewGroup {
 			}
 		}
 		this.invalidate();
-		// System.out.println(cardMove);
 		return false;
 	}
 
 	public boolean onInterceptTouchEvent(MotionEvent event) {
-		// System.out.println("inter");
 		int e = event.getAction();
 		if (e == MotionEvent.ACTION_DOWN) {
 			if (seeSort && sortHandBtn.checkCollision(event)) {
@@ -283,14 +251,11 @@ public class HandView extends ViewGroup {
 					this.bringChildToFront(card);
 					movingCard = card;
 					handEnded();
-					// return true;
 				}
 			}
 		}
 		if (e == MotionEvent.ACTION_UP) {
-			// System.out.println("up");
 			if (movingCard != null) {
-				// this.addView(sortHandBtn);
 				for (VCard card : cards) {
 					if (!movingCard.equalsInHand(card)) {
 						if (movingCard.collideWithCard(card)) {
@@ -313,6 +278,10 @@ public class HandView extends ViewGroup {
 		return false;
 	}
 
+	/**
+	 * Remove the moving card from the player's hand
+	 * TODO this might help from serializing the cards?!
+	 */
 	public void removeMovingCard() {
 		int tempPos = movingCard.getHandPos();
 		tempPos += left;
@@ -348,6 +317,9 @@ public class HandView extends ViewGroup {
 		movingCard = null;
 	}
 
+	/**
+	 * Sort the player's hand
+	 */
 	public void sortHand() {
 		Collections.sort(cards);
 		for (int i = 0; i < cards.size(); i++) {
@@ -355,6 +327,11 @@ public class HandView extends ViewGroup {
 		}
 	}
 
+	/**
+	 * Remove a card
+	 * @param card the card to remove
+	 * TODO Also might help from serialization
+	 */
 	public void removeCard(Card card) {
 		for (int i = 0; i < cards.size(); i++) {
 			Card temp = cards.get(i).getCard();
@@ -384,20 +361,19 @@ public class HandView extends ViewGroup {
 		}
 	}
 
+	/**
+	 * Remove a joker from the player's hand
+	 * @param card the joker card to be removed
+	 * TODO Also might help from card serialization
+	 */
 	public void removeJokerCard(VCard card) {
-		System.out.println("looking for card");
-		System.out.println(card.getCard().getRank());
-		System.out.println(card.getCard().getSuit());
 		for (int i = 0; i < cards.size(); i++) {
 			VCard temp = cards.get(i);
-			System.out.println(temp.getCard().getRank());
-			System.out.println(temp.getCard().getSuit());
 			if (temp.getCard().isJoker()) {
 				if (temp.getCard().getRank() == card.getCard().getRank()
 						&& temp.getCard().getSuit().ordinal() == card.getCard()
 								.getSuit().ordinal()) {
 					cards.remove(i);
-					System.out.println("found card");
 					this.removeView(card);
 					for (int j = 0; j < cards.size(); j++) {
 						cards.get(j).setHandPos(j - left);
@@ -408,10 +384,18 @@ public class HandView extends ViewGroup {
 		}
 	}
 
+	/**
+	 * Get the size of the player's hand
+	 * @return the size
+	 */
 	public int handSize() {
 		return cards.size();
 	}
 
+	/**
+	 * Hand end game method
+	 * @return all the player's cards
+	 */
 	public ArrayList<Card> endGame() {
 		ArrayList<Card> temp = new ArrayList<Card>();
 		for(VCard card : cards){
@@ -436,6 +420,10 @@ public class HandView extends ViewGroup {
 		return temp;
 	}
 
+	/**
+	 * Value of all the cards in the player's hand
+	 * @return the total value
+	 */
 	public int handValue() {
 		int total = 0;
 		for(VCard card: cards){

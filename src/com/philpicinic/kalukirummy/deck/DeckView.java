@@ -19,7 +19,6 @@ import com.philpicinic.kalukirummy.db.GameState;
  */
 public class DeckView extends View {
 
-	@SuppressWarnings("unused")
 	private Context context;
 	private Bitmap backCard;
 
@@ -40,7 +39,7 @@ public class DeckView extends View {
 	public DeckView(Context context) {
 		super(context);
 		this.context = context;
-		if (GameState.getInstance(context).isChoice()) {
+		if (GameState.getInstance(this.context).isChoice()) {
 			backCard = BitmapFactory.decodeResource(getResources(),
 					R.drawable.card_back2);
 		} else {

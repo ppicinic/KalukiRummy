@@ -6,6 +6,12 @@ import java.util.Collections;
 import com.philpicinic.kalukirummy.card.Card;
 import com.philpicinic.kalukirummy.card.VCard;
 
+/**
+ * 
+ * @author Phil Picinic
+ * Abstract Meld is the abstract meld class that implements meld
+ * and gives a common basis for both RunMeld and SetMeld
+ */
 public abstract class AbstractMeld implements Meld {
 
 	protected boolean undoable;

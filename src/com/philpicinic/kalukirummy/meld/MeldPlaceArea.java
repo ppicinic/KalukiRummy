@@ -27,7 +27,6 @@ public class MeldPlaceArea extends View {
 
 		meldPlace = BitmapFactory.decodeResource(getResources(),
 				R.drawable.meldplace);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
