@@ -1,6 +1,7 @@
 package com.philpicinic.kalukirummy.views;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Stack;
 
 import android.app.Dialog;
@@ -84,6 +85,7 @@ public class GameView extends ViewGroup {
 	private BotTurn botTurn;
 	
 	private ToastView toastView;
+	private Random random;
 
 	/**
 	 * Create the GameView Group Creates all child elements of the layout
@@ -95,7 +97,7 @@ public class GameView extends ViewGroup {
 		super(context);
 		this.context = context;
 
-		
+		random = new Random(System.currentTimeMillis());
 		
 		toastView = new ToastView(context);
 		this.addView(toastView);
@@ -210,7 +212,8 @@ public class GameView extends ViewGroup {
 								} else {
 									turnState = TurnState.BOT;
 									Handler handler = new Handler();
-									handler.postDelayed(botTurn, 200);
+									int wait = random.nextInt(1500) + 1000;
+									handler.postDelayed(botTurn, wait);
 								}
 							}
 						} else {
@@ -272,6 +275,9 @@ public class GameView extends ViewGroup {
 	}
 
 	public boolean onTouchEvent(MotionEvent event) {
+		if(animating || turnState == TurnState.BOT){
+			return true;
+		}
 		int e = event.getAction();
 		if (e == MotionEvent.ACTION_DOWN) {
 			if (turnState == TurnState.START) {
@@ -361,7 +367,6 @@ public class GameView extends ViewGroup {
 					if (!meldViewGroup.playingCards()) {
 						hand.handCreated();
 					}
-					// hand.deal(returnToHand);
 					returnToHand = false;
 					return true;
 				}

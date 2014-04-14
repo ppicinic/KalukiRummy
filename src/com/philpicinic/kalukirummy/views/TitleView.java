@@ -40,7 +40,7 @@ public class TitleView extends View {
 	public TitleView(Context context) {
 		super(context);
 		this.context = context;
-		//bg = BitmapFactory.decodeResource(getResources(), R.drawable.bg);
+		bg = BitmapFactory.decodeResource(getResources(), R.drawable.bg);
 		titleGraphic = BitmapFactory.decodeResource(getResources(),
 				R.drawable.title_graphic);
 		playButton = BitmapFactory.decodeResource(getResources(),
@@ -59,7 +59,7 @@ public class TitleView extends View {
 	 */
 	@Override
 	protected void onDraw(Canvas canvas) {
-		//canvas.drawBitmap(bg, 0, 0, null);
+		canvas.drawBitmap(bg, 0, 0, null);
 		canvas.drawBitmap(titleGraphic,
 				(screenW - titleGraphic.getWidth()) / 2, 0, null);
 		if (playButtonPressed) {
@@ -94,7 +94,7 @@ public class TitleView extends View {
 		super.onSizeChanged(w, h, oldw, oldh);
 		screenW = w;
 		screenH = h;
-		//bg = Bitmap.createScaledBitmap(bg, screenW, screenH, false);
+		bg = Bitmap.createScaledBitmap(bg, screenW, screenH, false);
 	}
 
 	/**
