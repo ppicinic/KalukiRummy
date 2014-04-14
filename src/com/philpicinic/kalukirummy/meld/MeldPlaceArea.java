@@ -9,6 +9,12 @@ import android.view.View;
 import com.philpicinic.kalukirummy.R;
 import com.philpicinic.kalukirummy.card.VCard;
 
+/**
+ * 
+ * @author Phil Picinic
+ * MeldPlaceArea is the view for placing cards that the player wants to play
+ *
+ */
 public class MeldPlaceArea extends View {
 
 	@SuppressWarnings("unused")
@@ -20,6 +26,10 @@ public class MeldPlaceArea extends View {
 	private int screenW;
 	private int screenH;
 
+	/**
+	 * Constructor
+	 * @param context the context of the activity
+	 */
 	public MeldPlaceArea(Context context) {
 		super(context);
 
@@ -45,6 +55,11 @@ public class MeldPlaceArea extends View {
 		canvas.drawBitmap(meldPlace, x, y, null);
 	}
 
+	/**
+	 * Checks if a card collides with this view
+	 * @param card the card to compare to
+	 * @return true for collision, otherwise false
+	 */
 	public boolean checkCollisionByCard(VCard card) {
 		if ((card.getMyX() + (card.getMyWidth() / 2)) > x
 				&& (card.getMyX() + (card.getMyWidth() / 2)) < (x + meldPlace

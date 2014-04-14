@@ -9,6 +9,11 @@ import android.view.ViewGroup;
 import com.philpicinic.kalukirummy.card.Card;
 import com.philpicinic.kalukirummy.card.VCard;
 
+/**
+ * 
+ * @author Phil Picinic
+ * ViewGroup for played melds
+ */
 public class MeldPlayerViewGroup extends ViewGroup {
 
 	protected ArrayList<Meld> melds;
@@ -24,6 +29,10 @@ public class MeldPlayerViewGroup extends ViewGroup {
 	private int r;
 	private int b;
 
+	/**
+	 * Constructor
+	 * @param context the context of the activity
+	 */
 	public MeldPlayerViewGroup(Context context) {
 		super(context);
 		playerSide = true;
@@ -34,6 +43,10 @@ public class MeldPlayerViewGroup extends ViewGroup {
 		attachSpots = new HashMap<VCard, ArrayList<Integer>>();
 	}
 
+	/**
+	 * Add a meld to the view group
+	 * @param meld the meld to add
+	 */
 	public void addMeld(Meld meld) {
 		melds.add(meld);
 		undoableMelds.add(meld);
@@ -41,11 +54,13 @@ public class MeldPlayerViewGroup extends ViewGroup {
 		for (VCard temp : temps) {
 			temp.layout(l, t, r, b);
 			this.addView(temp);
-			// temp.layout(l, t, r, b);
 		}
 		readjustMelds();
 	}
 
+	/**
+	 * Repositions the melds in the view group
+	 */
 	protected void readjustMelds() {
 		int level = 0;
 		int pos = 0;
@@ -66,19 +81,24 @@ public class MeldPlayerViewGroup extends ViewGroup {
 
 	@Override
 	protected void onLayout(boolean changed, int l, int t, int r, int b) {
-		// TODO Auto-generated method stub
 		this.l = l;
 		this.t = t;
 		this.r = r;
 		this.b = b;
 	}
 
+	/**
+	 * Make all melds undoable
+	 */
 	public void finishMelds() {
 		for (Meld meld : melds) {
 			meld.setUndoable(false);
 		}
 	}
 
+	/**
+	 * Remove all undoable melds
+	 */
 	public void UndoMelds() {
 		for (int i = 0; i < melds.size(); i++) {
 			if (melds.get(i).getUndoable()) {
@@ -92,7 +112,11 @@ public class MeldPlayerViewGroup extends ViewGroup {
 		}
 		undoableMelds = new ArrayList<Meld>();
 	}
-
+	
+	/**
+	 * Calculates the value of all the meld
+	 * @return the total value
+	 */
 	public int meldValue() {
 		int total = 0;
 		for (Meld meld : melds) {
@@ -101,6 +125,10 @@ public class MeldPlayerViewGroup extends ViewGroup {
 		return total;
 	}
 
+	/**
+	 * player can toss their cards
+	 * @return
+	 */
 	public boolean playerCanToss() {
 		if (melds.size() > 0 && meldValue() < 40) {
 			return false;
@@ -108,6 +136,9 @@ public class MeldPlayerViewGroup extends ViewGroup {
 		return true;
 	}
 
+	/**
+	 * undo all the cards
+	 */
 	public void undoCards() {
 		boolean hasRemoved = false;
 		for (int i = 0; i < melds.size(); i++) {
@@ -127,6 +158,9 @@ public class MeldPlayerViewGroup extends ViewGroup {
 		}
 	}
 
+	/**
+	 * Set all end turn info
+	 */
 	public void endTurn() {
 		if (undoableMelds.size() > 0) {
 			for (Meld meld : undoableMelds) {
@@ -139,10 +173,19 @@ public class MeldPlayerViewGroup extends ViewGroup {
 		attachSpots = new HashMap<VCard, ArrayList<Integer>>();
 	}
 
+	/**
+	 * Initial build complete
+	 * @return true if complete, otherwise false
+	 */
 	public boolean initialBuild() {
 		return meldValue() >= 40;
 	}
 
+	/**
+	 * Check collision of card to all the melds
+ 	 * @param card card to compare
+	 * @return true if collides, otherwise false
+	 */
 	public boolean checkMeldCollision(VCard card) {
 		for (int i = 0; i < melds.size(); i++) {
 			ArrayList<VCard> cards = melds.get(i).getCards();
@@ -157,6 +200,11 @@ public class MeldPlayerViewGroup extends ViewGroup {
 		return false;
 	}
 
+	/**
+	 * Check if the bot can attach any cards
+	 * @param card the card to attach
+	 * @return true if it can attach
+	 */
 	public boolean canBotAttach(VCard card) {
 		for (int i = 0; i < melds.size(); i++) {
 			Meld meld = melds.get(i);
@@ -169,6 +217,11 @@ public class MeldPlayerViewGroup extends ViewGroup {
 		return false;
 	}
 
+	/**
+	 * Checks if a card can be attached
+	 * @param card the card to attach
+	 * @return true if the card can be attached, otherwise false
+	 */
 	public boolean canAttach(VCard card) {
 		if (attachMeld.canAttach(card)) {
 			return true;
@@ -177,6 +230,10 @@ public class MeldPlayerViewGroup extends ViewGroup {
 		}
 	}
 
+	/**
+	 * Attach a card
+	 * @param card the card to be attached
+	 */
 	public void attach(VCard card) {
 		card.layout(l, t, r, b);
 		attachCards.add(card);
@@ -196,6 +253,9 @@ public class MeldPlayerViewGroup extends ViewGroup {
 		readjustMelds();
 	}
 
+	/**
+	 * Remove attached cards
+	 */
 	public void removeAttachedCards() {
 		if (attachCards.size() > 0) {
 			for (VCard temp : attachCards) {
@@ -209,6 +269,11 @@ public class MeldPlayerViewGroup extends ViewGroup {
 		readjustMelds();
 	}
 
+	/**
+	 * Check if a card can replace a joker
+	 * @param card the card to replace
+	 * @return true if it can replace the joker, else false
+	 */
 	public boolean canReplaceJoker(VCard card) {
 		if (attachMeld.canReplaceJoker(card)) {
 			return true;
@@ -218,6 +283,12 @@ public class MeldPlayerViewGroup extends ViewGroup {
 		return false;
 	}
 
+	/**
+	 * Replace a joker
+	 * @param card the card to replace
+	 * @param undo the joker undo to handle undoing
+	 * @return the joker that is replaced
+	 */
 	public VCard replaceJoker(VCard card, JokerUndo undo) {
 		VCard temp = attachMeld.replaceJoker(card);
 		if (undo != null) {
@@ -232,11 +303,18 @@ public class MeldPlayerViewGroup extends ViewGroup {
 		return temp;
 	}
 
+	/**
+	 * Reset attach info
+	 */
 	public void endAttach() {
 		attachSpot = -1;
 		attachMeld = null;
 	}
 
+	/**
+	 * Undo the joker replace
+	 * @param undo the joker undo object
+	 */
 	public void undoJoker(JokerUndo undo) {
 		undo.getMeld().removeReplaceCard(undo.getReplaceCard());
 		undo.getMeld().attach(undo.getJokerCard());
@@ -244,6 +322,10 @@ public class MeldPlayerViewGroup extends ViewGroup {
 		this.addView(undo.getJokerCard());
 	}
 
+	/**
+	 * Undo the joker replace
+	 * @param undo the joker undo object
+	 */
 	public void undoReplaceJoker(JokerUndo undo) {
 		this.removeView(undo.getReplaceCard());
 		undo.getMeld().removeReplaceCard(undo.getReplaceCard());
@@ -254,11 +336,18 @@ public class MeldPlayerViewGroup extends ViewGroup {
 		this.addView(joker);
 	}
 
+	/**
+	 * Get the melds
+	 * @return all the melds
+	 */
 	public ArrayList<Meld> getMelds() {
-		// TODO Auto-generated method stub
 		return melds;
 	}
 
+	/**
+	 * End game remove and return all cards
+	 * @return all the cards in the melds
+	 */
 	public ArrayList<Card> endGame() {
 		ArrayList<Card> temp = new ArrayList<Card>();
 		for (Meld meld : melds) {
@@ -276,6 +365,10 @@ public class MeldPlayerViewGroup extends ViewGroup {
 		return temp;
 	}
 
+	/**
+	 * Replace a joker by the bot
+	 * @param i the meld to replace the joker
+	 */
 	public void botReplaceJoker(int i) {
 		attachMeld = melds.get(i);
 	}

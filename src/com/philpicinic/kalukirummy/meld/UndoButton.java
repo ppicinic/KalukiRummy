@@ -9,6 +9,11 @@ import android.view.View;
 
 import com.philpicinic.kalukirummy.R;
 
+/**
+ * 
+ * @author Phil Picinic
+ * View for the undo button
+ */
 public class UndoButton extends View {
 
 	@SuppressWarnings("unused")
@@ -20,6 +25,10 @@ public class UndoButton extends View {
 	private int screenW;
 	private int screenH;
 
+	/**
+	 * Constructor
+	 * @param context the context of the activity
+	 */
 	public UndoButton(Context context) {
 		super(context);
 
@@ -27,7 +36,6 @@ public class UndoButton extends View {
 
 		button = BitmapFactory.decodeResource(getResources(),
 				R.drawable.undo_button);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -46,13 +54,16 @@ public class UndoButton extends View {
 		canvas.drawBitmap(button, x, y, null);
 	}
 	
+	/**
+	 * Check collision on the button
+	 * @param event the player's input
+	 * @return true if pressed, otherwise false
+	 */
 	public boolean checkCollision(MotionEvent event){
-		System.out.println("get here");
 		int X = (int) event.getX();
 		int Y = (int) event.getY();
 		
 		if(X > x && X < (x + button.getWidth()) && Y > y && Y < (y + button.getHeight())){
-			System.out.println("get here 2");
 			return true;
 		}
 		return false;

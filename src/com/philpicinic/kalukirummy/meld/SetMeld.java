@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import com.philpicinic.kalukirummy.card.Card;
 import com.philpicinic.kalukirummy.card.VCard;
 
+/**
+ * 
+ * @author Phil Picinic
+ * The Meld class for set melds
+ */
 public class SetMeld extends AbstractMeld{
 
 	public SetMeld(ArrayList<VCard> cards){

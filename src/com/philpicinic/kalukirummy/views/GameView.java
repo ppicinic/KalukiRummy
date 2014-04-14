@@ -54,9 +54,6 @@ public class GameView extends ViewGroup {
 	private HandView hand;
 	private UndoCards undoCards;
 
-	// private CardMove rightArrow;
-	// private CardMove leftArrow;
-
 	private StartHandButton startHand;
 
 	private DeckView deckV;
@@ -125,7 +122,6 @@ public class GameView extends ViewGroup {
 
 		meldViewGroup = new MeldViewGroup(context, toastView);
 		this.addView(meldViewGroup);
-		// this.addView(meldArea);
 
 		// Creates the scorecard button
 		scoreCard = new ScoreCardView(context);
@@ -141,6 +137,10 @@ public class GameView extends ViewGroup {
 		botTurn = new BotTurn(botPlayer);
 	}
 
+	/**
+	 * Sets animating to the view
+	 * @param animating animating setting
+	 */
 	public void setAnimating(boolean animating) {
 		this.animating = animating;
 	}
@@ -152,15 +152,11 @@ public class GameView extends ViewGroup {
 		int e = event.getAction();
 		if (e == MotionEvent.ACTION_DOWN) {
 			if (turnState == TurnState.START) {
-				return true; // startHand.checkCollision(event);
+				return true; 
 			} else if (turnState == TurnState.DRAW) {
 				return deckV.checkCollision(event);
 			} else if (turnState == TurnState.PLAY) {
 				if (meldViewGroup.checkPlayCollisions(event)) {
-					// hand.deal(returnToHand);
-					// returnToHand = null;
-					// returnToHand = true;
-					// return true;
 				}
 				if (meldViewGroup.checkPlayMeld(event)) {
 					return true;
@@ -177,7 +173,6 @@ public class GameView extends ViewGroup {
 					}
 				}
 				if (returnToHand) {
-					// return true;
 				}
 
 			}
@@ -187,7 +182,6 @@ public class GameView extends ViewGroup {
 				hand.handCreated();
 			}
 			if (turnState == TurnState.PLAY) {
-				// VCard temp = hand.getMovingCard();
 				if (movingCard != null) {
 
 					if (discard.checkCollision(movingCard)
@@ -262,18 +256,15 @@ public class GameView extends ViewGroup {
 						hand.handCreated();
 					}
 				} else if (returnToHand) {
-					// return true;
 				}
 			}
 		}
-
-		// if (hand.isClicked(event)) {
-		// this.bringChildToFront(hand);
-		// // return true;
-		// }
 		return false;
 	}
 
+	/**
+	 * Handling ending a turn
+	 */
 	private void endTurn() {
 		meldViewGroup.endTurn();
 		this.jokerUndo = new Stack<JokerUndo>();
@@ -297,8 +288,6 @@ public class GameView extends ViewGroup {
 				}
 			} else if (turnState == TurnState.PLAY) {
 				if (meldViewGroup.checkPlayCollisions(event)) {
-					// hand.deal(returnToHand);
-					// returnToHand = null;
 					returnToHand = true;
 					return true;
 				}
@@ -326,7 +315,7 @@ public class GameView extends ViewGroup {
 					start = false;
 					animating = true;
 					turnState = TurnState.DRAW;
-					// hand.handCreated();
+
 					ArrayList<Card> temp = botPlayer.endHand();
 					deck.returnCards(temp);
 					temp = meldViewGroup.endGame();
@@ -399,6 +388,9 @@ public class GameView extends ViewGroup {
 		return false;
 	}
 
+	/**
+	 * handling an undo
+	 */
 	private void handleUndo() {
 		while (!jokerUndo.isEmpty()) {
 			JokerUndo tempUndo = jokerUndo.pop();
@@ -458,10 +450,18 @@ public class GameView extends ViewGroup {
 		this.meldViewGroup.layout(arg1, arg2, arg3, arg4);
 	}
 
+	/**
+	 * initiate a hand
+	 */
 	public void initiateHand() {
 		meldViewGroup.initiateHand();
 	}
 
+	/**
+	 * Show the joker selection dialog
+	 * @param isAttach is the card being attached
+	 * @param player is the attach on the player side
+	 */
 	private void showChooseSuitDialog(final boolean isAttach,
 			final boolean player) {
 		final Dialog chooseSuitDialog = new Dialog(context);
@@ -524,6 +524,9 @@ public class GameView extends ViewGroup {
 		chooseSuitDialog.show();
 	}
 
+	/**
+	 * End a bot's turn
+	 */
 	public void endBotTurn() {
 		endTurn();
 		if (botPlayer.handSize() == 0) {

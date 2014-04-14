@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import com.philpicinic.kalukirummy.card.Card;
 import com.philpicinic.kalukirummy.card.VCard;
 
+/**
+ * 
+ * @author Phil Picinic
+ * Meld class for run melds
+ */
 public class RunMeld extends AbstractMeld{
 	
 	public RunMeld(ArrayList<VCard> cards){

@@ -9,6 +9,11 @@ import android.view.View;
 
 import com.philpicinic.kalukirummy.R;
 
+/**
+ * 
+ * @author Phil Picinic
+ * The view for the play button
+ */
 public class MeldPlayButton extends View {
 
 	@SuppressWarnings("unused")
@@ -20,6 +25,10 @@ public class MeldPlayButton extends View {
 	private int screenW;
 	private int screenH;
 
+	/**
+	 * Constructor
+	 * @param context the context of the activity
+	 */
 	public MeldPlayButton(Context context) {
 		super(context);
 
@@ -45,6 +54,11 @@ public class MeldPlayButton extends View {
 		canvas.drawBitmap(button, x, y, null);
 	}
 	
+	/**
+	 * Checks the collision of the play button
+	 * @param event the player's input
+	 * @return true if pressed, otherwise false
+	 */
 	public boolean checkCollision(MotionEvent event){
 		int X = (int) event.getX();
 		int Y = (int) event.getY();

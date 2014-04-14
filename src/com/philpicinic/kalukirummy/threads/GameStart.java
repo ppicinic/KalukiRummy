@@ -9,6 +9,11 @@ import com.philpicinic.kalukirummy.deck.DiscardView;
 import com.philpicinic.kalukirummy.hand.HandView;
 import com.philpicinic.kalukirummy.views.GameView;
 
+/**
+ * 
+ * @author Phil Picinic
+ * The Runnable to start the hand and deal the cards
+ */
 public class GameStart implements Runnable {
 
 	private GameView view;

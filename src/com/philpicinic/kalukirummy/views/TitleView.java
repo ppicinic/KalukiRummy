@@ -30,6 +30,7 @@ public class TitleView extends View {
 	private Bitmap optionsButtonPressed;
 	private boolean isOptionsPressed;
 	private Context context;
+	private Bitmap bg;
 	
 
 	/**
@@ -39,6 +40,7 @@ public class TitleView extends View {
 	public TitleView(Context context) {
 		super(context);
 		this.context = context;
+		//bg = BitmapFactory.decodeResource(getResources(), R.drawable.bg);
 		titleGraphic = BitmapFactory.decodeResource(getResources(),
 				R.drawable.title_graphic);
 		playButton = BitmapFactory.decodeResource(getResources(),
@@ -57,6 +59,7 @@ public class TitleView extends View {
 	 */
 	@Override
 	protected void onDraw(Canvas canvas) {
+		//canvas.drawBitmap(bg, 0, 0, null);
 		canvas.drawBitmap(titleGraphic,
 				(screenW - titleGraphic.getWidth()) / 2, 0, null);
 		if (playButtonPressed) {
@@ -91,6 +94,7 @@ public class TitleView extends View {
 		super.onSizeChanged(w, h, oldw, oldh);
 		screenW = w;
 		screenH = h;
+		//bg = Bitmap.createScaledBitmap(bg, screenW, screenH, false);
 	}
 
 	/**
@@ -130,7 +134,6 @@ public class TitleView extends View {
 				Intent gameIntent = new Intent(context, GameActivity.class);
 				context.startActivity(gameIntent);
 			} else if (isOptionsPressed) {
-				// TODO Go To Options Screen
 				Intent gameIntent = new Intent(context, OptionsActivity.class);
 				context.startActivity(gameIntent);
 			}

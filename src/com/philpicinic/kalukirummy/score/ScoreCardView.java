@@ -90,6 +90,11 @@ public class ScoreCardView extends View {
 		canvas.drawBitmap(scorecard, x, y, null);
 	}
 
+	/**
+	 * Add a game to the score card
+	 * @param player the player's score
+	 * @param bot the bot's score
+	 */
 	public void addGame(int player, int bot) {
 		if (playerGames.size() == 0) {
 			playerGames.add(player);
@@ -124,6 +129,9 @@ public class ScoreCardView extends View {
 		return false;
 	}
 
+	/**
+	 * Pop up the score Dialog
+	 */
 	private void showScoreDialog() {
 		final Dialog scoreCardDialog = new Dialog(context);
 		scoreCardDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -167,6 +175,10 @@ public class ScoreCardView extends View {
 		scoreCardDialog.show();
 	}
 
+	/**
+	 * Get the player's score
+	 * @return the score
+	 */
 	public int getPlayerScore() {
 		if (playerGames.size() > 0) {
 			return playerGames.get(playerGames.size() - 1);
@@ -174,6 +186,10 @@ public class ScoreCardView extends View {
 		return 0;
 	}
 
+	/**
+	 * Get the bot's score 
+	 * @return the score
+	 */
 	public int getBotScore() {
 		if (botGames.size() > 0) {
 			return botGames.get(botGames.size() - 1);
@@ -181,6 +197,9 @@ public class ScoreCardView extends View {
 		return 0;
 	}
 
+	/**
+	 * Reset the score card
+	 */
 	public void endGame() {
 		playerGames = new ArrayList<Integer>();
 		botGames = new ArrayList<Integer>();
