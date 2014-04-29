@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.philpicinic.kalukirummy.R;
 import com.philpicinic.kalukirummy.card.Card;
 import com.philpicinic.kalukirummy.card.VCard;
+import com.philpicinic.kalukirummy.sound.SoundManager;
 import com.philpicinic.kalukirummy.views.ToastView;
 
 /**
@@ -25,6 +26,7 @@ public class MeldViewGroup extends ViewGroup {
 	private MeldBotViewGroup meldBotViewGroup;
 	private MeldPlayerViewGroup attach;
 	private ToastView toastView;
+	private SoundManager sounds;
 
 	/**
 	 * Constructor DO NOT USE THIS CONSTRUCTOR IT IS HERE FOR DEFAULT REQUIREMENT
@@ -39,7 +41,7 @@ public class MeldViewGroup extends ViewGroup {
 	 * @param context the context of the activity
 	 * @param toastView the toast view to gain access to.
 	 */
-	public MeldViewGroup(Context context, ToastView toastView) {
+	public MeldViewGroup(Context context, ToastView toastView, SoundManager sounds) {
 		super(context);
 
 		this.context = context;
@@ -51,6 +53,7 @@ public class MeldViewGroup extends ViewGroup {
 		meldBotViewGroup = new MeldBotViewGroup(this.context);
 		this.addView(meldBotViewGroup);
 		this.toastView = toastView;
+		this.sounds = sounds;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -229,6 +232,7 @@ public class MeldViewGroup extends ViewGroup {
 		}
 		if (result && meldPlayerViewGroup.meldValue() < 40) {
 			toastView.showToast(getResources().getString(R.string.cannot_attach), Toast.LENGTH_SHORT);
+			sounds.playSound("error");
 			attach = null;
 			return false;
 		}

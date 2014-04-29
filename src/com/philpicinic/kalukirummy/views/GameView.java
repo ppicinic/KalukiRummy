@@ -33,6 +33,7 @@ import com.philpicinic.kalukirummy.meld.JokerUndo;
 import com.philpicinic.kalukirummy.meld.MeldFactory;
 import com.philpicinic.kalukirummy.meld.MeldViewGroup;
 import com.philpicinic.kalukirummy.score.ScoreCardView;
+import com.philpicinic.kalukirummy.sound.SoundManager;
 import com.philpicinic.kalukirummy.threads.BotTurn;
 import com.philpicinic.kalukirummy.threads.GameStart;
 
@@ -86,6 +87,8 @@ public class GameView extends ViewGroup {
 	
 	private ToastView toastView;
 	private Random random;
+	
+	private SoundManager sounds;
 
 	/**
 	 * Create the GameView Group Creates all child elements of the layout
@@ -98,6 +101,8 @@ public class GameView extends ViewGroup {
 		this.context = context;
 
 		random = new Random(System.currentTimeMillis());
+		
+		sounds = new SoundManager(context);
 		
 		toastView = new ToastView(context);
 		this.addView(toastView);
@@ -122,7 +127,7 @@ public class GameView extends ViewGroup {
 		bot = new BotView(context);
 		this.addView(bot);
 
-		meldViewGroup = new MeldViewGroup(context, toastView);
+		meldViewGroup = new MeldViewGroup(context, toastView, sounds);
 		this.addView(meldViewGroup);
 
 		// Creates the scorecard button
@@ -137,6 +142,8 @@ public class GameView extends ViewGroup {
 		botPlayer = new Bot(context, this, deck, discard,
 				meldViewGroup.getBotView(), meldViewGroup.getPlayerView(), bot, hand, scoreCard);
 		botTurn = new BotTurn(botPlayer);
+		
+		
 	}
 
 	/**
@@ -192,11 +199,13 @@ public class GameView extends ViewGroup {
 							if (hasDrawnFromDiscard
 									&& !meldViewGroup.hasInitialBuild()) {
 								toastView.showToast(getResources().getString(R.string.initial_discard), Toast.LENGTH_SHORT);
+								sounds.playSound("error");
 							} else {
 								hasDrawnFromDiscard = false;
 								hand.removeMovingCard();
 								movingCard.dispatchTouchEvent(event);
 								discard.toss(movingCard);
+								sounds.playSound("play");
 								endTurn();
 								
 								if (hand.handSize() == 0) {
@@ -204,8 +213,10 @@ public class GameView extends ViewGroup {
 									if (scoreCard.getBotScore() > 100) {
 										toastView.showToast(getResources().getString(R.string.game_win), Toast.LENGTH_LONG);
 										scoreCard.endGame();
+										sounds.playSound("win");
 									} else {
 										toastView.showToast(getResources().getString(R.string.hand_win), Toast.LENGTH_LONG);
+										sounds.playSound("win");
 									}
 									this.addView(startHand);
 									turnState = TurnState.START;
@@ -218,6 +229,7 @@ public class GameView extends ViewGroup {
 							}
 						} else {
 							toastView.showToast(getResources().getString(R.string.initial_build), Toast.LENGTH_SHORT);
+							sounds.playSound("error");
 						}
 					} else if (meldViewGroup.checkCollisionByCard(movingCard)) {
 						hand.removeMovingCard();
@@ -239,6 +251,7 @@ public class GameView extends ViewGroup {
 								hand.removeMovingCard();
 								meldViewGroup.attachToPlayer(movingCard);
 								undoCards.addAttachedCards(movingCard);
+								sounds.playSound("play");
 							} else if (meldViewGroup
 									.canReplacePlayerJoker(movingCard)) {
 								movingCard.dispatchTouchEvent(event);
@@ -250,6 +263,7 @@ public class GameView extends ViewGroup {
 								tempUndo.setJokerCard(temp);
 								jokerUndo.push(tempUndo);
 								hand.deal(temp);
+								sounds.playSound("play");
 							}
 						}
 					}
@@ -316,7 +330,6 @@ public class GameView extends ViewGroup {
 			}
 			if (turnState == TurnState.START) {
 				if (start) {
-					// TODO deal hand
 					this.removeView(startHand);
 					start = false;
 					animating = true;
@@ -334,13 +347,15 @@ public class GameView extends ViewGroup {
 					bot.update(13);
 					Handler handler = new Handler();
 					GameStart gameStart = new GameStart(this, hand, deck,
-							discard, botPlayer);
+							discard, botPlayer, sounds);
 					handler.postDelayed(gameStart, Constants.DEAL_DELAY);
 					return true;
 				}
 			} else if (turnState == TurnState.DRAW) {
 				hand.handCreated();
 				if (start) {
+					sounds.playSound("draw");
+					
 					Card card = deck.deal();
 					undoCards.addDrawCard(true, card);
 					hand.deal(card);
@@ -349,6 +364,7 @@ public class GameView extends ViewGroup {
 					return true;
 				}
 				if (drawFromDiscard) {
+					sounds.playSound("draw");
 					VCard card = discard.drawFromPile();
 					undoCards.addDrawCard(false, card.getCard());
 					hand.deal(card);
@@ -378,9 +394,10 @@ public class GameView extends ViewGroup {
 						meldViewGroup.removeAllPlayingCards();
 						undoCards.addMeldCards(tempCards);
 						meldViewGroup.addMeld(MeldFactory.buildMeld(tempCards));
-						// TODO place cards
+						sounds.playSound("play");
 					} else {
 						toastView.showToast(getResources().getString(R.string.invalid_meld), Toast.LENGTH_SHORT);
+						sounds.playSound("error");
 					}
 					playCards = false;
 					return true;
@@ -511,6 +528,7 @@ public class GameView extends ViewGroup {
 				if (isAttach) {
 					if (player) {
 						if (meldViewGroup.canAttach(jokerCard)) {
+							sounds.playSound("play");
 							meldViewGroup.attachToPlayer(jokerCard);
 							undoCards.addAttachedCards(jokerCard);
 						} else {
@@ -538,14 +556,17 @@ public class GameView extends ViewGroup {
 			scoreCard.addGame(hand.handValue(), 0);
 			if (scoreCard.getPlayerScore() > 100) {
 				toastView.showToast(getResources().getString(R.string.game_lose), Toast.LENGTH_LONG);
+				sounds.playSound("lose");
 				scoreCard.endGame();
 			} else {
 				toastView.showToast(getResources().getString(R.string.hand_lose), Toast.LENGTH_LONG);
+				sounds.playSound("lose");
 			}
 			this.addView(startHand);
 			turnState = TurnState.START;
 		} else {
 			toastView.showToast(getResources().getString(R.string.your_turn), Toast.LENGTH_SHORT);
+			sounds.playSound("turn");
 			turnState = TurnState.DRAW;
 		}
 	}
