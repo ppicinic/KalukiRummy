@@ -89,6 +89,8 @@ public class GameView extends ViewGroup {
 	private Random random;
 	
 	private SoundManager sounds;
+	
+	private boolean turn;
 
 	/**
 	 * Create the GameView Group Creates all child elements of the layout
@@ -143,7 +145,7 @@ public class GameView extends ViewGroup {
 				meldViewGroup.getBotView(), meldViewGroup.getPlayerView(), bot, hand, scoreCard);
 		botTurn = new BotTurn(botPlayer);
 		
-		
+		turn = random.nextBoolean();
 	}
 
 	/**
@@ -152,6 +154,20 @@ public class GameView extends ViewGroup {
 	 */
 	public void setAnimating(boolean animating) {
 		this.animating = animating;
+	}
+	
+	public void beginHand(){
+		turn = !turn;
+		if(turn){
+			turnState = TurnState.DRAW;
+			toastView.showToast(getResources().getString(R.string.your_turn_first), Toast.LENGTH_SHORT);
+		}else{
+			toastView.showToast(getResources().getString(R.string.bot_turn_first), Toast.LENGTH_SHORT);
+			turnState = TurnState.BOT;
+			Handler handler = new Handler();
+			int wait = random.nextInt(1500) + 1000;
+			handler.postDelayed(botTurn, wait);
+		}
 	}
 
 	public boolean onInterceptTouchEvent(MotionEvent event) {
@@ -333,8 +349,6 @@ public class GameView extends ViewGroup {
 					this.removeView(startHand);
 					start = false;
 					animating = true;
-					turnState = TurnState.DRAW;
-
 					ArrayList<Card> temp = botPlayer.endHand();
 					deck.returnCards(temp);
 					temp = meldViewGroup.endGame();

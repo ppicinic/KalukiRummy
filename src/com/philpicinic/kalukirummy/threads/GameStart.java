@@ -47,6 +47,7 @@ public class GameStart implements Runnable {
 			view.initiateHand();
 			//hand.sortHand();
 			view.setAnimating(false);
+			view.beginHand();
 		} else {
 			Handler handler = new Handler();
 			handler.postDelayed(this, Constants.DEAL_DELAY);

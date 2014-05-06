@@ -23,5 +23,7 @@
     <string name="option_2">Card Type</string>
     <string name="choice_1">Choice 1</string>
     <string name="choice_2">Choice 2</string>
+    <string name="your_turn_first">It\'s your turn first!</string>
+    <string name="bot_turn_first">It\'s the opponent\'s turn first!</string>
 
 </resources>
